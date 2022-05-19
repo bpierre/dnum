@@ -1,0 +1,27 @@
+{
+  "name": "dnum",
+  "version": "0.0.0",
+  "type": "module",
+  "module": "dist/dnum.es.js",
+  "main": "dist/dnum.es.js",
+  "types": "dist/index.d.ts",
+  "sideEffects": false,
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest",
+    "coverage": "vitest run --coverage"
+  },
+  "devDependencies": {
+    "c8": "^7.11.3",
+    "dprint": "^0.28.0",
+    "typescript": "^4.5.4",
+    "vite": "^2.9.9",
+    "vite-plugin-dts": "^1.1.1",
+    "vitest": "^0.12.6"
+  }
+}
