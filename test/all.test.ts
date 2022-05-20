@@ -1,8 +1,26 @@
 import { describe, expect, it } from "vitest";
-import { from, setDecimals, setValueDecimals } from "../src/dnum";
+import {
+  from,
+  fromJSON,
+  isDnum,
+  setDecimals,
+  setValueDecimals,
+  toJSON,
+} from "../src/dnum";
 import { format, formatNumber } from "../src/formatting";
-import { divide, multiply } from "../src/operations";
+import { add, divide, multiply, subtract } from "../src/operations";
 import { divideAndRound } from "../src/utils";
+
+describe("isDnum()", () => {
+  it("detects the Dnum data structure", () => {
+    expect(isDnum(null)).toBe(false);
+    expect(isDnum(1n)).toBe(false);
+    expect(isDnum([1, 2])).toBe(false);
+    expect(isDnum([10n])).toBe(false);
+    expect(isDnum([10n, 1, 1])).toBe(true); // More than 2 entries is still valid
+    expect(isDnum([1n, 1])).toBe(true);
+  });
+});
 
 describe("setValueDecimals()", () => {
   it("increases decimals", () => {
@@ -40,6 +58,90 @@ describe("setDecimals()", () => {
   });
 });
 
+describe("add()", () => {
+  it("adds positive values", () => {
+    const a1 = [123456n, 2] as const;
+    const a2 = [123456n, 4] as const;
+    const result = [124691n, 2] as const;
+    expect(add(a1, a2, result[1])).toEqual(result);
+    expect(add(a2, a1, result[1])).toEqual(result);
+  });
+  it("adds negative values", () => {
+    const a1 = [123456n, 2] as const;
+    const a2 = [-123456n, 4] as const;
+    const result = [122221n, 2] as const;
+    expect(add(a1, a2, result[1])).toEqual(result);
+    expect(add(a2, a1, result[1])).toEqual(result);
+    expect(add(a2, a2, 2)).toEqual([-2469n, 2]);
+  });
+  it("throws if decimals are negative", () => {
+    expect(() => add([1n, -1], [1n, 1], 1)).toThrowError(
+      "negative",
+    );
+    expect(() => add([1n, 1], [1n, -1], 1)).toThrowError(
+      "negative",
+    );
+    expect(() => add([1n, 1], [1n, 1], -1)).toThrowError(
+      "negative",
+    );
+  });
+  it("defaults to use value1 as decimals", () => {
+    expect(add([12345n, 2], [20000n, 4])).toEqual([12545n, 2]);
+  });
+  it("accepts numbers", () => {
+    const a1 = [123456n, 2] as const;
+    const a2 = 1234.56;
+    const result = [246912n, 2] as const;
+    expect(add(a1, a2, result[1])).toEqual(result);
+  });
+  it("accepts bigints", () => {
+    const a1 = [123456n, 2] as const;
+    const a2 = 123456n;
+    const result = [12469056n, 2] as const;
+    expect(add(a1, a2, result[1])).toEqual(result);
+  });
+});
+
+describe("subtract()", () => {
+  it("subtracts positive values", () => {
+    const a1 = [123456n, 2] as const;
+    const a2 = [123456n, 4] as const;
+    expect(subtract(a1, a2, 2)).toEqual([122221n, 2]);
+    expect(subtract(a2, a1, 2)).toEqual([-122221n, 2]);
+  });
+  it("subtracts negative values", () => {
+    const a1 = [123456n, 2] as const;
+    const a2 = [-123456n, 4] as const;
+    expect(subtract(a1, a2, 2)).toEqual([124691n, 2]);
+    expect(subtract(a2, a1, 2)).toEqual([-124691n, 2]);
+    expect(subtract(a2, a2, 2)).toEqual([0n, 2]);
+  });
+  it("throws if decimals are negative", () => {
+    expect(() => subtract([1n, -1], [1n, 1], 1)).toThrowError(
+      "negative",
+    );
+    expect(() => subtract([1n, 1], [1n, -1], 1)).toThrowError(
+      "negative",
+    );
+    expect(() => subtract([1n, 1], [1n, 1], -1)).toThrowError(
+      "negative",
+    );
+  });
+  it("defaults to use value1 as decimals", () => {
+    expect(subtract([12345n, 2], [20000n, 4])).toEqual([12145n, 2]);
+  });
+  it("accepts numbers", () => {
+    const a1 = [123456n, 2] as const;
+    const a2 = 1234.56;
+    expect(subtract(a1, a2, 2)).toEqual([0n, 2]);
+  });
+  it("accepts bigints", () => {
+    const a1 = [123456n, 2] as const;
+    const a2 = 1234n;
+    expect(subtract(a1, a2, 2)).toEqual([56n, 2]);
+  });
+});
+
 describe("multiply()", () => {
   it("multiplies positive values", () => {
     const a1 = [123456n, 2] as const;
@@ -65,6 +167,9 @@ describe("multiply()", () => {
     expect(() => multiply([1n, 1], [1n, 1], -1)).toThrowError(
       "negative",
     );
+  });
+  it("defaults to use value1 as decimals", () => {
+    expect(multiply([12345n, 2], [20000n, 4])).toEqual([24690n, 2]);
   });
   it("accepts numbers", () => {
     const a1 = [123456n, 2] as const;
@@ -108,6 +213,9 @@ describe("divide()", () => {
     expect(() => divide([1n, 1], [0n, 1], 1)).toThrowError(
       "zero",
     );
+  });
+  it("defaults to use value1 as decimals", () => {
+    expect(divide([12345n, 2], [20000n, 4])).toEqual([6173n, 2]);
   });
   it("accepts numbers", () => {
     expect(divide([123456n, 4], 3, 2)).toEqual([412n, 2]);
@@ -165,6 +273,11 @@ describe("from()", () => {
     expect(from(".29387", 18)).toEqual([293870000000000000n, 18]);
     expect(from("-.29387", 18)).toEqual([-293870000000000000n, 18]);
   });
+  it("works with Dnums", () => {
+    expect(from([12345n, 2], 2)).toEqual([12345n, 2]);
+    expect(from([12345n, 2], 4)).toEqual([1234500n, 4]);
+    expect(from([12345n, 2], true)).toEqual([12345n, 2]);
+  });
   it("works with numbers", () => {
     expect(from(12345.29387, 18)).toEqual([12345293870000000000000n, 18]);
     expect(from(-12345.29387, 18)).toEqual([-12345293870000000000000n, 18]);
@@ -178,5 +291,22 @@ describe("from()", () => {
   });
   it("throws with incorrect values", () => {
     expect(() => from("3298.987.32", 18)).toThrowError("Incorrect");
+  });
+});
+
+describe("toJSON()", () => {
+  it("works", () => {
+    expect(toJSON([123456789000000000000n, 18])).toEqual(
+      "[\"123456789000000000000\",18]",
+    );
+  });
+});
+
+describe("fromJSON()", () => {
+  it("works", () => {
+    expect(fromJSON("[\"123456789000000000000\",18]")).toEqual([
+      123456789000000000000n,
+      18,
+    ]);
   });
 });

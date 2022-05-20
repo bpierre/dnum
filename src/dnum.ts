@@ -1,6 +1,11 @@
-import type { Dnum, Decimals, Value } from "./types";
+import type { Decimals, Dnum, Numberish, Value } from "./types";
 
 import { divideAndRound, splitNumber } from "./utils";
+
+export function isDnum(value: unknown): value is Dnum {
+  return Array.isArray(value) && typeof value[0] === "bigint"
+    && typeof value[1] === "number";
+}
 
 // Matches:
 //  - whole numbers (123)
@@ -11,9 +16,13 @@ const NUM_RE = /^-?(?:[0-9]+|(?:[0-9]*(?:\.[0-9]+)))$/;
 // Based on ethers parseFixed():
 // https://github.com/ethers-io/ethers.js/blob/8b62aeff9cce44cbd16ff41f8fc01ebb101f8265/packages/bignumber/src.ts/fixednumber.ts#L70
 export function from(
-  number: string | number | bigint,
-  decimals: number,
+  number: Numberish,
+  decimals: number | true,
 ): Dnum {
+  if (isDnum(number)) {
+    return setDecimals(number, decimals === true ? number[1] : decimals);
+  }
+
   number = String(number);
 
   if (!number.match(NUM_RE)) {
@@ -26,6 +35,10 @@ export function from(
   }
 
   let [whole, fraction] = splitNumber(number);
+
+  if (decimals === true) {
+    decimals = fraction.length;
+  }
 
   // truncate according to decimals
   fraction = fraction.slice(0, decimals);
@@ -55,6 +68,10 @@ export function setDecimals(
   value: Dnum,
   decimals: Decimals,
 ): Dnum {
+  if (value[1] === decimals) {
+    return value;
+  }
+
   if (value[1] < 0 || decimals < 0) {
     throw new Error("Decimals cannot be negative");
   }
@@ -64,4 +81,13 @@ export function setDecimals(
     setValueDecimals(value[0], decimalsDiff),
     decimals,
   ];
+}
+
+export function toJSON([value, decimals]: Dnum) {
+  return JSON.stringify([String(value), decimals]);
+}
+
+export function fromJSON(jsonValue: string): Dnum {
+  const [value, decimals] = JSON.parse(jsonValue);
+  return [BigInt(value), decimals];
 }
