@@ -21,6 +21,7 @@ export default {
   multiply,
   setDecimals,
   sub,
+  subtract,
   toJSON,
 };
 export {
@@ -36,5 +37,6 @@ export {
   multiply,
   setDecimals,
   sub,
+  subtract,
   toJSON,
 };
