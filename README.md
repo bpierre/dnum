@@ -137,6 +137,8 @@ Subtract a value from another one, regardless of their decimals. `decimals` corr
 | `decimals` (optional) | Result decimals (defaults to value1 decimals) | `number`    |
 | returns               | Result                                        | `Dnum`      |
 
+Alias: `sub()`
+
 ### multiply(value1, value2, decimals)
 
 Multiply two values together, regardless of their decimals. `decimals` correspond to the decimals desired in the result.
@@ -147,6 +149,8 @@ Multiply two values together, regardless of their decimals. `decimals` correspon
 | `value2`              | Second value to multiply                      | `Numberish  |
 | `decimals` (optional) | Result decimals (defaults to value1 decimals) | `number`    |
 | returns               | Result                                        | `Dnum`      |
+
+Alias: `mul()`
 
 #### Example
 
@@ -170,6 +174,8 @@ Divide a value by another one, regardless of their decimals. `decimals` correspo
 | `decimals` (optional) | Result decimals (defaults to value1 decimals) | `number`    |
 | returns               | Result value                                  | `Dnum`      |
 
+Alias: `div()`
+
 #### Example
 
 ```ts
@@ -180,18 +186,6 @@ let tokenPriceEth = dnum.divide(tokenPriceUsd, ethPriceUsd, 18); // 0.57 ETH
 
 // tokenPriceEth equals [570000000000000000, 18]
 ```
-
-### setDecimals(value, decimals)
-
-Return a new `Dnum` with a different amount of decimals. The value will reflect this change so that the represented number stays the same.
-
-| Name       | Description                                    | Type     |
-| ---------- | ---------------------------------------------- | -------- |
-| `value`    | The number from which decimals will be changed | `Dnum`   |
-| `decimals` | New number of decimals                         | `number` |
-| returns    | Result value                                   | `Dnum`   |
-
-Note: `from(value, decimals)` can also be used instead.
 
 ### toJSON(value)
 
@@ -222,6 +216,18 @@ let dnum = fromJSON("[\"123456789000000000000\", 18]");
 
 // dnum === [123456789000000000000n, 18]
 ```
+
+### setDecimals(value, decimals)
+
+Return a new `Dnum` with a different amount of decimals. The value will reflect this change so that the represented number stays the same.
+
+| Name       | Description                                    | Type     |
+| ---------- | ---------------------------------------------- | -------- |
+| `value`    | The number from which decimals will be changed | `Dnum`   |
+| `decimals` | New number of decimals                         | `number` |
+| returns    | Result value                                   | `Dnum`   |
+
+Note: `from(value, decimals)` can also be used instead.
 
 ## Tree shaking
 
