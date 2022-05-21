@@ -50,6 +50,7 @@ export function subtract(
     decimals,
   );
 }
+export { subtract as sub };
 
 export function multiply(
   num1: Numberish,
@@ -74,6 +75,7 @@ export function multiply(
     decimals,
   );
 }
+export { multiply as mul };
 
 export function divide(
   num1: Numberish,
@@ -103,3 +105,4 @@ export function divide(
     decimals,
   ];
 }
+export { divide as div };
