@@ -4,17 +4,25 @@
 
 dnum (Decimal Numbers) is a library that allows to operate on large numbers represented as a pair composed of a [`BigInt`](https://developer.mozilla.org/en-US/docs/Glossary/BigInt) for the value, and a [`Number`](https://developer.mozilla.org/en-US/docs/Glossary/Number) for the decimals.
 
-It is not a replacement for libraries such as [decimal.js](https://mikemcl.github.io/decimal.js/) or the native `BigInt` operators. Instead, dnum focuses on a small set of utilities that allow to manipulate numbers represented in this way.
+It is not a replacement for libraries such as [decimal.js](https://mikemcl.github.io/decimal.js/) or the native `BigInt` operators (which it uses internally). Instead, dnum focuses on a small (~1kb) set of utilities focused around the `Dnum` data structure, allowing to safely operate on numbers represented in various decimal precisions.
 
-## Usage
-
-The data structure is a simple array with two entries: a `BigInt` representing the value, and a `Number` representing the decimals. We’ll call it `Dnum`, and this is how it is represented in TypeScript:
+The `Dnum` data structure is a simple array with two entries, or tuple: a `BigInt` for the value, and a `Number` for the decimals. This is how it looks in TypeScript:
 
 ```ts
 type Dnum = [value: bigint, decimals: number];
 ```
 
-dnum can be useful to manipulate different currencies together, so let’s imagine a situation where you have the price of a given [token](https://ethereum.org/en/developers/docs/standards/tokens/erc-20/) token TKN expressed in [ETH](https://ethereum.org/en/developers/docs/intro-to-ether/). You received it as a string to avoid any precision issue:
+## Install
+
+```sh
+npm install --save dnum
+pnpm add dnum
+yarn add dnum
+```
+
+## Example
+
+dnum can be useful to manipulate different currencies together, so let’s imagine a situation where you have the price of a given [token](https://ethereum.org/en/developers/docs/standards/tokens/erc-20/) token TKN expressed in [ETH](https://ethereum.org/en/developers/docs/intro-to-ether/), which you received it as a string to avoid any precision issue:
 
 ```ts
 let tknPriceInEth = "17.30624293209842";
@@ -32,7 +40,14 @@ Finally, you have a certain quantity of TKN to be displayed − as a BigInt:
 let tknQuantity = 1401385000000000000000n; // 1401.385 (with 18 decimals precision)
 ```
 
-You want to display the USD value of `tknQuantity`. Doing it without dnum would require to parse the numbers correctly, convert everything into BigInt with the same decimals precision, do the multiplications, and convert it back into a string to format it − without using Number since you’d lose the precision. dnum can do all of this for you:
+You want to display the USD value of `tknQuantity`, which would normally require to:
+
+- Parse the numbers correctly (without using `parseInt()` to not lose precision).
+- Convert everything into BigInt values with an identical decimals precision.
+- Multiply the numbers and get the result.
+- Convert it into a string to format it − without using `Number` since you’d lose precision.
+
+dnum can do all of this for you:
 
 ```ts
 // No need to convert anything, you can just multiply different formats of decimal numbers:
@@ -44,27 +59,8 @@ let tknQuantityInUsd = dnum.multiply([tknQuantity, 18], tknPriceInUsd);
 dnum.format(tknQuantityInUsd, 2); // $24,310,188.17
 ```
 
-You can run and edit this example [on CodeSandbox](https://codesandbox.io/s/dnum-intro-qljzi6?file=/src/index.ts).
+You can play with this example [on CodeSandbox](https://codesandbox.io/s/dnum-intro-qljzi6?file=/src/index.ts).
 
-## Install
-
-npm:
-
-```sh
-npm install --save dnum
-```
-
-pnpm:
-
-```sh
-pnpm add dnum
-```
-
-yarn:
-
-```sh
-yarn add dnum
-```
 
 ## API
 
