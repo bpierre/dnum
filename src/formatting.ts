@@ -1,6 +1,6 @@
 import type { Dnum } from "./types";
 
-import { divideAndRound } from "./utils";
+import { divideAndRound, powerOfTen } from "./utils";
 
 export function formatNumber(
   value: bigint | number | string,
@@ -50,7 +50,7 @@ export function format(
     return formatNumber(value, digits, { compact });
   }
 
-  const decimalsDivisor = BigInt(10) ** BigInt(decimals);
+  const decimalsDivisor = powerOfTen(decimals);
 
   const whole = String(value / decimalsDivisor);
   let fraction = String(value % decimalsDivisor);
@@ -61,7 +61,7 @@ export function format(
 
   fraction = zeros + divideAndRound(
     BigInt(fraction),
-    BigInt(10) ** BigInt(decimals - digits),
+    powerOfTen(decimals - digits),
   );
 
   if (!trailingZeros) {

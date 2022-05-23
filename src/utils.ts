@@ -14,3 +14,10 @@ export function splitNumber(number: string) {
 
   return [whole, fraction];
 }
+
+export function powerOfTen(zeroes: number) {
+  // This is to avoid using the ** operator which
+  // doesn’t seem to work for BigInt values on CodeSandbox.
+  // See https://github.com/codesandbox/codesandbox-client/issues/6706
+  return BigInt("1" + "0".repeat(zeroes));
+}

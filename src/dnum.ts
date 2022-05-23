@@ -1,6 +1,6 @@
 import type { Decimals, Dnum, Numberish, Value } from "./types";
 
-import { divideAndRound, splitNumber } from "./utils";
+import { divideAndRound, powerOfTen, splitNumber } from "./utils";
 
 export function isDnum(value: unknown): value is Dnum {
   return Array.isArray(value) && typeof value[0] === "bigint"
@@ -16,25 +16,25 @@ const NUM_RE = /^-?(?:[0-9]+|(?:[0-9]*(?:\.[0-9]+)))$/;
 // Based on ethers parseFixed():
 // https://github.com/ethers-io/ethers.js/blob/8b62aeff9cce44cbd16ff41f8fc01ebb101f8265/packages/bignumber/src.ts/fixednumber.ts#L70
 export function from(
-  number: Numberish,
+  value: Numberish,
   decimals: number | true,
 ): Dnum {
-  if (isDnum(number)) {
-    return setDecimals(number, decimals === true ? number[1] : decimals);
+  if (isDnum(value)) {
+    return setDecimals(value, decimals === true ? value[1] : decimals);
   }
 
-  number = String(number);
+  value = String(value);
 
-  if (!number.match(NUM_RE)) {
-    throw new Error(`Incorrect number: ${number}`);
+  if (!value.match(NUM_RE)) {
+    throw new Error(`Incorrect number: ${value}`);
   }
 
-  const negative = number.startsWith("-");
+  const negative = value.startsWith("-");
   if (negative) {
-    number = number.slice(1);
+    value = value.slice(1);
   }
 
-  let [whole, fraction] = splitNumber(number);
+  let [whole, fraction] = splitNumber(value);
 
   if (decimals === true) {
     decimals = fraction.length;
@@ -46,10 +46,11 @@ export function from(
   // pad fraction with trailing zeros
   fraction = fraction + "0".repeat(decimals - fraction.length);
 
-  const value = BigInt(whole) * BigInt(10) ** BigInt(decimals)
-    + BigInt(fraction);
+  const result = (
+    BigInt(whole) * powerOfTen(decimals) + BigInt(fraction)
+  ) * BigInt(negative ? -1 : 1);
 
-  return [value * BigInt(negative ? -1 : 1), decimals];
+  return [result, decimals];
 }
 
 export function setValueDecimals(
@@ -57,10 +58,10 @@ export function setValueDecimals(
   decimalsDiff: Decimals,
 ): Value {
   if (decimalsDiff > 0) {
-    return (value * BigInt(10) ** BigInt(decimalsDiff));
+    return (value * powerOfTen(decimalsDiff));
   }
   if (decimalsDiff < 0) {
-    return divideAndRound(value, BigInt(10) ** BigInt(-decimalsDiff));
+    return divideAndRound(value, powerOfTen(-decimalsDiff));
   }
   return value;
 }
