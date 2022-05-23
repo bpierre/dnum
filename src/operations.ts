@@ -11,7 +11,7 @@ export function add(
   const [value1, decimals1] = from(num1, true);
   const [value2, decimals2] = from(num2, true);
 
-  decimals ??= decimals1;
+  if (decimals === undefined) { decimals = decimals1; }
 
   if (decimals1 < 0 || decimals2 < 0 || decimals < 0) {
     throw new Error("Dnum: decimals cannot be negative");
@@ -35,7 +35,7 @@ export function subtract(
   const [value1, decimals1] = from(num1, true);
   const [value2, decimals2] = from(num2, true);
 
-  decimals ??= decimals1;
+  if (decimals === undefined) { decimals = decimals1; }
 
   if (decimals1 < 0 || decimals2 < 0 || decimals < 0) {
     throw new Error("Dnum: decimals cannot be negative");
@@ -59,7 +59,7 @@ export function multiply(
   const [value1, decimals1] = from(num1, true);
   const [value2, decimals2] = from(num2, true);
 
-  decimals ??= decimals1;
+  if (decimals === undefined) { decimals = decimals1; }
 
   if (decimals1 < 0 || decimals2 < 0 || decimals < 0) {
     throw new Error("Dnum: decimals cannot be negative");
@@ -83,7 +83,7 @@ export function divide(
   const [value1, decimals1] = from(num1, true);
   const [value2, decimals2] = from(num2, true);
 
-  decimals ??= decimals1;
+  if (decimals === undefined) { decimals = decimals1; }
 
   if (decimals1 < 0 || decimals2 < 0 || decimals < 0) {
     throw new Error("Dnum: decimals cannot be negative");
