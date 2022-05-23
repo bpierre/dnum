@@ -128,7 +128,7 @@ Adds two values together, regardless of their decimals. `decimals` correspond to
 | Name                  | Description                                   | Type        |
 | --------------------- | --------------------------------------------- | ----------- |
 | `value1`              | First value to add                            | `Numberish` |
-| `value2`              | Second value to add                           | `Numberish  |
+| `value2`              | Second value to add                           | `Numberish`  |
 | `decimals` (optional) | Result decimals (defaults to value1 decimals) | `number`    |
 | returns               | Result                                        | `Dnum`      |
 
@@ -139,7 +139,7 @@ Subtract a value from another one, regardless of their decimals. `decimals` corr
 | Name                  | Description                                   | Type        |
 | --------------------- | --------------------------------------------- | ----------- |
 | `value1`              | First value to add                            | `Numberish` |
-| `value2`              | Second value to add                           | `Numberish  |
+| `value2`              | Second value to add                           | `Numberish`  |
 | `decimals` (optional) | Result decimals (defaults to value1 decimals) | `number`    |
 | returns               | Result                                        | `Dnum`      |
 
@@ -152,7 +152,7 @@ Multiply two values together, regardless of their decimals. `decimals` correspon
 | Name                  | Description                                   | Type        |
 | --------------------- | --------------------------------------------- | ----------- |
 | `value1`              | First value to multiply                       | `Numberish` |
-| `value2`              | Second value to multiply                      | `Numberish  |
+| `value2`              | Second value to multiply                      | `Numberish`  |
 | `decimals` (optional) | Result decimals (defaults to value1 decimals) | `number`    |
 | returns               | Result                                        | `Dnum`      |
 
@@ -176,7 +176,7 @@ Divide a value by another one, regardless of their decimals. `decimals` correspo
 | Name                  | Description                                   | Type        |
 | --------------------- | --------------------------------------------- | ----------- |
 | `value1`              | Dividend                                      | `Numberish` |
-| `value2`              | Divisor                                       | `Numberish  |
+| `value2`              | Divisor                                       | `Numberish`  |
 | `decimals` (optional) | Result decimals (defaults to value1 decimals) | `number`    |
 | returns               | Result value                                  | `Dnum`      |
 
