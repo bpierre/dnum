@@ -14,27 +14,37 @@ The data structure is a simple array with two entries: a `BigInt` representing t
 type Dnum = [value: bigint, decimals: number];
 ```
 
+dnum can be useful to manipulate different currencies together, so let’s imagine a situation where you have the price of a given [token](https://ethereum.org/en/developers/docs/standards/tokens/erc-20/) token TKN expressed in [ETH](https://ethereum.org/en/developers/docs/intro-to-ether/). You received it as a string to avoid any precision issue:
+
 ```ts
-import dnum from "dnum";
-
-// Create a Big Integer With Decimals from strings
-let amount1 = dnum.from("17.30624", 18); // [17306240000000000000n, 18]
-
-// Or numbers
-let amount2 = dnum.from(3.4, 2); // [340, 2]
-
-// You don’t need dnum.from() if you already know the value and decimals
-let amount3 = [140138500000n, 8]; // represents 1401.385 with 8 decimals precision
-
-// Format with 2 digits
-dnum.format(amount1, 2); // "17.31"
-
-// Format with 4 digits while keeping the trailing zeros
-dnum.format(amount2, 4, { trailingZeros: true }); // "3.4000"
-
-// Compact formatting
-dnum.format(amount3, 2, { compact: true }); // "1.4K"
+let tknPriceInEth = "17.30624293209842";
 ```
+
+And you have the price of ETH in USD, as a number this time:
+
+```ts
+let ethPriceInUsd = 1002.37;
+```
+
+Finally, you have a certain quantity of TKN to be displayed − as a BigInt:
+
+```ts
+let tknQuantity = 1401385000000000000000n; // 1401.385 (with 18 decimals precision)
+```
+
+You want to display the USD value of `tknQuantity`. Doing it without dnum would require to parse the numbers correctly, convert everything into BigInt with the same decimals precision, do the multiplications, and convert it back into a string to format it − without using Number since you’d lose the precision. dnum can do all of this for you:
+
+```ts
+// No need to convert anything, you can just multiply different formats of decimal numbers:
+let tknPriceInUsd = dnum.multiply(tknPriceInEth, ethPriceInUsd);
+
+// A Dnum is just a two entries array (or tuple): [value: bigint, decimals: number]
+let tknQuantityInUsd = dnum.multiply([tknQuantity, 18], tknPriceInUsd);
+
+dnum.format(tknQuantityInUsd, 2); // $24,310,188.17
+```
+
+You can run and edit this example [on CodeSandbox](https://codesandbox.io/s/dnum-intro-qljzi6?file=/src/index.ts).
 
 ## Install
 
