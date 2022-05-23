@@ -34,15 +34,15 @@ And you have the price of ETH in USD, as a number this time:
 let ethPriceInUsd = 1002.37;
 ```
 
-Finally, you have a certain quantity of TKN to be displayed − as a BigInt:
+Finally, you have a certain quantity of TKN to be displayed, as a BigInt:
 
 ```ts
-let tknQuantity = 1401385000000000000000n; // 1401.385 (with 18 decimals precision)
+let tknQuantity = 1401385000000000000000n; // 1401.385 with 18 decimals precision
 ```
 
 You want to display the USD value of `tknQuantity`, which would normally require to:
 
-- Parse the numbers correctly (without using `parseInt()` to not lose precision).
+- Parse the numbers correctly (without using `parseInt()` / `parseFloat()` to avoid precision loss).
 - Convert everything into BigInt values with an identical decimals precision.
 - Multiply the numbers and get the result.
 - Convert it into a string to format it − without using `Number` since you’d lose precision.
