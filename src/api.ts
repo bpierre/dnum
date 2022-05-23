@@ -3,23 +3,23 @@ import "./types";
 
 import { from, fromJSON, isDnum, setDecimals, toJSON } from "./dnum";
 import { format, formatNumber } from "./formatting";
-import { add, div, divide, mul, multiply, sub, subtract } from "./operations";
+import { add, divide, multiply, subtract } from "./operations";
 
 export type { Decimals, Dnum, Value } from "./types";
 
 export {
   add,
-  div,
   divide,
+  divide as div,
   format,
   formatNumber,
   from,
   fromJSON,
   isDnum,
-  mul,
   multiply,
+  multiply as mul,
   setDecimals,
-  sub,
   subtract,
+  subtract as sub,
   toJSON,
 };

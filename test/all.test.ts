@@ -1,14 +1,18 @@
 import { describe, expect, it } from "vitest";
 import {
+  add,
+  divide,
+  format,
+  formatNumber,
   from,
   fromJSON,
   isDnum,
+  multiply,
   setDecimals,
-  setValueDecimals,
+  subtract,
   toJSON,
-} from "../src/dnum";
-import { format, formatNumber } from "../src/formatting";
-import { add, divide, multiply, subtract } from "../src/operations";
+} from "../src";
+import { setValueDecimals } from "../src/dnum";
 import { divideAndRound } from "../src/utils";
 
 describe("isDnum()", () => {

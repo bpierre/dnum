@@ -46,9 +46,10 @@ export function from(
   // pad fraction with trailing zeros
   fraction = fraction + "0".repeat(decimals - fraction.length);
 
-  const value = BigInt(whole) * 10n ** BigInt(decimals) + BigInt(fraction);
+  const value = BigInt(whole) * BigInt(10) ** BigInt(decimals)
+    + BigInt(fraction);
 
-  return [value * (negative ? -1n : 1n), decimals];
+  return [value * BigInt(negative ? -1 : 1), decimals];
 }
 
 export function setValueDecimals(
@@ -56,10 +57,10 @@ export function setValueDecimals(
   decimalsDiff: Decimals,
 ): Value {
   if (decimalsDiff > 0) {
-    return (value * 10n ** BigInt(decimalsDiff));
+    return (value * BigInt(10) ** BigInt(decimalsDiff));
   }
   if (decimalsDiff < 0) {
-    return divideAndRound(value, 10n ** BigInt(-decimalsDiff));
+    return divideAndRound(value, BigInt(10) ** BigInt(-decimalsDiff));
   }
   return value;
 }

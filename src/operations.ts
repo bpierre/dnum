@@ -50,7 +50,6 @@ export function subtract(
     decimals,
   );
 }
-export { subtract as sub };
 
 export function multiply(
   num1: Numberish,
@@ -75,7 +74,6 @@ export function multiply(
     decimals,
   );
 }
-export { multiply as mul };
 
 export function divide(
   num1: Numberish,
@@ -90,7 +88,7 @@ export function divide(
   if (decimals1 < 0 || decimals2 < 0 || decimals < 0) {
     throw new Error("Dnum: decimals cannot be negative");
   }
-  if (value2 === 0n) {
+  if (value2 === BigInt(0)) {
     throw new Error("Division by zero");
   }
 
@@ -105,4 +103,3 @@ export function divide(
     decimals,
   ];
 }
-export { divide as div };

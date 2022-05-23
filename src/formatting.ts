@@ -50,7 +50,7 @@ export function format(
     return formatNumber(value, digits, { compact });
   }
 
-  const decimalsDivisor = 10n ** BigInt(decimals);
+  const decimalsDivisor = BigInt(10) ** BigInt(decimals);
 
   const whole = String(value / decimalsDivisor);
   let fraction = String(value % decimalsDivisor);
@@ -61,7 +61,7 @@ export function format(
 
   fraction = zeros + divideAndRound(
     BigInt(fraction),
-    10n ** BigInt(decimals - digits),
+    BigInt(10) ** BigInt(decimals - digits),
   );
 
   if (!trailingZeros) {
@@ -69,7 +69,9 @@ export function format(
   }
 
   return formatNumber(
-    fraction === "" || BigInt(fraction) === 0n ? whole : `${whole}.${fraction}`,
+    fraction === "" || BigInt(fraction) === BigInt(0)
+      ? whole
+      : `${whole}.${fraction}`,
     digits,
     { compact, trailingZeros },
   );
