@@ -246,6 +246,12 @@ describe("format()", () => {
     expect(format([123400n, 2], 2)).toBe("1,234");
     expect(format([-123400n, 2], 2)).toBe("-1,234");
   });
+  it("works with greater digits than decimals", () => {
+    expect(format([123400n, 2], 3)).toBe("1,234");
+  });
+  it("works with negative values and smaller digits than decimals", () => {
+    expect(format([-123400n, 4], 2)).toBe("-12.34");
+  });
 });
 
 describe("formatNumber()", () => {

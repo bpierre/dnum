@@ -3,8 +3,11 @@ import type { Decimals, Dnum, Numberish, Value } from "./types";
 import { divideAndRound, powerOfTen, splitNumber } from "./utils";
 
 export function isDnum(value: unknown): value is Dnum {
-  return Array.isArray(value) && typeof value[0] === "bigint"
-    && typeof value[1] === "number";
+  return (
+    Array.isArray(value)
+    && typeof value[0] === "bigint"
+    && typeof value[1] === "number"
+  );
 }
 
 // Matches:

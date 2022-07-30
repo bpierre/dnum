@@ -14,6 +14,7 @@ export function formatNumber(
   } = {},
 ): string {
   digits = Number(digits);
+
   return (
     new Intl.NumberFormat("en-US", {
       minimumFractionDigits: trailingZeros ? digits : 0,
@@ -61,11 +62,13 @@ export function format(
 
   fraction = zeros + divideAndRound(
     BigInt(fraction),
-    powerOfTen(decimals - digits),
+    powerOfTen(Math.max(0, decimals - digits)),
   );
 
   if (!trailingZeros) {
-    fraction = fraction.replace(/0+$/, "");
+    fraction = fraction
+      .replace(/0+$/, "")
+      .replace(/^-/, "");
   }
 
   return formatNumber(
