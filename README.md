@@ -1,4 +1,4 @@
-# dnum
+<img width="1167" alt="dnum" src="https://user-images.githubusercontent.com/36158/185436996-6178ce8f-8b86-4ac2-b655-12f776743e13.png">
 
 [![npm version](https://badgen.net/npm/v/dnum)](https://www.npmjs.com/package/dnum) [![bundle size](https://img.shields.io/bundlephobia/minzip/dnum)](https://bundlephobia.com/result?p=dnum) [![License](https://badgen.net/github/license/bpierre/dnum)](https://github.com/bpierre/dnum/blob/main/LICENSE)
 
