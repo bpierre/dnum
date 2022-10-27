@@ -61,7 +61,6 @@ dnum.format(tknQuantityInUsd, 2); // $24,310,188.17
 
 You can play with this example [on CodeSandbox](https://codesandbox.io/s/dnum-intro-qljzi6?file=/src/index.ts).
 
-
 ## API
 
 ### Types
@@ -128,7 +127,7 @@ Adds two values together, regardless of their decimals. `decimals` correspond to
 | Name                  | Description                                   | Type        |
 | --------------------- | --------------------------------------------- | ----------- |
 | `value1`              | First value to add                            | `Numberish` |
-| `value2`              | Second value to add                           | `Numberish`  |
+| `value2`              | Second value to add                           | `Numberish` |
 | `decimals` (optional) | Result decimals (defaults to value1 decimals) | `number`    |
 | returns               | Result                                        | `Dnum`      |
 
@@ -139,7 +138,7 @@ Subtract a value from another one, regardless of their decimals. `decimals` corr
 | Name                  | Description                                   | Type        |
 | --------------------- | --------------------------------------------- | ----------- |
 | `value1`              | First value to add                            | `Numberish` |
-| `value2`              | Second value to add                           | `Numberish`  |
+| `value2`              | Second value to add                           | `Numberish` |
 | `decimals` (optional) | Result decimals (defaults to value1 decimals) | `number`    |
 | returns               | Result                                        | `Dnum`      |
 
@@ -152,7 +151,7 @@ Multiply two values together, regardless of their decimals. `decimals` correspon
 | Name                  | Description                                   | Type        |
 | --------------------- | --------------------------------------------- | ----------- |
 | `value1`              | First value to multiply                       | `Numberish` |
-| `value2`              | Second value to multiply                      | `Numberish`  |
+| `value2`              | Second value to multiply                      | `Numberish` |
 | `decimals` (optional) | Result decimals (defaults to value1 decimals) | `number`    |
 | returns               | Result                                        | `Dnum`      |
 
@@ -176,7 +175,7 @@ Divide a value by another one, regardless of their decimals. `decimals` correspo
 | Name                  | Description                                   | Type        |
 | --------------------- | --------------------------------------------- | ----------- |
 | `value1`              | Dividend                                      | `Numberish` |
-| `value2`              | Divisor                                       | `Numberish`  |
+| `value2`              | Divisor                                       | `Numberish` |
 | `decimals` (optional) | Result decimals (defaults to value1 decimals) | `number`    |
 | returns               | Result value                                  | `Dnum`      |
 
@@ -193,6 +192,23 @@ let tokenPriceEth = dnum.divide(tokenPriceUsd, ethPriceUsd, 18); // 0.57 ETH
 // tokenPriceEth equals [570000000000000000, 18]
 ```
 
+### toNumber(value, options)
+
+Converts the `Dnum` data structure into a `Number`. [This will result in a loss of precision](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number#number_encoding) depending on how large the number is.
+
+| Name     | Description                           | Type     |
+| -------- | ------------------------------------- | -------- |
+| `value`  | The number to convert into a `Number` | `Dnum`   |
+| `digits` | The number of digits to round to.     | `Number` |
+| returns  | Result value                          | `Number` |
+
+```ts
+let value = [123456789000000000000000n, 18];
+
+toNumber(value); // 123456.789
+toNumber(value, 1); // 123456.8
+```
+
 ### toJSON(value)
 
 Converts the `Dnum` data structure into a JSON-compatible string. This function is provided because `JSON.stringify()` doesn’t work with `BigInt` data types.
@@ -205,7 +221,7 @@ Converts the `Dnum` data structure into a JSON-compatible string. This function 
 ```ts
 let json = toJSON([123456789000000000000n, 18]);
 
-// json === "[\"123456789000000000000\", 18]";
+// json == "[\"123456789000000000000\", 18]";
 ```
 
 ### fromJSON(value)
@@ -220,7 +236,7 @@ Converts the string resulting from `toJSON()` back into a `Dnum`.
 ```ts
 let dnum = fromJSON("[\"123456789000000000000\", 18]");
 
-// dnum === [123456789000000000000n, 18]
+// dnum == [123456789000000000000n, 18]
 ```
 
 ### setDecimals(value, decimals)

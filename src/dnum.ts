@@ -96,3 +96,56 @@ export function fromJSON(jsonValue: string): Dnum {
   const [value, decimals] = JSON.parse(jsonValue);
   return [BigInt(value), decimals];
 }
+
+export function toParts(
+  dnum: Dnum,
+  optionsOrDigits:
+    | {
+      digits?: number; // defaults to decimals
+      trailingZeros?: boolean;
+    }
+    | number = {},
+): [whole: bigint, fraction: string | null] {
+  const [value, decimals] = dnum;
+
+  // options.digits can also be passed directly as the third argument
+  if (typeof optionsOrDigits === "number") {
+    optionsOrDigits = { digits: optionsOrDigits };
+  }
+
+  const {
+    digits = decimals,
+    trailingZeros = false,
+  } = optionsOrDigits;
+
+  if (decimals === 0) {
+    return [value, null];
+  }
+
+  const decimalsDivisor = powerOfTen(decimals);
+
+  const whole = value / decimalsDivisor;
+  let fraction = String(value % decimalsDivisor).replace(/^\-/, "");
+
+  const zeros = "0".repeat(
+    Math.max(0, String(decimalsDivisor).length - fraction.length - 1),
+  );
+
+  fraction = zeros + divideAndRound(
+    BigInt(fraction),
+    powerOfTen(Math.max(0, decimals - digits)),
+  );
+
+  if (trailingZeros) {
+    fraction = fraction.padEnd(digits, "0");
+  }
+
+  return [
+    whole,
+    fraction === "" || BigInt(fraction) === BigInt(0) ? null : fraction,
+  ];
+}
+
+export function toNumber(value: Dnum, digits?: number) {
+  return Number(toParts(value, { digits }).join("."));
+}

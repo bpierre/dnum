@@ -3,7 +3,6 @@ import {
   add,
   divide,
   format,
-  formatNumber,
   from,
   fromJSON,
   isDnum,
@@ -11,6 +10,8 @@ import {
   setDecimals,
   subtract,
   toJSON,
+  toNumber,
+  toParts,
 } from "../src";
 import { setValueDecimals } from "../src/dnum";
 import { divideAndRound } from "../src/utils";
@@ -55,6 +56,9 @@ describe("setDecimals()", () => {
   });
   it("leaves decimals unchanged", () => {
     expect(setDecimals([123456n, 4], 4)).toEqual([123456n, 4]);
+  });
+  it("removes the decimals", () => {
+    expect(setDecimals([123456n, 4], 0)).toEqual([12n, 0]);
   });
   it("throws if decimals are negative", () => {
     expect(() => setDecimals([123456n, -4], 4)).toThrowError("negative");
@@ -245,6 +249,7 @@ describe("format()", () => {
     expect(format([123456n, 0], 0)).toBe("123,456");
     expect(format([123400n, 2], 2)).toBe("1,234");
     expect(format([-123400n, 2], 2)).toBe("-1,234");
+    expect(format([-12342938798723n, 10], 6)).toBe("-1,234.293880");
   });
   it("works with greater digits than decimals", () => {
     expect(format([123400n, 2], 3)).toBe("1,234");
@@ -252,24 +257,115 @@ describe("format()", () => {
   it("works with negative values and smaller digits than decimals", () => {
     expect(format([-123400n, 4], 2)).toBe("-12.34");
   });
+  it("works with very large numbers", () => {
+    expect(format(
+      [-123400932870192873098321798321798731298713298n, 4],
+      2,
+    )).toBe(
+      "-12,340,093,287,019,287,309,832,179,832,179,873,129,871.33",
+    );
+    expect(format(
+      [-123400932870192873098321798321798731298713298n, 4],
+      { digits: 8, trailingZeros: true },
+    )).toBe(
+      "-12,340,093,287,019,287,309,832,179,832,179,873,129,871.32980000",
+    );
+    expect(format(
+      [-123400932870192873098321798321798731298713298n, 4],
+      { digits: 8, trailingZeros: false },
+    )).toBe(
+      "-12,340,093,287,019,287,309,832,179,832,179,873,129,871.3298",
+    );
+  });
 });
 
-describe("formatNumber()", () => {
-  it("works with numbers", () => {
-    expect(formatNumber(123456n, 2)).toBe("123,456");
+describe("format()", () => {
+  it("works", () => {
+    expect(format([123456n, 2], 2)).toBe("1,234.56");
+    expect(format([123456n, 2], 1)).toBe("1,234.6");
+    expect(format([123456n, 0], 0)).toBe("123,456");
+    expect(format([123400n, 2], 2)).toBe("1,234");
+    expect(format([-123400n, 2], 2)).toBe("-1,234");
+    expect(format([-12342938798723n, 10], 6)).toBe("-1,234.293880");
   });
-  it("works with bigints", () => {
-    expect(formatNumber(123456.789, 2)).toBe("123,456.79");
+  it("works with greater digits than decimals", () => {
+    expect(format([123400n, 2], 3)).toBe("1,234");
   });
-  it("works with strings", () => {
-    expect(formatNumber("123456.789999", 2)).toBe("123,456.79");
+  it("works with negative values and smaller digits than decimals", () => {
+    expect(format([-123400n, 4], 2)).toBe("-12.34");
   });
-  it("formats in a compact way", () => {
-    expect(formatNumber(123_456_789.888, 2, { compact: true })).toBe("123.46M");
+  it("works with very large numbers", () => {
+    expect(format(
+      [-123400932870192873098321798321798731298713298n, 4],
+      2,
+    )).toBe(
+      "-12,340,093,287,019,287,309,832,179,832,179,873,129,871.33",
+    );
+    expect(format(
+      [-123400932870192873098321798321798731298713298n, 4],
+      { digits: 8, trailingZeros: true },
+    )).toBe(
+      "-12,340,093,287,019,287,309,832,179,832,179,873,129,871.32980000",
+    );
+    expect(format(
+      [-123400932870192873098321798321798731298713298n, 4],
+      { digits: 8, trailingZeros: false },
+    )).toBe(
+      "-12,340,093,287,019,287,309,832,179,832,179,873,129,871.3298",
+    );
   });
-  it("keeps the trailing zeros", () => {
-    expect(formatNumber(123_456_789, 2, { trailingZeros: true })).toBe(
-      "123,456,789.00",
+});
+
+describe("toParts()", () => {
+  it("works", () => {
+    expect(toParts([123456n, 2], 2)).toEqual([1234n, "56"]);
+    expect(toParts([123456n, 2], 1)).toEqual([1234n, "6"]);
+    expect(toParts([123456n, 0], 0)).toEqual([123456n, null]);
+    expect(toParts([123400n, 2], 2)).toEqual([1234n, null]);
+    expect(toParts([-123400n, 2], 2)).toEqual([-1234n, null]);
+  });
+  it("works with greater digits than decimals", () => {
+    expect(toParts([123400n, 2], 3)).toEqual([1234n, null]);
+  });
+  it("works with negative values and smaller digits than decimals", () => {
+    expect(toParts([-123400n, 4], 2)).toEqual([-12n, "34"]);
+  });
+  it("works with very large numbers", () => {
+    expect(toParts(
+      [-123400932870192873098321798321798731298713298n, 4],
+      { digits: 2, trailingZeros: true },
+    )).toEqual(
+      [-12340093287019287309832179832179873129871n, "33"],
+    );
+    expect(toParts(
+      [-123400932870192873098321798321798731298713298n, 4],
+      { digits: 8, trailingZeros: true },
+    )).toEqual(
+      [-12340093287019287309832179832179873129871n, "32980000"],
+    );
+  });
+});
+
+describe("toNumber()", () => {
+  it("works", () => {
+    expect(toNumber([123456n, 2], 2)).toBe(1234.56);
+    expect(toNumber([123456n, 2], 1)).toBe(1234.6);
+    expect(toNumber([123456n, 0], 0)).toBe(123456);
+    expect(toNumber([123400n, 2], 2)).toBe(1234);
+    expect(toNumber([-123400n, 2], 2)).toBe(-1234);
+  });
+  it("works with greater digits than decimals", () => {
+    expect(toNumber([123400n, 2], 3)).toBe(1234);
+  });
+  it("works with negative values and smaller digits than decimals", () => {
+    expect(toNumber([-123400n, 4], 2)).toBe(-12.34);
+  });
+  it("works with very large numbers", () => {
+    expect(toNumber(
+      [-123400932870192873098321798321798731298713298n, 4],
+      { digits: 2, trailingZeros: true },
+    )).toBe(
+      -12340093287019287309832179832179873129871.33,
     );
   });
 });

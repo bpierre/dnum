@@ -1,8 +1,16 @@
 // forces vite-plugin-dts to generate types.d.ts
 import "./types";
 
-import { from, fromJSON, isDnum, setDecimals, toJSON } from "./dnum";
-import { format, formatNumber } from "./formatting";
+import {
+  from,
+  fromJSON,
+  isDnum,
+  setDecimals,
+  toJSON,
+  toNumber,
+  toParts,
+} from "./dnum";
+import { format } from "./formatting";
 import { add, divide, multiply, subtract } from "./operations";
 
 export type { Decimals, Dnum, Value } from "./types";
@@ -12,7 +20,6 @@ export {
   divide,
   divide as div,
   format,
-  formatNumber,
   from,
   fromJSON,
   isDnum,
@@ -22,4 +29,6 @@ export {
   subtract,
   subtract as sub,
   toJSON,
+  toNumber,
+  toParts,
 };

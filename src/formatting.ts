@@ -1,28 +1,6 @@
 import type { Dnum } from "./types";
 
-import { divideAndRound, powerOfTen } from "./utils";
-
-export function formatNumber(
-  value: bigint | number | string,
-  digits: number = 2,
-  {
-    trailingZeros = false,
-    compact = false,
-  }: {
-    compact?: boolean;
-    trailingZeros?: boolean;
-  } = {},
-): string {
-  digits = Number(digits);
-
-  return (
-    new Intl.NumberFormat("en-US", {
-      minimumFractionDigits: trailingZeros ? digits : 0,
-      maximumFractionDigits: digits,
-      notation: compact ? "compact" : "standard",
-    }).format as (value: bigint | number | string) => string
-  )(String(value));
-}
+import { toParts } from "./dnum";
 
 export function format(
   dnum: Dnum,
@@ -34,48 +12,22 @@ export function format(
     }
     | number = {},
 ): string {
-  const [value, decimals] = dnum;
+  const options = typeof optionsOrDigits === "number"
+    ? { digits: optionsOrDigits }
+    : optionsOrDigits;
 
-  // options.digits can also be passed directly as the third argument
-  if (typeof optionsOrDigits === "number") {
-    optionsOrDigits = { digits: optionsOrDigits };
-  }
+  const [whole, fraction] = toParts(dnum, {
+    digits: options.digits,
+    trailingZeros: options.trailingZeros,
+  });
 
-  const {
-    compact = false,
-    digits = decimals,
-    trailingZeros = false,
-  } = optionsOrDigits;
+  const wholeString = whole.toLocaleString("en-US", {
+    notation: options.compact ? "compact" : "standard",
+  });
 
-  if (decimals === 0) {
-    return formatNumber(value, digits, { compact });
-  }
-
-  const decimalsDivisor = powerOfTen(decimals);
-
-  const whole = String(value / decimalsDivisor);
-  let fraction = String(value % decimalsDivisor);
-
-  const zeros = "0".repeat(
-    Math.max(0, String(decimalsDivisor).length - fraction.length - 1),
-  );
-
-  fraction = zeros + divideAndRound(
-    BigInt(fraction),
-    powerOfTen(Math.max(0, decimals - digits)),
-  );
-
-  if (!trailingZeros) {
-    fraction = fraction
-      .replace(/0+$/, "")
-      .replace(/^-/, "");
-  }
-
-  return formatNumber(
-    fraction === "" || BigInt(fraction) === BigInt(0)
-      ? whole
-      : `${whole}.${fraction}`,
-    digits,
-    { compact, trailingZeros },
-  );
+  return fraction === null
+      // check if the compact notation has been applied
+      || !/\d/.test(wholeString.at(-1) ?? "")
+    ? wholeString
+    : `${wholeString}.${fraction}`;
 }
