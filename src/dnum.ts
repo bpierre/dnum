@@ -138,6 +138,8 @@ export function toParts(
 
   if (trailingZeros) {
     fraction = fraction.padEnd(digits, "0");
+  } else {
+    fraction = fraction.replace(/0+$/, "");
   }
 
   return [

@@ -249,7 +249,9 @@ describe("format()", () => {
     expect(format([123456n, 0], 0)).toBe("123,456");
     expect(format([123400n, 2], 2)).toBe("1,234");
     expect(format([-123400n, 2], 2)).toBe("-1,234");
-    expect(format([-12342938798723n, 10], 6)).toBe("-1,234.293880");
+    expect(format([-12342938798723n, 10], 6)).toBe("-1,234.29388");
+    expect(format([-12342938798723n, 10], { digits: 6, trailingZeros: true }))
+      .toBe("-1,234.293880");
   });
   it("works with greater digits than decimals", () => {
     expect(format([123400n, 2], 3)).toBe("1,234");
@@ -276,42 +278,11 @@ describe("format()", () => {
     )).toBe(
       "-12,340,093,287,019,287,309,832,179,832,179,873,129,871.3298",
     );
-  });
-});
-
-describe("format()", () => {
-  it("works", () => {
-    expect(format([123456n, 2], 2)).toBe("1,234.56");
-    expect(format([123456n, 2], 1)).toBe("1,234.6");
-    expect(format([123456n, 0], 0)).toBe("123,456");
-    expect(format([123400n, 2], 2)).toBe("1,234");
-    expect(format([-123400n, 2], 2)).toBe("-1,234");
-    expect(format([-12342938798723n, 10], 6)).toBe("-1,234.293880");
-  });
-  it("works with greater digits than decimals", () => {
-    expect(format([123400n, 2], 3)).toBe("1,234");
-  });
-  it("works with negative values and smaller digits than decimals", () => {
-    expect(format([-123400n, 4], 2)).toBe("-12.34");
-  });
-  it("works with very large numbers", () => {
     expect(format(
-      [-123400932870192873098321798321798731298713298n, 4],
-      2,
-    )).toBe(
-      "-12,340,093,287,019,287,309,832,179,832,179,873,129,871.33",
-    );
-    expect(format(
-      [-123400932870192873098321798321798731298713298n, 4],
-      { digits: 8, trailingZeros: true },
-    )).toBe(
-      "-12,340,093,287,019,287,309,832,179,832,179,873,129,871.32980000",
-    );
-    expect(format(
-      [-123400932870192873098321798321798731298713298n, 4],
+      divide(from(1, 18), from(100_000, 18)),
       { digits: 8, trailingZeros: false },
     )).toBe(
-      "-12,340,093,287,019,287,309,832,179,832,179,873,129,871.3298",
+      "0.00001",
     );
   });
 });
@@ -344,6 +315,14 @@ describe("toParts()", () => {
       [-12340093287019287309832179832179873129871n, "32980000"],
     );
   });
+  it("handles trailing zeros", () => {
+    expect(toParts(
+      divide(from(1, 18), from(100_000, 18)),
+      { digits: 8, trailingZeros: false },
+    )).toEqual(
+      [0n, "00001"],
+    );
+  });
 });
 
 describe("toNumber()", () => {
@@ -363,7 +342,7 @@ describe("toNumber()", () => {
   it("works with very large numbers", () => {
     expect(toNumber(
       [-123400932870192873098321798321798731298713298n, 4],
-      { digits: 2, trailingZeros: true },
+      2,
     )).toBe(
       -12340093287019287309832179832179873129871.33,
     );
