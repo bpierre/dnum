@@ -13,7 +13,8 @@ export function add(
 
   if (decimals === undefined) { decimals = decimals1; }
 
-  if (decimals1 < 0 || decimals2 < 0 || decimals < 0) {
+  // decimals1 and decimals2 being positive is already checked by from()
+  if (decimals < 0) {
     throw new Error("Dnum: decimals cannot be negative");
   }
 
@@ -37,7 +38,8 @@ export function subtract(
 
   if (decimals === undefined) { decimals = decimals1; }
 
-  if (decimals1 < 0 || decimals2 < 0 || decimals < 0) {
+  // decimals1 and decimals2 being positive is already checked by from()
+  if (decimals < 0) {
     throw new Error("Dnum: decimals cannot be negative");
   }
 
@@ -61,7 +63,8 @@ export function multiply(
 
   if (decimals === undefined) { decimals = decimals1; }
 
-  if (decimals1 < 0 || decimals2 < 0 || decimals < 0) {
+  // decimals1 and decimals2 being positive is already checked by from()
+  if (decimals < 0) {
     throw new Error("Dnum: decimals cannot be negative");
   }
 
@@ -85,7 +88,8 @@ export function divide(
 
   if (decimals === undefined) { decimals = decimals1; }
 
-  if (decimals1 < 0 || decimals2 < 0 || decimals < 0) {
+  // decimals1 and decimals2 being positive is already checked by from()
+  if (decimals < 0) {
     throw new Error("Dnum: decimals cannot be negative");
   }
   if (value2 === BigInt(0)) {
