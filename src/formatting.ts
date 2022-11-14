@@ -27,7 +27,7 @@ export function format(
 
   return fraction === null
       // check if the compact notation has been applied
-      || !/\d/.test(wholeString.at(-1) ?? "")
+      || !/\d/.test(wholeString.at(-1) as string) // “as string” is safe because whole.toLocaleString() always returns a non-empty string
     ? wholeString
     : `${wholeString}.${fraction}`;
 }

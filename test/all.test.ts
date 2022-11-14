@@ -1,11 +1,16 @@
 import { describe, expect, it } from "vitest";
 import {
+  abs,
   add,
   divide,
+  equal,
+  equalizeDecimals,
   format,
   from,
   fromJSON,
+  greaterThan,
   isDnum,
+  lessThan,
   multiply,
   setDecimals,
   subtract,
@@ -73,6 +78,10 @@ describe("add()", () => {
     const result = [124691n, 2] as const;
     expect(add(a1, a2, result[1])).toEqual(result);
     expect(add(a2, a1, result[1])).toEqual(result);
+    expect(add(a1, 12.3456, result[1])).toEqual(result);
+    expect(add(12.3456, 14.48)).toEqual([268256n, 4]);
+    expect(add(12.3456, 14.48, 4)).toEqual([268256n, 4]);
+    expect(add(12.3456, 14.48, 3)).toEqual([26826n, 3]);
   });
   it("adds negative values", () => {
     const a1 = [123456n, 2] as const;
@@ -80,6 +89,7 @@ describe("add()", () => {
     const result = [122221n, 2] as const;
     expect(add(a1, a2, result[1])).toEqual(result);
     expect(add(a2, a1, result[1])).toEqual(result);
+    expect(add(a2, a2)).toEqual([-246912n, 4]);
     expect(add(a2, a2, 2)).toEqual([-2469n, 2]);
   });
   it("throws if decimals are negative", () => {
@@ -116,6 +126,9 @@ describe("subtract()", () => {
     const a2 = [123456n, 4] as const;
     expect(subtract(a1, a2, 2)).toEqual([122221n, 2]);
     expect(subtract(a2, a1, 2)).toEqual([-122221n, 2]);
+    expect(subtract(16.34, 14.44548)).toEqual([189452n, 5]);
+    expect(subtract(16.34, 14.44548, 5)).toEqual([189452n, 5]);
+    expect(subtract(16.34, 14.44548, 0)).toEqual([2n, 0]);
   });
   it("subtracts negative values", () => {
     const a1 = [123456n, 2] as const;
@@ -157,6 +170,8 @@ describe("multiply()", () => {
     const result = [1524138n, 2] as const;
     expect(multiply(a1, a2, result[1])).toEqual(result);
     expect(multiply(a2, a1, result[1])).toEqual(result);
+    expect(multiply(16.34, 14.4454)).toEqual([2360378n, 4]);
+    expect(multiply(16.34, 14.4454, 3)).toEqual([236038n, 3]);
   });
   it("multiplies negative values", () => {
     const a1 = [123456n, 2] as const;
@@ -205,6 +220,8 @@ describe("divide()", () => {
       411520n,
       5,
     ]);
+    expect(divide(8, 2, 8)).toEqual([400000000n, 8]);
+    expect(divide(16.342, 14.43)).toEqual([1133n, 3]);
   });
   it("throws if decimals are negative", () => {
     expect(() => divide([1n, -1], [1n, 1], 1)).toThrowError(
@@ -252,6 +269,7 @@ describe("format()", () => {
     expect(format([-12342938798723n, 10], 6)).toBe("-1,234.29388");
     expect(format([-12342938798723n, 10], { digits: 6, trailingZeros: true }))
       .toBe("-1,234.293880");
+    expect(format([-12342938798723n, 10], { compact: true })).toBe("-1.2K");
   });
   it("works with greater digits than decimals", () => {
     expect(format([123400n, 2], 3)).toBe("1,234");
@@ -393,5 +411,88 @@ describe("fromJSON()", () => {
       123456789000000000000n,
       18,
     ]);
+  });
+});
+
+describe("abs()", () => {
+  it("works", () => {
+    expect(abs([123456789000000000000n, 18]))
+      .toEqual([123456789000000000000n, 18]);
+    expect(abs([-123456789000000000000n, 18]))
+      .toEqual([123456789000000000000n, 18]);
+    expect(abs(-1234, 2)).toEqual([123400n, 2]);
+  });
+});
+
+describe("lessThan()", () => {
+  it("works", () => {
+    expect(
+      lessThan([123456789000000000000n, 18], [123456789000000000001n, 18]),
+    ).toBe(true);
+    expect(
+      lessThan([123456789000000000001n, 18], [123456789000000000001n, 18]),
+    ).toBe(false);
+    expect(
+      lessThan([123456789000000000001n, 18], [123456789000000000000n, 18]),
+    ).toBe(false);
+    expect(
+      lessThan([123456789000000000000n, 18], 124),
+    ).toBe(true);
+    expect(
+      lessThan([123456789000000000000n, 18], 123),
+    ).toBe(false);
+  });
+});
+
+describe("greaterThan()", () => {
+  it("works", () => {
+    expect(
+      greaterThan([123456789000000000000n, 18], [123456789000000000001n, 18]),
+    ).toBe(false);
+    expect(
+      greaterThan([123456789000000000001n, 18], [123456789000000000001n, 18]),
+    ).toBe(false);
+    expect(
+      greaterThan([123456789000000000001n, 18], [123456789000000000000n, 18]),
+    ).toBe(true);
+    expect(
+      greaterThan([123456789000000000000n, 18], 124),
+    ).toBe(false);
+    expect(
+      greaterThan([123456789000000000000n, 18], 123),
+    ).toBe(true);
+  });
+});
+
+describe("equal()", () => {
+  it("works", () => {
+    expect(
+      equal([123456789000000000001n, 18], [123456789000000000001n, 18]),
+    ).toBe(true);
+    expect(
+      equal([123456789000000000001n, 18], [123456789000000000000n, 18]),
+    ).toBe(false);
+    expect(
+      equal([123456789000000000000n, 18], 123),
+    ).toBe(false);
+    expect(
+      equal([123000000000000000000n, 18], 123),
+    ).toBe(true);
+  });
+});
+
+describe("equalizeDecimals()", () => {
+  it("works", () => {
+    expect(
+      equalizeDecimals([[123456789000000000001n, 18], [1n, 0]]),
+    ).toEqual(
+      [[123456789000000000001n, 18], [1000000000000000000n, 18]],
+    );
+    expect(
+      equalizeDecimals([[123456789000000000001n, 18], [1n, 0]], 2),
+    ).toEqual(
+      [[12346n, 2], [100n, 2]],
+    );
+    expect(equalizeDecimals([])).toEqual([]);
   });
 });

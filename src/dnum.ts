@@ -88,6 +88,12 @@ export function setDecimals(
   ];
 }
 
+export function equalizeDecimals(nums: Dnum[], decimals?: number): Dnum[] {
+  const decimals_ = decimals
+    ?? Math.max(...nums.map(([, decimals]) => decimals), 0);
+  return nums.map(num => setDecimals(num, decimals_));
+}
+
 export function toJSON([value, decimals]: Dnum) {
   return JSON.stringify([String(value), decimals]);
 }

@@ -2,6 +2,7 @@
 import "./types";
 
 import {
+  equalizeDecimals,
   from,
   fromJSON,
   isDnum,
@@ -11,18 +12,35 @@ import {
   toParts,
 } from "./dnum";
 import { format } from "./formatting";
-import { add, divide, multiply, subtract } from "./operations";
+import {
+  abs,
+  add,
+  divide,
+  equal,
+  greaterThan,
+  lessThan,
+  multiply,
+  subtract,
+} from "./operations";
 
 export type { Decimals, Dnum, Value } from "./types";
 
 export {
+  abs,
   add,
   divide,
   divide as div,
+  equal,
+  equal as eq,
+  equalizeDecimals,
   format,
   from,
   fromJSON,
+  greaterThan,
+  greaterThan as gt,
   isDnum,
+  lessThan,
+  lessThan as lt,
   multiply,
   multiply as mul,
   setDecimals,
