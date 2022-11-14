@@ -192,6 +192,94 @@ let tokenPriceEth = dnum.divide(tokenPriceUsd, ethPriceUsd, 18); // 0.57 ETH
 // tokenPriceEth equals [570000000000000000, 18]
 ```
 
+### abs(value)
+
+Equivalent to the [`Math.abs()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/abs) function: it returns the absolute value of the `Dnum` number.
+
+| Name                  | Description                                  | Type        |
+| --------------------- | -------------------------------------------- | ----------- |
+| `value`               | Value to remove the sign from                | `Numberish` |
+| `decimals` (optional) | Result decimals (defaults to value decimals) | `number`    |
+| returns               | Result value                                 | `Dnum`      |
+
+#### Example
+
+```ts
+let value = [-100000n, 2];
+
+dnum.abs(value); // [100000n, 2]
+```
+
+### greaterThan(value)
+
+Equivalent to the [`>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Greater_than) operator: it returns `true` if the first value is greater than the second value and `false` otherwise, regardless of their respective decimals.
+
+| Name                  | Description                                   | Type        |
+| --------------------- | --------------------------------------------- | ----------- |
+| `value1`              | First value                                   | `Numberish` |
+| `value2`              | Second value                                  | `Numberish` |
+| `decimals` (optional) | Result decimals (defaults to value1 decimals) | `number`    |
+| returns               | Result value                                  | `Dnum`      |
+
+Alias: `gt()`
+
+#### Example
+
+```ts
+let value1 = [10000100n, 4];
+let value2 = [100000n, 2];
+
+dnum.greaterThan(value1, value2); // true
+dnum.greaterThan(value1, value1); // false
+dnum.greaterThan(value2, value1); // false
+```
+
+### lessThan(value)
+
+Equivalent to the [`<`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Less_than) operator: it returns `true` if the first value is less than the second value and `false` otherwise, regardless of their respective decimals.
+
+| Name                  | Description                                   | Type        |
+| --------------------- | --------------------------------------------- | ----------- |
+| `value1`              | First value                                   | `Numberish` |
+| `value2`              | Second value                                  | `Numberish` |
+| `decimals` (optional) | Result decimals (defaults to value1 decimals) | `number`    |
+| returns               | Result value                                  | `Dnum`      |
+
+Alias: `lt()`
+
+#### Example
+
+```ts
+let value1 = [100000n, 2];
+let value2 = [10000100n, 4];
+
+dnum.lessThan(value1, value2); // true
+dnum.lessThan(value1, value1); // false
+dnum.lessThan(value2, value1); // false
+```
+
+### equal(value)
+
+Equivalent to the [`==`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Equality) operator: it returns `true` if the first value is equal to the second value and `false` otherwise, regardless of their respective decimals.
+
+| Name                  | Description                                   | Type        |
+| --------------------- | --------------------------------------------- | ----------- |
+| `value1`              | First value                                   | `Numberish` |
+| `value2`              | Second value                                  | `Numberish` |
+| `decimals` (optional) | Result decimals (defaults to value1 decimals) | `number`    |
+| returns               | Result value                                  | `Dnum`      |
+
+Alias: `eq()`
+
+#### Example
+
+```ts
+let value1 = [100000n, 2];
+let value2 = [10000000n, 4];
+
+dnum.lessThan(value1, value2); // true
+```
+
 ### toNumber(value, options)
 
 Converts the `Dnum` data structure into a `Number`. [This will result in a loss of precision](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number#number_encoding) depending on how large the number is.
