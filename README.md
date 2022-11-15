@@ -12,6 +12,15 @@ The `Dnum` data structure is a simple array with two entries, or tuple: a `BigIn
 type Dnum = [value: bigint, decimals: number];
 ```
 
+## TL;DR
+
+dnum might be a good option for your project if:
+
+- You are dealing with numbers represented as integers associated with a number of decimals (e.g. currencies).
+- You need common math operations, safely and with by abstracting their representation abstracted.
+- You want to format these numbers without having to convert them into `Number` first (and thus losing precision).
+- You want to avoid adding a library to your project that would be too big, or lack flexibility.
+
 ## Install
 
 ```sh
