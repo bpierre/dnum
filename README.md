@@ -2,7 +2,7 @@
 
 <p align=center><a href="https://www.npmjs.com/package/dnum"><img src="https://badgen.net/npm/v/dnum" alt="npm version"></a> <a href="https://bundlephobia.com/result?p=dnum"><img src="https://img.shields.io/bundlephobia/minzip/dnum" alt="bundle size"></a> <a href="https://github.com/bpierre/dnum/blob/main/LICENSE"><img src="https://badgen.net/github/license/bpierre/dnum" alt="License"></a></p>
 
-dnum provides a small set of utilities to manipulate large numbers represented as a pair composed of a value (stored as a [`BigInt`](https://developer.mozilla.org/en-US/docs/Glossary/BigInt)) and corresponding decimals. This structure makes it possible to handle large decimal numbers in an easy manner, without any precision loss, and using an open structure that permits maximum flexibility. The corresponding type is called `Dnum`.
+dnum provides a small set of utilities to manipulate large numbers represented as a pair composed of a value (stored as a [`BigInt`](https://developer.mozilla.org/en-US/docs/Glossary/BigInt)) and corresponding decimals. This structure makes it possible to handle large decimal numbers in an easy manner, without any loss of precision, and using an open structure that preserves flexibility.
 
 ```ts
 type Dnum = [value: bigint, decimals: number];
@@ -21,7 +21,7 @@ yarn add dnum
 dnum might be a good option for your project if:
 
 - You are dealing with numbers represented as integers associated with a number of decimals (e.g. currencies).
-- You need common math operations, safely and with by abstracting their representation abstracted.
+- You need common math operations, safely and by having their representation abstracted.
 - You want to format these numbers without having to convert them into `Number` first (and thus losing precision).
 - You want to avoid adding a library to your project that would be too big, or lack flexibility.
 
