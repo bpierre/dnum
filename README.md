@@ -76,7 +76,7 @@ type Dnum = [value: bigint, decimals: number];
 type Numberish = string | number | bigint | Dnum;
 ```
 
-### format(value, options)
+### `format(value, options)`
 
 Formats the number for display purposes.
 
@@ -107,7 +107,7 @@ dnum.format(amount, { compact: true }); // 123K
 dnum.format(amount, { digits: 6, trailingZeros: true }); // 123,456.789000
 ```
 
-### from(valueToParse, decimals)
+### `from(valueToParse, decimals)`
 
 Parse a value and convert it into a `Dnum`.
 
@@ -126,7 +126,7 @@ let amount = dnum.from("17.30624", 18);
 // amount equals [17306240000000000000n, 18]
 ```
 
-### add(value1, value2, decimals)
+### `add(value1, value2, decimals)`
 
 Adds two values together, regardless of their decimals. `decimals` correspond to the decimals desired in the result.
 
@@ -137,7 +137,7 @@ Adds two values together, regardless of their decimals. `decimals` correspond to
 | `decimals` (optional) | Result decimals (defaults to value1 decimals) | `number`    |
 | returns               | Result                                        | `Dnum`      |
 
-### subtract(value1, value2, decimals)
+### `subtract(value1, value2, decimals)`
 
 Subtract a value from another one, regardless of their decimals. `decimals` correspond to the decimals desired in the result.
 
@@ -150,7 +150,7 @@ Subtract a value from another one, regardless of their decimals. `decimals` corr
 
 Alias: `sub()`
 
-### multiply(value1, value2, decimals)
+### `multiply(value1, value2, decimals)`
 
 Multiply two values together, regardless of their decimals. `decimals` correspond to the decimals desired in the result.
 
@@ -174,7 +174,7 @@ let tokenPriceUsd = dnum.multiply(tokenPriceEth, ethPriceUsd, 2); // 570 USD
 // tokenPriceUsd equals [57000, 2]
 ```
 
-### divide(value1, value2, decimals)
+### `divide(value1, value2, decimals)`
 
 Divide a value by another one, regardless of their decimals. `decimals` correspond to the decimals desired in the result.
 
@@ -198,7 +198,7 @@ let tokenPriceEth = dnum.divide(tokenPriceUsd, ethPriceUsd, 18); // 0.57 ETH
 // tokenPriceEth equals [570000000000000000, 18]
 ```
 
-### abs(value)
+### `abs(value)`
 
 Equivalent to the [`Math.abs()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/abs) function: it returns the absolute value of the `Dnum` number.
 
@@ -216,7 +216,7 @@ let value = [-100000n, 2];
 dnum.abs(value); // [100000n, 2]
 ```
 
-### greaterThan(value)
+### `greaterThan(value)`
 
 Equivalent to the [`>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Greater_than) operator: it returns `true` if the first value is greater than the second value and `false` otherwise, regardless of their respective decimals.
 
@@ -240,7 +240,7 @@ dnum.greaterThan(value1, value1); // false
 dnum.greaterThan(value2, value1); // false
 ```
 
-### lessThan(value)
+### `lessThan(value)`
 
 Equivalent to the [`<`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Less_than) operator: it returns `true` if the first value is less than the second value and `false` otherwise, regardless of their respective decimals.
 
@@ -264,7 +264,7 @@ dnum.lessThan(value1, value1); // false
 dnum.lessThan(value2, value1); // false
 ```
 
-### equal(value)
+### `equal(value)`
 
 Equivalent to the [`==`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Equality) operator: it returns `true` if the first value is equal to the second value and `false` otherwise, regardless of their respective decimals.
 
@@ -286,7 +286,7 @@ let value2 = [10000000n, 4];
 dnum.lessThan(value1, value2); // true
 ```
 
-### toNumber(value, options)
+### `toNumber(value, options)`
 
 Converts the `Dnum` data structure into a `Number`. [This will result in a loss of precision](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number#number_encoding) depending on how large the number is.
 
@@ -303,7 +303,7 @@ toNumber(value); // 123456.789
 toNumber(value, 1); // 123456.8
 ```
 
-### toJSON(value)
+### `toJSON(value)`
 
 Converts the `Dnum` data structure into a JSON-compatible string. This function is provided because `JSON.stringify()` doesn’t work with `BigInt` data types.
 
@@ -318,7 +318,7 @@ let json = toJSON([123456789000000000000n, 18]);
 // json == "[\"123456789000000000000\", 18]";
 ```
 
-### fromJSON(value)
+### `fromJSON(value)`
 
 Converts the string resulting from `toJSON()` back into a `Dnum`.
 
@@ -333,7 +333,7 @@ let dnum = fromJSON("[\"123456789000000000000\", 18]");
 // dnum == [123456789000000000000n, 18]
 ```
 
-### setDecimals(value, decimals)
+### `setDecimals(value, decimals)`
 
 Return a new `Dnum` with a different amount of decimals. The value will reflect this change so that the represented number stays the same.
 
