@@ -1,15 +1,19 @@
-<img width="1167" alt="dnum" src="https://user-images.githubusercontent.com/36158/185436996-6178ce8f-8b86-4ac2-b655-12f776743e13.png">
+<img alt="dnum: small library for big decimal numbers" src="https://user-images.githubusercontent.com/36158/202865124-a4020c0b-5ad7-4e66-aaf4-a5be415a84f3.png">
 
-[![npm version](https://badgen.net/npm/v/dnum)](https://www.npmjs.com/package/dnum) [![bundle size](https://img.shields.io/bundlephobia/minzip/dnum)](https://bundlephobia.com/result?p=dnum) [![License](https://badgen.net/github/license/bpierre/dnum)](https://github.com/bpierre/dnum/blob/main/LICENSE)
+<p align=center><a href="https://www.npmjs.com/package/dnum"><img src="https://badgen.net/npm/v/dnum" alt="npm version"></a> <a href="https://bundlephobia.com/result?p=dnum"><img src="https://img.shields.io/bundlephobia/minzip/dnum" alt="bundle size"></a> <a href="https://github.com/bpierre/dnum/blob/main/LICENSE"><img src="https://badgen.net/github/license/bpierre/dnum" alt="License"></a></p>
 
-dnum (Decimal Numbers) is a library that allows to operate on large numbers represented as a pair composed of a [`BigInt`](https://developer.mozilla.org/en-US/docs/Glossary/BigInt) for the value, and a [`Number`](https://developer.mozilla.org/en-US/docs/Glossary/Number) for the decimals.
-
-It is not a replacement for libraries such as [decimal.js](https://mikemcl.github.io/decimal.js/) or the native `BigInt` operators (which it uses internally). Instead, dnum focuses on a small (~1kb) set of utilities focused around the `Dnum` data structure, allowing to safely operate on numbers represented in various decimal precisions.
-
-The `Dnum` data structure is a simple array with two entries, or tuple: a `BigInt` for the value, and a `Number` for the decimals. This is how it looks in TypeScript:
+dnum provides a small set of utilities to manipulate large numbers represented as a pair composed of a value (stored as a [`BigInt`](https://developer.mozilla.org/en-US/docs/Glossary/BigInt)) and corresponding decimals. This structure makes it possible to handle large decimal numbers in an easy manner, without any precision loss, and using an open structure that permits maximum flexibility. The corresponding type is called `Dnum`.
 
 ```ts
 type Dnum = [value: bigint, decimals: number];
+```
+
+## Install
+
+```sh
+npm install --save dnum
+pnpm add dnum
+yarn add dnum
 ```
 
 ## TL;DR
@@ -21,13 +25,6 @@ dnum might be a good option for your project if:
 - You want to format these numbers without having to convert them into `Number` first (and thus losing precision).
 - You want to avoid adding a library to your project that would be too big, or lack flexibility.
 
-## Install
-
-```sh
-npm install --save dnum
-pnpm add dnum
-yarn add dnum
-```
 
 ## Example
 
@@ -355,6 +352,20 @@ To make use of tree shaking, named exports are also provided:
 ```ts
 import { format, from } from "dnum";
 ```
+
+## FAQ
+
+### Should dnum be used instead of BigInt or libraries such as BN.js or decimal.js?
+
+dnum is not a full replacement for libraries such as [decimal.js](https://mikemcl.github.io/decimal.js/) or `BigInt`. Instead, dnum focuses on a small (~1kb) set of utilities focused around the simple `Dnum` data structure, allowing to manipulate numbers represented in various decimal precisions in a safe manner.
+
+### Why is it called dnum?
+
+dnum stands for Decimal Numbers.
+
+### Who made the logo and banner 😍?
+
+The gorgeous visual identity of dnum has been created by [Paty Davila](https://twitter.com/dizzypaty).
 
 ## Acknowledgements
 
