@@ -363,7 +363,7 @@ dnum is not a full replacement for libraries such as [decimal.js](https://mikemc
 
 dnum stands for Decimal Numbers.
 
-### Who made the logo and banner 😍?
+### Who made the logo and banner? 😍
 
 The gorgeous visual identity of dnum has been created by [Paty Davila](https://twitter.com/dizzypaty).
 
