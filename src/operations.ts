@@ -89,6 +89,36 @@ export function abs(num: Numberish, decimals?: Decimals): Dnum {
   return setDecimals([valueAbs, decimalsIn], decimals);
 }
 
+export function floor(num: Numberish, decimals?: Decimals): Dnum {
+  const [valueIn, decimalsIn] = from(num, true);
+  if (decimals === undefined) { decimals = decimalsIn; }
+
+  let whole = BigInt(String(valueIn).slice(0, -decimalsIn));
+  const fraction = BigInt(String(valueIn).slice(-decimalsIn));
+  if (whole < BigInt(0) && fraction > BigInt(0)) {
+    whole -= BigInt(1);
+  }
+  const numFloored: Dnum = [
+    BigInt(String(whole) + "0".repeat(decimalsIn)),
+    decimalsIn,
+  ];
+
+  return setDecimals(numFloored, decimals);
+}
+
+export function ceil(num: Numberish, decimals?: Decimals): Dnum {
+  const minus1: Dnum = [BigInt(-1), 0];
+  return multiply(floor(multiply(num, minus1)), minus1, decimals);
+}
+
+export function round(num: Numberish, decimals?: Decimals): Dnum {
+  const numIn = from(num, true);
+  return setDecimals(
+    setDecimals(numIn, 0), // setDecimals() uses divideAndRound() internally
+    decimals === undefined ? numIn[1] : decimals,
+  );
+}
+
 // Converts a pair of Numberish into Dnum and equalize
 // their decimals based on the highest precision found.
 function normalizePairAndDecimals(

@@ -2,9 +2,11 @@ import { describe, expect, it } from "vitest";
 import {
   abs,
   add,
+  ceil,
   divide,
   equal,
   equalizeDecimals,
+  floor,
   format,
   from,
   fromJSON,
@@ -12,6 +14,7 @@ import {
   isDnum,
   lessThan,
   multiply,
+  round,
   setDecimals,
   subtract,
   toJSON,
@@ -255,7 +258,67 @@ describe("divideAndRound()", () => {
     expect(divideAndRound(1n, 1n)).toBe(1n);
     expect(divideAndRound(1n, 3n)).toBe(0n);
     expect(divideAndRound(20n, 2n)).toBe(10n);
+    expect(divideAndRound(20n, 3n)).toBe(7n);
+    expect(divideAndRound(20n, 6n)).toBe(3n);
+    expect(divideAndRound(20n, 7n)).toBe(3n);
     expect(divideAndRound(15n, 2n)).toBe(8n);
+  });
+});
+
+describe("round()", () => {
+  it("works", () => {
+    expect(round([1000n, 2])).toEqual([1000n, 2]);
+    expect(round([123456n, 2])).toEqual([123500n, 2]);
+    expect(round([123449n, 2])).toEqual([123400n, 2]);
+    expect(round([123450n, 2])).toEqual([123500n, 2]);
+    expect(
+      round([1234555555555555555555n, 18]),
+    ).toEqual([1235000000000000000000n, 18]);
+    expect(
+      round([1234499999999999999999n, 18]),
+    ).toEqual([1234000000000000000000n, 18]);
+  });
+});
+
+describe("floor()", () => {
+  it("works", () => {
+    expect(floor([1000n, 2])).toEqual([1000n, 2]);
+    expect(floor([109n, 1])).toEqual([100n, 1]);
+    expect(floor([-109n, 1])).toEqual([-110n, 1]);
+    expect(floor([-101n, 1])).toEqual([-110n, 1]);
+    expect(floor([123456n, 2])).toEqual([123400n, 2]);
+    expect(floor([123449n, 2])).toEqual([123400n, 2]);
+    expect(floor([123450n, 2])).toEqual([123400n, 2]);
+    expect(
+      floor([1234555555555555555555n, 18]),
+    ).toEqual([1234000000000000000000n, 18]);
+    expect(
+      floor([-1234000000000000000000n, 18]),
+    ).toEqual([-1234000000000000000000n, 18]);
+    expect(
+      floor([-1234000000000000000001n, 18]),
+    ).toEqual([-1235000000000000000000n, 18]);
+    expect(
+      floor([1234999999999999999999n, 18]),
+    ).toEqual([1234000000000000000000n, 18]);
+  });
+});
+
+describe("ceil()", () => {
+  it("works", () => {
+    expect(ceil([1000n, 2])).toEqual([1000n, 2]);
+    expect(
+      ceil([1234000000000000000000n, 18]),
+    ).toEqual([1234000000000000000000n, 18]);
+    expect(
+      ceil([1234000000000000000001n, 18]),
+    ).toEqual([1235000000000000000000n, 18]);
+    expect(
+      ceil([-1234000000000000000001n, 18]),
+    ).toEqual([-1234000000000000000000n, 18]);
+    expect(
+      ceil([1234999999999999999999n, 18]),
+    ).toEqual([1235000000000000000000n, 18]);
   });
 });
 

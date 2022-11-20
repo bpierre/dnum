@@ -59,20 +59,30 @@ export function from(
 export function setValueDecimals(
   value: Value,
   decimalsDiff: Decimals,
+  options: { round?: boolean } = {},
 ): Value {
+  options.round ??= true;
+
   if (decimalsDiff > 0) {
-    return (value * powerOfTen(decimalsDiff));
+    return value * powerOfTen(decimalsDiff);
   }
+
   if (decimalsDiff < 0) {
-    return divideAndRound(value, powerOfTen(-decimalsDiff));
+    return options.round
+      ? divideAndRound(value, powerOfTen(-decimalsDiff))
+      : value / powerOfTen(-decimalsDiff);
   }
+
   return value;
 }
 
 export function setDecimals(
   value: Dnum,
   decimals: Decimals,
+  options: { round?: boolean } = {},
 ): Dnum {
+  options.round ??= true;
+
   if (value[1] === decimals) {
     return value;
   }
@@ -83,7 +93,7 @@ export function setDecimals(
 
   const decimalsDiff = decimals - value[1];
   return [
-    setValueDecimals(value[0], decimalsDiff),
+    setValueDecimals(value[0], decimalsDiff, options),
     decimals,
   ];
 }

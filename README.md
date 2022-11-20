@@ -25,7 +25,6 @@ dnum might be a good option for your project if:
 - You want to format these numbers without having to convert them into `Number` first (and thus losing precision).
 - You want to avoid adding a library to your project that would be too big, or lack flexibility.
 
-
 ## Example
 
 dnum can be useful to manipulate different currencies together, so let’s imagine a situation where you have the price of a given [token](https://ethereum.org/en/developers/docs/standards/tokens/erc-20/) token TKN expressed in [ETH](https://ethereum.org/en/developers/docs/intro-to-ether/), which you received it as a string to avoid any precision issue:
@@ -109,7 +108,7 @@ dnum.format(amount, { digits: 6, trailingZeros: true }); // 123,456.789000
 
 ### `from(valueToParse, decimals)`
 
-Parse a value and convert it into a `Dnum`.
+Parse a value and convert it into a `Dnum`. It can be a string, a number, a bigint, or even a `Dnum` (which can be useful to change its decimals).
 
 | Name           | Description                             | Type             |
 | -------------- | --------------------------------------- | ---------------- |
@@ -130,23 +129,23 @@ let amount = dnum.from("17.30624", 18);
 
 Adds two values together, regardless of their decimals. `decimals` correspond to the decimals desired in the result.
 
-| Name                  | Description                                   | Type        |
-| --------------------- | --------------------------------------------- | ----------- |
-| `value1`              | First value to add                            | `Numberish` |
-| `value2`              | Second value to add                           | `Numberish` |
-| `decimals` (optional) | Result decimals (defaults to value1 decimals) | `number`    |
-| returns               | Result                                        | `Dnum`      |
+| Name                  | Description                                     | Type        |
+| --------------------- | ----------------------------------------------- | ----------- |
+| `value1`              | First value to add                              | `Numberish` |
+| `value2`              | Second value to add                             | `Numberish` |
+| `decimals` (optional) | Result decimals (defaults to `value1` decimals) | `number`    |
+| returns               | Result                                          | `Dnum`      |
 
 ### `subtract(value1, value2, decimals)`
 
 Subtract a value from another one, regardless of their decimals. `decimals` correspond to the decimals desired in the result.
 
-| Name                  | Description                                   | Type        |
-| --------------------- | --------------------------------------------- | ----------- |
-| `value1`              | First value to add                            | `Numberish` |
-| `value2`              | Second value to add                           | `Numberish` |
-| `decimals` (optional) | Result decimals (defaults to value1 decimals) | `number`    |
-| returns               | Result                                        | `Dnum`      |
+| Name                  | Description                                     | Type        |
+| --------------------- | ----------------------------------------------- | ----------- |
+| `value1`              | First value to add                              | `Numberish` |
+| `value2`              | Second value to add                             | `Numberish` |
+| `decimals` (optional) | Result decimals (defaults to `value1` decimals) | `number`    |
+| returns               | Result                                          | `Dnum`      |
 
 Alias: `sub()`
 
@@ -154,12 +153,12 @@ Alias: `sub()`
 
 Multiply two values together, regardless of their decimals. `decimals` correspond to the decimals desired in the result.
 
-| Name                  | Description                                   | Type        |
-| --------------------- | --------------------------------------------- | ----------- |
-| `value1`              | First value to multiply                       | `Numberish` |
-| `value2`              | Second value to multiply                      | `Numberish` |
-| `decimals` (optional) | Result decimals (defaults to value1 decimals) | `number`    |
-| returns               | Result                                        | `Dnum`      |
+| Name                  | Description                                     | Type        |
+| --------------------- | ----------------------------------------------- | ----------- |
+| `value1`              | First value to multiply                         | `Numberish` |
+| `value2`              | Second value to multiply                        | `Numberish` |
+| `decimals` (optional) | Result decimals (defaults to `value1` decimals) | `number`    |
+| returns               | Result                                          | `Dnum`      |
 
 Alias: `mul()`
 
@@ -178,12 +177,12 @@ let tokenPriceUsd = dnum.multiply(tokenPriceEth, ethPriceUsd, 2); // 570 USD
 
 Divide a value by another one, regardless of their decimals. `decimals` correspond to the decimals desired in the result.
 
-| Name                  | Description                                   | Type        |
-| --------------------- | --------------------------------------------- | ----------- |
-| `value1`              | Dividend                                      | `Numberish` |
-| `value2`              | Divisor                                       | `Numberish` |
-| `decimals` (optional) | Result decimals (defaults to value1 decimals) | `number`    |
-| returns               | Result value                                  | `Dnum`      |
+| Name                  | Description                                     | Type        |
+| --------------------- | ----------------------------------------------- | ----------- |
+| `value1`              | Dividend                                        | `Numberish` |
+| `value2`              | Divisor                                         | `Numberish` |
+| `decimals` (optional) | Result decimals (defaults to `value1` decimals) | `number`    |
+| returns               | Result value                                    | `Dnum`      |
 
 Alias: `div()`
 
@@ -198,15 +197,15 @@ let tokenPriceEth = dnum.divide(tokenPriceUsd, ethPriceUsd, 18); // 0.57 ETH
 // tokenPriceEth equals [570000000000000000, 18]
 ```
 
-### `abs(value)`
+### `abs(value, decimals)`
 
 Equivalent to the [`Math.abs()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/abs) function: it returns the absolute value of the `Dnum` number.
 
-| Name                  | Description                                  | Type        |
-| --------------------- | -------------------------------------------- | ----------- |
-| `value`               | Value to remove the sign from                | `Numberish` |
-| `decimals` (optional) | Result decimals (defaults to value decimals) | `number`    |
-| returns               | Result value                                 | `Dnum`      |
+| Name                  | Description                                    | Type        |
+| --------------------- | ---------------------------------------------- | ----------- |
+| `value`               | Value to remove the sign from                  | `Numberish` |
+| `decimals` (optional) | Result decimals (defaults to `value` decimals) | `number`    |
+| returns               | Result value                                   | `Dnum`      |
 
 #### Example
 
@@ -216,7 +215,45 @@ let value = [-100000n, 2];
 dnum.abs(value); // [100000n, 2]
 ```
 
-### `greaterThan(value)`
+### `round(value, decimals)`
+
+Equivalent to the [`Math.round()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/round) function: it returns the value of a number rounded to the nearest integer.
+
+| Name                  | Description                                    | Type        |
+| --------------------- | ---------------------------------------------- | ----------- |
+| `value`               | Value to round to the nearest integer          | `Numberish` |
+| `decimals` (optional) | Result decimals (defaults to `value` decimals) | `number`    |
+| returns               | Result value                                   | `Dnum`      |
+
+#### Example
+
+```ts
+let value = [-123456n, 2]; // 1234.56
+
+dnum.round(value); // [123500n, 2] or 1235.00
+```
+
+### `floor(value, decimals)`
+
+Equivalent to the [`Math.floor()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/floor) function: it rounds down and returns the largest integer less than or equal to the number.
+
+| Name                  | Description                                    | Type        |
+| --------------------- | ---------------------------------------------- | ----------- |
+| `value`               | Value to round down                            | `Numberish` |
+| `decimals` (optional) | Result decimals (defaults to `value` decimals) | `number`    |
+| returns               | Result value                                   | `Dnum`      |
+
+### `ceil(value, decimals)`
+
+Equivalent to the [`Math.ceil()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/ceil) function: it rounds rounds up and returns the smaller integer greater than or equal to the number.
+
+| Name                  | Description                                    | Type        |
+| --------------------- | ---------------------------------------------- | ----------- |
+| `value`               | Value to round up                              | `Numberish` |
+| `decimals` (optional) | Result decimals (defaults to `value` decimals) | `number`    |
+| returns               | Result value                                   | `Dnum`      |
+
+### `greaterThan(value1, value2, decimals)`
 
 Equivalent to the [`>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Greater_than) operator: it returns `true` if the first value is greater than the second value and `false` otherwise, regardless of their respective decimals.
 
@@ -240,7 +277,7 @@ dnum.greaterThan(value1, value1); // false
 dnum.greaterThan(value2, value1); // false
 ```
 
-### `lessThan(value)`
+### `lessThan(value1, value2, decimals)`
 
 Equivalent to the [`<`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Less_than) operator: it returns `true` if the first value is less than the second value and `false` otherwise, regardless of their respective decimals.
 
@@ -264,7 +301,7 @@ dnum.lessThan(value1, value1); // false
 dnum.lessThan(value2, value1); // false
 ```
 
-### `equal(value)`
+### `equal(value1, value2, decimals)`
 
 Equivalent to the [`==`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Equality) operator: it returns `true` if the first value is equal to the second value and `false` otherwise, regardless of their respective decimals.
 
@@ -333,15 +370,16 @@ let dnum = fromJSON("[\"123456789000000000000\", 18]");
 // dnum == [123456789000000000000n, 18]
 ```
 
-### `setDecimals(value, decimals)`
+### `setDecimals(value, decimals, options)`
 
 Return a new `Dnum` with a different amount of decimals. The value will reflect this change so that the represented number stays the same.
 
-| Name       | Description                                    | Type     |
-| ---------- | ---------------------------------------------- | -------- |
-| `value`    | The number from which decimals will be changed | `Dnum`   |
-| `decimals` | New number of decimals                         | `number` |
-| returns    | Result value                                   | `Dnum`   |
+| Name            | Description                                                                         | Type      |
+| --------------- | ----------------------------------------------------------------------------------- | --------- |
+| `value`         | The number from which decimals will be changed                                      | `Dnum`    |
+| `decimals`      | New number of decimals                                                              | `number`  |
+| `options.round` | In case of reduction, whether to round the remaining decimals (defaults to `true`). | `boolean` |
+| returns         | Result value                                                                        | `Dnum`    |
 
 Note: `from(value, decimals)` can also be used instead.
 
