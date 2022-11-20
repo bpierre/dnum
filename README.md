@@ -2,7 +2,7 @@
 
 <p align=center><a href="https://www.npmjs.com/package/dnum"><img src="https://badgen.net/npm/v/dnum" alt="npm version"></a> <a href="https://bundlephobia.com/result?p=dnum"><img src="https://img.shields.io/bundlephobia/minzip/dnum" alt="bundle size"></a> <a href="https://github.com/bpierre/dnum/blob/main/LICENSE"><img src="https://badgen.net/github/license/bpierre/dnum" alt="License"></a></p>
 
-dnum provides a small set of utilities to manipulate large numbers represented as a pair composed of a value (stored as a [`BigInt`](https://developer.mozilla.org/en-US/docs/Glossary/BigInt)) and corresponding decimals. This structure makes it possible to handle large decimal numbers in an easy manner, without any loss of precision, and using an open structure that preserves flexibility.
+dnum provides a [small](https://bundlephobia.com/package/dnum@latest) set of utilities to manipulate large numbers represented as a pair composed of a value (stored as a [`BigInt`](https://developer.mozilla.org/en-US/docs/Glossary/BigInt)) and corresponding decimals. This structure makes it possible to handle large decimal numbers in an easy manner, without any loss of precision, and using an open structure that preserves flexibility.
 
 ```ts
 type Dnum = [value: bigint, decimals: number];
