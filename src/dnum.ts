@@ -20,7 +20,7 @@ const NUM_RE = /^-?(?:[0-9]+|(?:[0-9]*(?:\.[0-9]+)))$/;
 // https://github.com/ethers-io/ethers.js/blob/8b62aeff9cce44cbd16ff41f8fc01ebb101f8265/packages/bignumber/src.ts/fixednumber.ts#L70
 export function from(
   value: Numberish,
-  decimals: number | true,
+  decimals: number | true = true,
 ): Dnum {
   if (isDnum(value)) {
     return setDecimals(value, decimals === true ? value[1] : decimals);
@@ -40,7 +40,7 @@ export function from(
   let [whole, fraction] = splitNumber(value);
 
   if (decimals === true) {
-    decimals = fraction.length;
+    decimals = fraction === "0" ? 0 : fraction.length;
   }
 
   // truncate according to decimals

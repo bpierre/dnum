@@ -78,7 +78,7 @@ export function lessThan(num1: Numberish, num2: Numberish): boolean {
 }
 
 export function abs(num: Numberish, decimals?: Decimals): Dnum {
-  const [valueIn, decimalsIn] = from(num, true);
+  const [valueIn, decimalsIn] = from(num);
   if (decimals === undefined) { decimals = decimalsIn; }
 
   let valueAbs = valueIn;
@@ -90,7 +90,7 @@ export function abs(num: Numberish, decimals?: Decimals): Dnum {
 }
 
 export function floor(num: Numberish, decimals?: Decimals): Dnum {
-  const [valueIn, decimalsIn] = from(num, true);
+  const [valueIn, decimalsIn] = from(num);
   if (decimals === undefined) { decimals = decimalsIn; }
 
   let whole = BigInt(String(valueIn).slice(0, -decimalsIn));
@@ -112,7 +112,7 @@ export function ceil(num: Numberish, decimals?: Decimals): Dnum {
 }
 
 export function round(num: Numberish, decimals?: Decimals): Dnum {
-  const numIn = from(num, true);
+  const numIn = from(num);
   return setDecimals(
     setDecimals(numIn, 0), // setDecimals() uses divideAndRound() internally
     decimals === undefined ? numIn[1] : decimals,
@@ -126,8 +126,8 @@ function normalizePairAndDecimals(
   num2: Numberish,
   decimals?: number,
 ) {
-  const num1_ = from(num1, true);
-  const num2_ = from(num2, true);
+  const num1_ = from(num1);
+  const num2_ = from(num2);
 
   if (num1_[1] < 0 || num2_[1] < 0) {
     throw new Error("Dnum: decimals cannot be negative");

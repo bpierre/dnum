@@ -109,13 +109,13 @@ dnum.format(amount, { digits: 6, trailingZeros: true }); // 123,456.789000
 
 ### `from(valueToParse, decimals)`
 
-Parse a value and convert it into a `Dnum`. It can be a string, a number, a bigint, or even a `Dnum` (which can be useful to change its decimals).
+Parse a value and convert it into a `Dnum`. The passed value can be a string, a number, a bigint, or even a `Dnum` − which can be useful to change its decimals.
 
-| Name           | Description                             | Type             |
-| -------------- | --------------------------------------- | ---------------- |
-| `valueToParse` | Value to convert into a `Dnum`          | `Numberish`      |
-| `decimals`     | Number of decimals (or `true` for auto) | `number \| true` |
-| returns        | Converted value                         | `Dnum`           |
+| Name                  | Description                                      | Type             |
+| --------------------- | ------------------------------------------------ | ---------------- |
+| `valueToParse`        | Value to convert into a `Dnum`                   | `Numberish`      |
+| `decimals` (optional) | Number of decimals (defaults to `true` for auto) | `number \| true` |
+| returns               | Converted value                                  | `Dnum`           |
 
 #### Example
 
