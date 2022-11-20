@@ -8,24 +8,6 @@ dnum provides a small set of utilities to manipulate large numbers represented a
 type Dnum = [value: bigint, decimals: number];
 ```
 
-## Install
-
-```sh
-npm install --save dnum
-pnpm add dnum
-yarn add dnum
-```
-
-## TL;DR
-
-dnum might be a good option for your project if:
-
-- You are dealing with decimal numbers represented as integers associated with a number of decimals.
-- You need common math operations that feel like using JavaScript `Number` operators.
-- You want to format large numbers without converting them to `Number`, to avoid precision loss.
-- You want to avoid adding a library to your project that would be too heavy.
-- You don’t want to rely on a library that would require to embrace its wrapper object.
-
 ## Usage
 
 ```ts
@@ -45,6 +27,24 @@ console.log(
   dn.format(b, { compact: true }), // "1.7B"
 );
 ```
+
+## Install
+
+```sh
+npm install --save dnum
+pnpm add dnum
+yarn add dnum
+```
+
+## TL;DR
+
+dnum might be a good option for your project if:
+
+- You are dealing with decimal numbers represented as integers associated with a number of decimals.
+- You need common math operations that feel like using JavaScript `Number` operators.
+- You want to format large numbers without converting them to `Number`, to avoid precision loss.
+- You want to avoid adding a library to your project that would be too heavy.
+- You don’t want to rely on a library that would require to embrace its wrapper object.
 
 ## Example
 
