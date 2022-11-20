@@ -2,8 +2,8 @@
   "name": "dnum",
   "version": "1.10.1",
   "type": "module",
-  "module": "dist/dnum.es.js",
-  "main": "dist/dnum.es.js",
+  "module": "dist/dnum.js",
+  "main": "dist/dnum.js",
   "types": "dist/index.d.ts",
   "sideEffects": false,
   "files": [
