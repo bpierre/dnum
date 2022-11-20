@@ -37,7 +37,9 @@ export function from(
     value = value.slice(1);
   }
 
-  let [whole, fraction] = splitNumber(value);
+  const parts = splitNumber(value);
+  const whole = parts[0];
+  let fraction = parts[1];
 
   if (decimals === true) {
     decimals = fraction === "0" ? 0 : fraction.length;
@@ -141,7 +143,7 @@ export function toParts(
   const decimalsDivisor = powerOfTen(decimals);
 
   const whole = value / decimalsDivisor;
-  let fraction = String(value % decimalsDivisor).replace(/^\-/, "");
+  let fraction = String(value % decimalsDivisor).replace(/^-/, "");
 
   const zeros = "0".repeat(
     Math.max(0, String(decimalsDivisor).length - fraction.length - 1),
