@@ -23,10 +23,11 @@ export function format(
   });
 
   const locale = options.locale ?? Intl.NumberFormat().resolvedOptions().locale;
-  const decimalsSeparator =
-    (new Intl.NumberFormat(locale)).formatToParts(.1).find(v =>
-      v.type === "decimal"
-    )?.value ?? ".";
+  const decimalsSeparator = (
+    new Intl.NumberFormat(locale)
+      .formatToParts(.1)
+      .find(v => v.type === "decimal")?.value ?? "."
+  );
 
   const wholeString = whole.toLocaleString(locale, {
     notation: options.compact ? "compact" : "standard",

@@ -50,6 +50,9 @@ describe("setValueDecimals()", () => {
     expect(setValueDecimals(123456n, -2)).toBe(1235n);
     expect(setValueDecimals(123456n, -6)).toBe(0n);
   });
+  it("doesn’t round decimals when specified", () => {
+    expect(setValueDecimals(123456n, -2, { round: false })).toBe(1234n);
+  });
   it("leaves decimals unchanged", () => {
     expect(setValueDecimals(123456n, 0)).toBe(123456n);
   });
@@ -277,6 +280,9 @@ describe("round()", () => {
     expect(
       round([1234499999999999999999n, 18]),
     ).toEqual([1234000000000000000000n, 18]);
+    expect(
+      round([1234499999999999999999n, 18], 2),
+    ).toEqual([123400n, 2]);
   });
 });
 
@@ -369,6 +375,11 @@ describe("format()", () => {
     expect(format([123456n, 2], { locale: "fr-FR" })).toBe("1\u202f234,56");
     expect(format([123456n, 2], { locale: "es-ES" })).toBe("1234,56");
     expect(format([123456n, 2], { locale: "de-DE" })).toBe("1.234,56");
+
+    const formatToParts = Intl.NumberFormat.prototype.formatToParts;
+    Intl.NumberFormat.prototype.formatToParts = () => [];
+    expect(format([123456n, 2], { locale: "fr-FR" })).toBe("1\u202f234.56");
+    Intl.NumberFormat.prototype.formatToParts = formatToParts;
   });
 });
 
