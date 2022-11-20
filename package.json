@@ -1,6 +1,6 @@
 {
   "name": "dnum",
-  "version": "1.10.2",
+  "version": "2.0.0",
   "type": "module",
   "module": "dist/dnum.js",
   "main": "dist/dnum.js",
