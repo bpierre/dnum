@@ -85,6 +85,7 @@ Formats the number for display purposes.
 | `options.digits`        | Number of digits to display. Setting `options` to a number acts as an alias for this option. Defaults to the number of decimals in the passed `Dnum`. | `number` |
 | `options.compact`       | Compact formatting (e.g. “1,000” becomes “1K”).                                                                                                       | `object` |
 | `options.trailingZeros` | Add trailing zeros if any, following the number of digits.                                                                                            | `object` |
+| `options.locale`        | The locale used to format the number.                                                                                                                 | `string` |
 | returns                 | Formatted string.                                                                                                                                     | `string` |
 
 #### Example

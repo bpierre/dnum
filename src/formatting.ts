@@ -9,6 +9,7 @@ export function format(
       compact?: boolean;
       digits?: number; // defaults to decimals
       trailingZeros?: boolean;
+      locale?: string;
     }
     | number = {},
 ): string {
@@ -21,7 +22,13 @@ export function format(
     trailingZeros: options.trailingZeros,
   });
 
-  const wholeString = whole.toLocaleString("en-US", {
+  const locale = options.locale ?? Intl.NumberFormat().resolvedOptions().locale;
+  const decimalsSeparator =
+    (new Intl.NumberFormat(locale)).formatToParts(.1).find(v =>
+      v.type === "decimal"
+    )?.value ?? ".";
+
+  const wholeString = whole.toLocaleString(locale, {
     notation: options.compact ? "compact" : "standard",
   });
 
@@ -29,5 +36,5 @@ export function format(
       // check if the compact notation has been applied
       || !/\d/.test(wholeString.at(-1) as string) // “as string” is safe because whole.toLocaleString() always returns a non-empty string
     ? wholeString
-    : `${wholeString}.${fraction}`;
+    : `${wholeString}${decimalsSeparator}${fraction}`;
 }

@@ -365,6 +365,10 @@ describe("format()", () => {
     )).toBe(
       "0.00001",
     );
+    expect(format([123456n, 2], { locale: "en-US" })).toBe("1,234.56");
+    expect(format([123456n, 2], { locale: "fr-FR" })).toBe("1\u202f234,56");
+    expect(format([123456n, 2], { locale: "es-ES" })).toBe("1234,56");
+    expect(format([123456n, 2], { locale: "de-DE" })).toBe("1.234,56");
   });
 });
 
