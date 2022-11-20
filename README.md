@@ -20,10 +20,12 @@ yarn add dnum
 
 dnum might be a good option for your project if:
 
-- You are dealing with numbers represented as integers associated with a number of decimals (e.g. currencies).
-- You need common math operations, safely and by having their representation abstracted.
-- You want to format these numbers without having to convert them into `Number` first (and thus losing precision).
-- You want to avoid adding a library to your project that would be too big, or lack flexibility.
+- You are dealing with decimal numbers represented as integers associated with a number of decimals.
+- You need common math operations that feel like using JavaScript `Number` operators.
+- You want to format these numbers without having to to rely on converting them into `Number` (and losing precision).
+- You want to avoid adding a library to your project that would be too heavy.
+- You don’t want to rely on a library that would require to embrace its wrapper object.
+
 
 ## Example
 
