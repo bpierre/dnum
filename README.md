@@ -26,6 +26,25 @@ dnum might be a good option for your project if:
 - You want to avoid adding a library to your project that would be too heavy.
 - You don’t want to rely on a library that would require to embrace its wrapper object.
 
+## Usage
+
+```ts
+import * as dn from "dnum";
+
+let a = dn.from(2, 18); // the number 2 followed by 18 decimals
+let a = [2000000000000000000n, 18]; // equivalent to the previous line
+
+let b = dn.from("870983127.93887"); // dn.from() can parse strings, numbers, bigint and more
+
+let c = dn.multiply(a, b); // returns [1741966255877740000000000000n, 18]
+
+console.log(
+  dn.format(a), // "2"
+  dn.format(b, 2), // "870,983,127.94"
+  dn.format(c, 2), // "1,741,966,255.88"
+  dn.format(b, { compact: true }), // "1.7B"
+);
+```
 
 ## Example
 
