@@ -18,14 +18,14 @@
     "coverage": "vitest run --coverage"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "5.43.1-alpha.23",
-    "@typescript-eslint/parser": "5.43.1-alpha.23",
-    "@vitest/coverage-c8": "^0.25.2",
-    "dprint": "^0.32.2",
+    "@typescript-eslint/eslint-plugin": "5.45.0",
+    "@typescript-eslint/parser": "5.45.0",
+    "@vitest/coverage-c8": "^0.25.3",
+    "dprint": "^0.33.0",
     "eslint": "^8.28.0",
     "typescript": "^4.9.3",
     "vite": "^3.2.4",
     "vite-plugin-dts": "^1.7.1",
-    "vitest": "^0.25.2"
+    "vitest": "^0.25.3"
   }
 }
