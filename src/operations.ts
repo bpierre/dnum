@@ -62,6 +62,18 @@ export function divide(
   );
 }
 
+export function remainder(
+  num1: Numberish,
+  num2: Numberish,
+  decimals?: Decimals,
+): Dnum {
+  const [num1_, num2_] = normalizePairAndDecimals(num1, num2);
+  return setDecimals(
+    [num1_[0] % num2_[0], num1_[1]],
+    decimals ?? (isDnum(num1) ? num1[1] : num1_[1]),
+  );
+}
+
 export function equal(num1: Numberish, num2: Numberish): boolean {
   const [num1_, num2_] = normalizePairAndDecimals(num1, num2);
   return num1_[0] === num2_[0];

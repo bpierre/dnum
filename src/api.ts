@@ -22,6 +22,7 @@ import {
   greaterThan,
   lessThan,
   multiply,
+  remainder,
   round,
   subtract,
 } from "./operations";
@@ -48,6 +49,8 @@ export {
   lessThan as lt,
   multiply,
   multiply as mul,
+  remainder,
+  remainder as rem,
   round,
   setDecimals,
   subtract,

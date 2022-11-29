@@ -13,6 +13,7 @@ import {
   greaterThan,
   isDnum,
   lessThan,
+  remainder,
   multiply,
   round,
   setDecimals,
@@ -253,6 +254,20 @@ describe("divide()", () => {
   });
   it("accepts bigints", () => {
     expect(divide([123456n, 4], 3n, 2)).toEqual([412n, 2]);
+  });
+});
+
+describe("remainder()", () => {
+  it("works", () => {
+    expect(remainder(10, 7)).toEqual([3n, 0]);
+    expect(remainder(-10, 7)).toEqual([-3n, 0]);
+    expect(remainder(10, -7)).toEqual([3n, 0]);
+    expect(remainder(-10, -7)).toEqual([-3n, 0]);
+    expect(remainder(10, 7, 40)).toEqual([
+      30000000000000000000000000000000000000000n,
+      40,
+    ]);
+    expect(remainder([10_00000000n, 8], 7)).toEqual([3_00000000n, 8]);
   });
 });
 

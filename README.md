@@ -219,6 +219,19 @@ let tokenPriceEth = dnum.divide(tokenPriceUsd, ethPriceUsd, 18); // 0.57 ETH
 // tokenPriceEth equals [570000000000000000, 18]
 ```
 
+### `remainder(value1, value2, decimals)`
+
+Equivalent to [the `%` operator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Remainder): calculate the remainder left over when one operand is divided by a second operand.
+
+| Name                  | Description                                     | Type        |
+| --------------------- | ----------------------------------------------- | ----------- |
+| `value1`              | Dividend                                        | `Numberish` |
+| `value2`              | Divisor                                         | `Numberish` |
+| `decimals` (optional) | Result decimals (defaults to `value1` decimals) | `number`    |
+| returns               | Result value                                    | `Dnum`      |
+
+Alias: `rem()`
+
 ### `abs(value, decimals)`
 
 Equivalent to the [`Math.abs()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/abs) function: it returns the absolute value of the `Dnum` number.
@@ -277,7 +290,7 @@ Equivalent to the [`Math.ceil()`](https://developer.mozilla.org/en-US/docs/Web/J
 
 ### `greaterThan(value1, value2, decimals)`
 
-Equivalent to the [`>`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Greater_than) operator: it returns `true` if the first value is greater than the second value and `false` otherwise, regardless of their respective decimals.
+Equivalent to [the `>` operator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Greater_than): it returns `true` if the first value is greater than the second value and `false` otherwise, regardless of their respective decimals.
 
 | Name                  | Description                                   | Type        |
 | --------------------- | --------------------------------------------- | ----------- |
@@ -301,7 +314,7 @@ dnum.greaterThan(value2, value1); // false
 
 ### `lessThan(value1, value2, decimals)`
 
-Equivalent to the [`<`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Less_than) operator: it returns `true` if the first value is less than the second value and `false` otherwise, regardless of their respective decimals.
+Equivalent to [the `<` operator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Less_than): it returns `true` if the first value is less than the second value and `false` otherwise, regardless of their respective decimals.
 
 | Name                  | Description                                   | Type        |
 | --------------------- | --------------------------------------------- | ----------- |
@@ -325,7 +338,7 @@ dnum.lessThan(value2, value1); // false
 
 ### `equal(value1, value2, decimals)`
 
-Equivalent to the [`==`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Equality) operator: it returns `true` if the first value is equal to the second value and `false` otherwise, regardless of their respective decimals.
+Equivalent to [the `==` operator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Equality): it returns `true` if the first value is equal to the second value and `false` otherwise, regardless of their respective decimals.
 
 | Name                  | Description                                   | Type        |
 | --------------------- | --------------------------------------------- | ----------- |
