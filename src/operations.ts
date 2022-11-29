@@ -74,6 +74,11 @@ export function remainder(
   );
 }
 
+export function compare(num1: Numberish, num2: Numberish): 1 | -1 | 0 {
+  const [num1_, num2_] = normalizePairAndDecimals(num1, num2);
+  return num1_ > num2_ ? 1 : num1_ < num2_ ? -1 : 0;
+}
+
 export function equal(num1: Numberish, num2: Numberish): boolean {
   const [num1_, num2_] = normalizePairAndDecimals(num1, num2);
   return num1_[0] === num2_[0];

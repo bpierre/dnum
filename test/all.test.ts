@@ -3,6 +3,7 @@ import {
   abs,
   add,
   ceil,
+  compare,
   divide,
   equal,
   equalizeDecimals,
@@ -13,8 +14,8 @@ import {
   greaterThan,
   isDnum,
   lessThan,
-  remainder,
   multiply,
+  remainder,
   round,
   setDecimals,
   subtract,
@@ -280,6 +281,31 @@ describe("divideAndRound()", () => {
     expect(divideAndRound(20n, 6n)).toBe(3n);
     expect(divideAndRound(20n, 7n)).toBe(3n);
     expect(divideAndRound(15n, 2n)).toBe(8n);
+  });
+});
+
+describe("compare()", () => {
+  it("works", () => {
+    expect(compare(1n, -1n)).toBe(1);
+    expect(compare(-1n, 1n)).toBe(-1);
+    expect(compare(1n, 1n)).toBe(0);
+    expect(
+      [
+        1,
+        8n,
+        [70000n, 4] as const,
+        3.1,
+        2n,
+        5,
+      ].sort(compare),
+    ).toEqual([
+      1,
+      2n,
+      3.1,
+      5,
+      [70000n, 4],
+      8n,
+    ]);
   });
 });
 

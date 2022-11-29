@@ -358,6 +358,31 @@ let value2 = [10000000n, 4];
 dnum.lessThan(value1, value2); // true
 ```
 
+### `compare(value1, value2)`
+
+Returns `1` if `value1 > value2`, `-1` if `value1 < value2`, `0` if `value1 == value2`. It makes it easy to combine `Dnum` values with sorting functions such as [`Array#sort()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort).
+
+| Name     | Description  | Type           |
+| -------- | ------------ | -------------- |
+| `value1` | First value  | `Numberish`    |
+| `value2` | Second value | `Numberish`    |
+| returns  | Result value | `1 \| -1 \| 0` |
+
+#### Example
+
+```ts
+let sorted = [
+  1,
+  8n,
+  [700n, 2],
+  3.1,
+  2n,
+  5,
+].sort(compare);
+
+console.log(sorted); // [1, 2n, 3.1, 5, [700n, 2], 8n];
+```
+
 ### `toNumber(value, options)`
 
 Converts the `Dnum` data structure into a `Number`. [This will result in a loss of precision](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number#number_encoding) depending on how large the number is.
