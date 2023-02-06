@@ -1,6 +1,12 @@
 import type { Decimals, Dnum, Numberish, Value } from "./types";
 
-import { divideAndRound, powerOfTen, splitNumber } from "./utils";
+import {
+  abs,
+  divideAndRound,
+  powerOfTen,
+  roundToPower,
+  splitNumber,
+} from "./utils";
 
 export function isDnum(value: unknown): value is Dnum {
   return (
@@ -126,7 +132,7 @@ export function toParts(
 ): [whole: bigint, fraction: string | null] {
   const [value, decimals] = dnum;
 
-  // options.digits can also be passed directly as the third argument
+  // options.digits can also be passed directly as the second argument
   if (typeof optionsOrDigits === "number") {
     optionsOrDigits = { digits: optionsOrDigits };
   }
@@ -143,16 +149,29 @@ export function toParts(
   const decimalsDivisor = powerOfTen(decimals);
 
   const whole = value / decimalsDivisor;
-  let fraction = String(value % decimalsDivisor).replace(/^-/, "");
+  const fractionValue = abs(value % decimalsDivisor);
 
-  const zeros = "0".repeat(
-    Math.max(0, String(decimalsDivisor).length - fraction.length - 1),
+  let fraction = String(
+    roundToPower(
+      BigInt(
+        // prefix with 1 to keep the leading zeros
+        "1"
+          // leading zeros
+          + "0".repeat(
+            Math.max(
+              0,
+              String(decimalsDivisor).length - String(fractionValue).length - 1,
+            ),
+          )
+          // non zero numbers
+          + String(fractionValue),
+      ),
+      powerOfTen(Math.max(0, decimals - digits)),
+    ),
   );
 
-  fraction = zeros + divideAndRound(
-    BigInt(fraction),
-    powerOfTen(Math.max(0, decimals - digits)),
-  );
+  // remove the leading 1 and extra decimal places
+  fraction = fraction.slice(1, digits + 1);
 
   if (trailingZeros) {
     fraction = fraction.padEnd(digits, "0");

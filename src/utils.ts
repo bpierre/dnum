@@ -21,3 +21,13 @@ export function powerOfTen(zeroes: number) {
   // See https://github.com/codesandbox/codesandbox-client/issues/6706
   return BigInt("1" + "0".repeat(zeroes));
 }
+
+export function roundToPower(value: bigint, power: bigint) {
+  const a = (value / power) * power;
+  const b = a + power;
+  return (value - a >= b - value) ? b : a;
+}
+
+export function abs(value: bigint) {
+  return value < BigInt(0) ? -value : value;
+}

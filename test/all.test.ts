@@ -460,6 +460,42 @@ describe("toParts()", () => {
       [0n, "00001"],
     );
   });
+  it("rounds decimals properly", () => {
+    expect(toParts([49999999n, 9], 1)).toEqual([0n, null]);
+    expect(toParts([50000000n, 9], 1)).toEqual([0n, "1"]);
+    expect(toParts([49998805n, 9], 2)).toEqual([0n, "05"]);
+    expect(toParts([90000000n, 9], 1)).toEqual([0n, "1"]);
+
+    // 1234.56
+    expect(toParts([123456n, 2], 1)).toEqual([1234n, "6"]);
+    expect(toParts([123456n, 2], 2)).toEqual([1234n, "56"]);
+    expect(toParts([123456n, 2], 3)).toEqual([1234n, "56"]);
+
+    // 0.09
+    expect(toParts([9n, 2], 1)).toEqual([0n, "1"]);
+    expect(toParts([9n, 2], 2)).toEqual([0n, "09"]);
+
+    // 1.09
+    expect(toParts([109n, 2], 1)).toEqual([1n, "1"]);
+    expect(toParts([109n, 2], 2)).toEqual([1n, "09"]);
+
+    // 0.006
+    expect(toParts([6n, 3], 1)).toEqual([0n, null]);
+    expect(toParts([6n, 3], 2)).toEqual([0n, "01"]);
+    expect(toParts([6n, 3], 3)).toEqual([0n, "006"]);
+
+    // 0.049998805;
+    expect(toParts([49998805n, 9], 0)).toEqual([0n, null]);
+    expect(toParts([49998805n, 9], 1)).toEqual([0n, null]);
+    expect(toParts([49998805n, 9], 2)).toEqual([0n, "05"]);
+    expect(toParts([49998805n, 9], 3)).toEqual([0n, "05"]);
+    expect(toParts([49998805n, 9], 4)).toEqual([0n, "05"]);
+    expect(toParts([49998805n, 9], 5)).toEqual([0n, "05"]);
+    expect(toParts([49998805n, 9], 6)).toEqual([0n, "049999"]);
+    expect(toParts([49998805n, 9], 7)).toEqual([0n, "0499988"]);
+    expect(toParts([49998805n, 9], 8)).toEqual([0n, "04999881"]);
+    expect(toParts([49998805n, 9], 9)).toEqual([0n, "049998805"]);
+  });
 });
 
 describe("toNumber()", () => {
