@@ -4,25 +4,24 @@ import { toParts } from "./dnum";
 
 export function format(
   dnum: Dnum,
-  optionsOrDigits:
-    | {
-      compact?: boolean;
-      digits?: number; // defaults to decimals
-      trailingZeros?: boolean;
-      locale?: string;
-    }
-    | number = {},
+  // see toParts() in src/dnum.ts
+  optionsOrDigits: Parameters<typeof toParts>[1] & {
+    compact?: boolean;
+    locale?: ConstructorParameters<typeof Intl.NumberFormat>[0];
+  },
 ): string {
   const options = typeof optionsOrDigits === "number"
     ? { digits: optionsOrDigits }
     : optionsOrDigits;
 
-  const [whole, fraction] = toParts(dnum, {
-    digits: options.digits,
-    trailingZeros: options.trailingZeros,
-  });
+  const {
+    compact,
+    locale = Intl.NumberFormat().resolvedOptions().locale,
+    ...toPartsOptions
+  } = options;
 
-  const locale = options.locale ?? Intl.NumberFormat().resolvedOptions().locale;
+  const [whole, fraction] = toParts(dnum, toPartsOptions);
+
   const decimalsSeparator = (
     new Intl.NumberFormat(locale)
       .formatToParts(.1)
@@ -30,7 +29,7 @@ export function format(
   );
 
   const wholeString = whole.toLocaleString(locale, {
-    notation: options.compact ? "compact" : "standard",
+    notation: compact ? "compact" : "standard",
   });
 
   return fraction === null

@@ -2,7 +2,9 @@ import type { Decimals, Dnum, Numberish, Value } from "./types";
 
 import {
   abs,
+  ceilToPower,
   divideAndRound,
+  floorToPower,
   powerOfTen,
   roundToPower,
   splitNumber,
@@ -127,20 +129,22 @@ export function toParts(
     | {
       digits?: number; // defaults to decimals
       trailingZeros?: boolean;
+      decimalsRounding?: "ROUND_HALF" | "ROUND_UP" | "ROUND_DOWN";
     }
     | number = {},
 ): [whole: bigint, fraction: string | null] {
   const [value, decimals] = dnum;
 
   // options.digits can also be passed directly as the second argument
-  if (typeof optionsOrDigits === "number") {
-    optionsOrDigits = { digits: optionsOrDigits };
-  }
+  const options = typeof optionsOrDigits === "number"
+    ? { digits: optionsOrDigits }
+    : optionsOrDigits;
 
   const {
     digits = decimals,
-    trailingZeros = false,
-  } = optionsOrDigits;
+    trailingZeros,
+    decimalsRounding,
+  } = options;
 
   if (decimals === 0) {
     return [value, null];
@@ -148,11 +152,19 @@ export function toParts(
 
   const decimalsDivisor = powerOfTen(decimals);
 
-  const whole = value / decimalsDivisor;
+  let whole = value / decimalsDivisor;
   const fractionValue = abs(value % decimalsDivisor);
 
+  let roundFn = (
+    decimalsRounding === "ROUND_UP"
+      ? ceilToPower
+      : decimalsRounding === "ROUND_DOWN"
+      ? floorToPower
+      : roundToPower
+  );
+
   let fraction = String(
-    roundToPower(
+    roundFn(
       BigInt(
         // prefix with 1 to keep the leading zeros
         "1"
@@ -170,6 +182,10 @@ export function toParts(
     ),
   );
 
+  if (fraction.startsWith("2")) {
+    whole += BigInt(1);
+  }
+
   // remove the leading 1 and extra decimal places
   fraction = fraction.slice(1, digits + 1);
 
@@ -185,6 +201,9 @@ export function toParts(
   ];
 }
 
-export function toNumber(value: Dnum, digits?: number) {
-  return Number(toParts(value, { digits }).join("."));
+export function toNumber(
+  value: Dnum,
+  optionsOrDigits: Parameters<typeof toParts>[1],
+) {
+  return Number(toParts(value, optionsOrDigits).join("."));
 }

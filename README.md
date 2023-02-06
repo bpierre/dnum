@@ -100,14 +100,15 @@ type Numberish = string | number | bigint | Dnum;
 
 Formats the number for display purposes.
 
-| Name                    | Description                                                                                                                                           | Type     |
-| ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
-| `value`                 | The value to format.                                                                                                                                  | `Dnum`   |
-| `options.digits`        | Number of digits to display. Setting `options` to a number acts as an alias for this option. Defaults to the number of decimals in the passed `Dnum`. | `number` |
-| `options.compact`       | Compact formatting (e.g. “1,000” becomes “1K”).                                                                                                       | `object` |
-| `options.trailingZeros` | Add trailing zeros if any, following the number of digits.                                                                                            | `object` |
-| `options.locale`        | The locale used to format the number.                                                                                                                 | `string` |
-| returns                 | Formatted string.                                                                                                                                     | `string` |
+| Name                       | Description                                                                                                                                           | Type                                         |
+| -------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------- |
+| `value`                    | The value to format.                                                                                                                                  | `Dnum`                                       |
+| `options.digits`           | Number of digits to display. Setting `options` to a number acts as an alias for this option. Defaults to the number of decimals in the passed `Dnum`. | `number`                                     |
+| `options.compact`          | Compact formatting (e.g. “1,000” becomes “1K”).                                                                                                       | `object`                                     |
+| `options.trailingZeros`    | Add trailing zeros if any, following the number of digits.                                                                                            | `object`                                     |
+| `options.locale`           | The locale used to format the number.                                                                                                                 | `string`                                     |
+| `options.decimalsRounding` | Method used to round to `digits` decimals (defaults to `"ROUND_HALF"`).                                                                               | `"ROUND_HALF" \| "ROUND_UP" \| "ROUND_DOWN"` |
+| returns                    | Formatted string.                                                                                                                                     | `string`                                     |
 
 #### Example
 

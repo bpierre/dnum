@@ -422,6 +422,22 @@ describe("format()", () => {
     expect(format([123456n, 2], { locale: "fr-FR" })).toBe("1\u202f234.56");
     Intl.NumberFormat.prototype.formatToParts = formatToParts;
   });
+  it("rounds correctly", () => {
+    // using 4,569.988
+    const n = [456988n, 2] as const;
+
+    expect(format(n, 0)).toBe("4,570");
+    expect(format(n, 1)).toBe("4,569.9");
+    expect(format(n, 2)).toBe("4,569.88");
+    expect(format(n, {
+      digits: 2,
+      decimalsRounding: "ROUND_UP",
+    })).toBe("4,569.89");
+    expect(format(n, {
+      digits: 1,
+      decimalsRounding: "ROUND_DOWN",
+    })).toBe("4,569.8");
+  });
 });
 
 describe("toParts()", () => {
@@ -479,6 +495,11 @@ describe("toParts()", () => {
     expect(toParts([109n, 2], 1)).toEqual([1n, "1"]);
     expect(toParts([109n, 2], 2)).toEqual([1n, "09"]);
 
+    // 1.65
+    expect(toParts([165n, 2], 0)).toEqual([2n, null]); // 2
+    expect(toParts([165n, 2], 1)).toEqual([1n, "7"]); // 1.7
+    expect(toParts([165n, 2], 2)).toEqual([1n, "65"]); // 1.65
+
     // 0.006
     expect(toParts([6n, 3], 1)).toEqual([0n, null]);
     expect(toParts([6n, 3], 2)).toEqual([0n, "01"]);
@@ -495,6 +516,39 @@ describe("toParts()", () => {
     expect(toParts([49998805n, 9], 7)).toEqual([0n, "0499988"]);
     expect(toParts([49998805n, 9], 8)).toEqual([0n, "04999881"]);
     expect(toParts([49998805n, 9], 9)).toEqual([0n, "049998805"]);
+
+    // decimals for 1-7 digits, rounding half (default)
+    [null, "05", "05", "05", "05", "049999", "0499988"].forEach(
+      (decimals, index) => {
+        expect(
+          toParts([49998805n, 9], { digits: index + 1 }),
+        ).toEqual([0n, decimals]);
+      },
+    );
+
+    // decimals for 1-7 digits, rounding up
+    ["1", "05", "05", "05", "05", "049999", "0499989"].forEach(
+      (decimals, index) => {
+        expect(
+          toParts([49998805n, 9], {
+            digits: index + 1,
+            decimalsRounding: "ROUND_UP",
+          }),
+        ).toEqual([0n, decimals]);
+      },
+    );
+
+    // decimals for 1-7 digits, rounding down
+    [null, "04", "049", "0499", "04999", "049998", "0499988"].forEach(
+      (decimals, index) => {
+        expect(
+          toParts([49998805n, 9], {
+            digits: index + 1,
+            decimalsRounding: "ROUND_DOWN",
+          }),
+        ).toEqual([0n, decimals]);
+      },
+    );
   });
 });
 

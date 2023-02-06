@@ -28,6 +28,14 @@ export function roundToPower(value: bigint, power: bigint) {
   return (value - a >= b - value) ? b : a;
 }
 
+export function ceilToPower(value: bigint, power: bigint) {
+  return ((value / power) * power) + power;
+}
+
+export function floorToPower(value: bigint, power: bigint) {
+  return (value / power) * power;
+}
+
 export function abs(value: bigint) {
   return value < BigInt(0) ? -value : value;
 }
