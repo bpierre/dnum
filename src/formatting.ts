@@ -8,7 +8,7 @@ export function format(
   optionsOrDigits: Parameters<typeof toParts>[1] & {
     compact?: boolean;
     locale?: ConstructorParameters<typeof Intl.NumberFormat>[0];
-  },
+  } = {},
 ): string {
   const options = typeof optionsOrDigits === "number"
     ? { digits: optionsOrDigits }
