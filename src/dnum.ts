@@ -197,7 +197,9 @@ export function toParts(
 
   return [
     whole,
-    fraction === "" || BigInt(fraction) === BigInt(0) ? null : fraction,
+    fraction === "" || (BigInt(fraction) === BigInt(0) && !trailingZeros)
+      ? null
+      : fraction,
   ];
 }
 

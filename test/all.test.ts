@@ -401,6 +401,12 @@ describe("format()", () => {
       "-12,340,093,287,019,287,309,832,179,832,179,873,129,871.32980000",
     );
     expect(format(
+      from("5", 2),
+      { digits: 2, trailingZeros: true },
+    )).toBe(
+      "5.00",
+    );
+    expect(format(
       [-123400932870192873098321798321798731298713298n, 4],
       { digits: 8, trailingZeros: false },
     )).toBe(
@@ -412,6 +418,7 @@ describe("format()", () => {
     )).toBe(
       "0.00001",
     );
+
     expect(format([123456n, 2], { locale: "en-US" })).toBe("1,234.56");
     expect(format([123456n, 2], { locale: "fr-FR" })).toBe("1\u202f234,56");
     expect(format([123456n, 2], { locale: "es-ES" })).toBe("1234,56");
@@ -475,6 +482,14 @@ describe("toParts()", () => {
     )).toEqual(
       [0n, "00001"],
     );
+
+    expect(toParts(
+      from(5, 4),
+      { digits: 4, trailingZeros: true },
+    )).toEqual([
+      5n,
+      "0000",
+    ]);
   });
   it("rounds decimals properly", () => {
     expect(toParts([49999999n, 9], 1)).toEqual([0n, null]);
