@@ -490,6 +490,18 @@ describe("toParts()", () => {
       5n,
       "0000",
     ]);
+
+    expect(
+      toParts([0n, 0], { digits: 2, trailingZeros: true }),
+    ).toEqual([0n, "00"]);
+
+    expect(
+      toParts([5n, 0], { digits: 2, trailingZeros: true }),
+    ).toEqual([5n, "00"]);
+
+    expect(
+      toParts([500n, 2], { digits: 8, trailingZeros: true }),
+    ).toEqual([5n, "00000000"]);
   });
   it("rounds decimals properly", () => {
     expect(toParts([49999999n, 9], 1)).toEqual([0n, null]);

@@ -146,10 +146,6 @@ export function toParts(
     decimalsRounding,
   } = options;
 
-  if (decimals === 0) {
-    return [value, null];
-  }
-
   const decimalsDivisor = powerOfTen(decimals);
 
   let whole = value / decimalsDivisor;
