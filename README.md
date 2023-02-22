@@ -4,6 +4,24 @@
 
 dnum provides a [small](https://bundlephobia.com/package/dnum@latest) set of utilities to manipulate large numbers represented as a pair composed of a value (stored as a [`BigInt`](https://developer.mozilla.org/en-US/docs/Glossary/BigInt)) and corresponding decimals. This structure makes it possible to handle large decimal numbers in an easy manner, without any loss of precision, and using an open structure that preserves flexibility.
 
+In other words, it lets you go from this:
+
+```ts
+// without dnum (precision loss)
+console.log(0.1 + 0.2)                    // 0.30000000000000004
+console.log(9999999999999999.99 + 0.1234) // 10000000000000000
+```
+
+To this:
+
+```ts
+// with dnum (no precision loss)
+dnum.add("0.1", "0.2")                    // 0.3
+dnum.add("9999999999999999.99", "0.1234") // 10000000000000000.1134
+```
+
+While also providing useful features for everyday apps, such as formatting and math operator functions. It relies on a simple but flexible format to represent decimal numbers:
+
 ```ts
 type Dnum = [value: bigint, decimals: number];
 ```
