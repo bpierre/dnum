@@ -387,6 +387,8 @@ Returns `1` if `value1 > value2`, `-1` if `value1 < value2`, `0` if `value1 == v
 | `value2` | Second value | `Numberish`    |
 | returns  | Result value | `1 \| -1 \| 0` |
 
+Alias: `cmp()`
+
 #### Example
 
 ```ts

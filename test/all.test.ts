@@ -286,6 +286,10 @@ describe("divideAndRound()", () => {
 
 describe("compare()", () => {
   it("works", () => {
+    expect(compare(
+      [16000000000000n, 18], // 0.000016
+      [1300000000000000n, 18], // 0.0013
+    )).toBe(-1);
     expect(compare(1n, -1n)).toBe(1);
     expect(compare(-1n, 1n)).toBe(-1);
     expect(compare(1n, 1n)).toBe(0);

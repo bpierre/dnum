@@ -35,6 +35,7 @@ export {
   add,
   ceil,
   compare,
+  compare as cmp,
   divide,
   divide as div,
   equal,
