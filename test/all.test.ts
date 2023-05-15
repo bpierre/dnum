@@ -624,6 +624,13 @@ describe("from()", () => {
   it("works with numbers", () => {
     expect(from(12345.29387, 18)).toEqual([12345293870000000000000n, 18]);
     expect(from(-12345.29387, 18)).toEqual([-12345293870000000000000n, 18]);
+    expect(from(10 ** 20, 0)).toEqual([100000000000000000000n, 0]);
+  });
+  it("fails when the passed number lost its precision", () => {
+    expect(() => from(10 ** 21, 0))
+      .toThrowErrorMatchingInlineSnapshot(
+        '"The passed number lost its precision: 1e+21. Please use a string, BigInt or Dnum value instead."',
+      );
   });
   it("works with bigints", () => {
     expect(from(1234529387n, 18)).toEqual([1234529387000000000000000000n, 18]);

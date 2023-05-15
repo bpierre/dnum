@@ -36,6 +36,13 @@ export function from(
 
   value = String(value);
 
+  if (value.includes("e")) {
+    throw new Error(
+      `The passed number lost its precision: ${value}. `
+        + `Please use a string, BigInt or Dnum value instead.`,
+    );
+  }
+
   if (!value.match(NUM_RE)) {
     throw new Error(`Incorrect number: ${value}`);
   }
