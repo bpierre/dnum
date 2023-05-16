@@ -52,7 +52,7 @@ export function divide(
 ): Dnum {
   const [num1_, num2_] = normalizePairAndDecimals(num1, num2, decimals);
   if (num2_[0] === BigInt(0)) {
-    throw new Error("Dnum: division by zero");
+    throw new Error("dnum: division by zero");
   }
   const value1 = setValueDecimals(num1_[0], Math.max(num1_[1], decimals ?? 0));
   const value2 = setValueDecimals(num2_[0], 0);
@@ -147,7 +147,7 @@ function normalizePairAndDecimals(
   const num2_ = from(num2);
 
   if (num1_[1] < 0 || num2_[1] < 0) {
-    throw new Error("Dnum: decimals cannot be negative");
+    throw new Error("dnum: decimals cannot be negative");
   }
 
   return equalizeDecimals(

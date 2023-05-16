@@ -626,11 +626,8 @@ describe("from()", () => {
     expect(from(-12345.29387, 18)).toEqual([-12345293870000000000000n, 18]);
     expect(from(10 ** 20, 0)).toEqual([100000000000000000000n, 0]);
   });
-  it("fails when the passed number lost its precision", () => {
-    expect(() => from(10 ** 21, 0))
-      .toThrowErrorMatchingInlineSnapshot(
-        '"The passed number lost its precision: 1e+21. Please use a string, BigInt or Dnum value instead."',
-      );
+  it("accepts numbers requiring scientific notation", () => {
+    expect(from(10 ** 21, 0)).toEqual([10n ** 21n, 0]);
   });
   it("works with bigints", () => {
     expect(from(1234529387n, 18)).toEqual([1234529387000000000000000000n, 18]);
@@ -640,7 +637,8 @@ describe("from()", () => {
     ]);
   });
   it("throws with incorrect values", () => {
-    expect(() => from("3298.987.32", 18)).toThrowError("Incorrect");
+    expect(() => from("3298.987.32", 18))
+      .toThrowErrorMatchingSnapshot(JSON.stringify(["3298.987.32", 18]));
   });
 });
 

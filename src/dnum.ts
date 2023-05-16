@@ -1,5 +1,6 @@
 import type { Decimals, Dnum, Numberish, Value } from "./types";
 
+import fromExponential from "from-exponential";
 import {
   abs,
   ceilToPower,
@@ -37,14 +38,11 @@ export function from(
   value = String(value);
 
   if (value.includes("e")) {
-    throw new Error(
-      `The passed number lost its precision: ${value}. `
-        + `Please use a string, BigInt or Dnum value instead.`,
-    );
+    value = fromExponential(value);
   }
 
   if (!value.match(NUM_RE)) {
-    throw new Error(`Incorrect number: ${value}`);
+    throw new Error(`dnum: incorrect number (${value})`);
   }
 
   const negative = value.startsWith("-");
@@ -105,7 +103,7 @@ export function setDecimals(
   }
 
   if (value[1] < 0 || decimals < 0) {
-    throw new Error("Decimals cannot be negative");
+    throw new Error("dnum: decimals cannot be negative");
   }
 
   const decimalsDiff = decimals - value[1];
