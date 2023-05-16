@@ -637,6 +637,7 @@ describe("from()", () => {
     ]);
   });
   it("throws with incorrect values", () => {
+    expect(from(10 ** 21)).toEqual([10n ** 21n, 0]);
     expect(() => from("3298.987.32", 18))
       .toThrowErrorMatchingSnapshot(JSON.stringify(["3298.987.32", 18]));
   });
