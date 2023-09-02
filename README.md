@@ -2,25 +2,7 @@
 
 <p align=center><a href="https://www.npmjs.com/package/dnum"><img src="https://badgen.net/npm/v/dnum" alt="npm version"></a> <a href="https://bundlephobia.com/result?p=dnum"><img src="https://img.shields.io/bundlephobia/minzip/dnum" alt="bundle size"></a> <a href="https://github.com/bpierre/dnum/blob/main/LICENSE"><img src="https://badgen.net/github/license/bpierre/dnum" alt="License"></a></p>
 
-dnum provides a [small](https://bundlephobia.com/package/dnum@latest) set of utilities to manipulate large numbers represented as a pair composed of a value (stored as a [`BigInt`](https://developer.mozilla.org/en-US/docs/Glossary/BigInt)) and corresponding decimals. This structure makes it possible to handle large decimal numbers in an easy manner, without any loss of precision, and using an open structure that preserves flexibility.
-
-In other words, it lets you go from this:
-
-```ts
-// without dnum (precision loss)
-console.log(0.1 + 0.2)                    // 0.30000000000000004
-console.log(9999999999999999.99 + 0.1234) // 10000000000000000
-```
-
-To this:
-
-```ts
-// with dnum (no precision loss)
-dnum.add("0.1", "0.2")                    // 0.3
-dnum.add("9999999999999999.99", "0.1234") // 10000000000000000.1134
-```
-
-While also providing useful features for everyday apps, such as formatting and math operator functions. It relies on a simple but flexible format to represent decimal numbers:
+dnum provides a [concise](https://bundlephobia.com/package/dnum@latest) set of utilities designed for the manipulation of large numbers. It provides useful features for everyday apps, such as formatting and math functions. Numbers are represented as a pair composed of a value ([`BigInt`](https://developer.mozilla.org/en-US/docs/Glossary/BigInt)) and a decimal precision. This structure makes it possible maintain precision while offering a great flexibility compared to other approaches.
 
 ```ts
 type Dnum = [value: bigint, decimals: number];
@@ -58,48 +40,58 @@ yarn add dnum
 
 dnum might be a good option for your project if:
 
-- You are dealing with decimal numbers represented as integers associated with a number of decimals.
-- You need common math operations that feel like using JavaScript `Number` operators.
-- You want to format large numbers without converting them to `Number`, to avoid precision loss.
-- You want to avoid adding a library to your project that would be too heavy.
-- You don’t want to rely on a library that would require to embrace its wrapper object.
+- Your numbers are represented as value + decimals pairs.
+- You need to format large numbers for UI purposes.
+- You want to keep your big numbers library small.
+- You want a simple, straightforward data structure.
 
 ## Example
 
-dnum can be useful to manipulate different currencies together, so let’s imagine a situation where you have the price of a given [token](https://ethereum.org/en/developers/docs/standards/tokens/erc-20/) token TKN expressed in [ETH](https://ethereum.org/en/developers/docs/intro-to-ether/), which you received it as a string to avoid any precision issue:
+dnum can be used to perform math operations on currency values. Let’s consider a scenario where you have the price of a specific [token](https://ethereum.org/en/developers/docs/standards/tokens/erc-20/) known as TKN, expressed in [ETH](https://ethereum.org/en/developers/docs/intro-to-ether/), received as a string to prevent potential precision issues:
 
 ```ts
 let tknPriceInEth = "17.30624293209842";
 ```
 
-And you have the price of ETH in USD, as a number this time:
+And you received the price of 1 ETH in USD from a different source, as a JavaScript number:
 
 ```ts
 let ethPriceInUsd = 1002.37;
 ```
 
-Finally, you have a certain quantity of TKN to be displayed, as a BigInt:
+Finally, your app has a specific quantity of TKN to be displayed, represented as a BigInt with an implied 18 decimals precision:
 
 ```ts
-let tknQuantity = 1401385000000000000000n; // 1401.385 with 18 decimals precision
+let tknQuantity = 1401385000000000000000n; // 1401.385 (18 decimals precision)
 ```
 
-You want to display the USD value of `tknQuantity`, which would normally require to:
+You want to display the USD value of `tknQuantity`. This would normally require to:
 
 - Parse the numbers correctly (without using `parseInt()` / `parseFloat()` to avoid precision loss).
 - Convert everything into BigInt values with an identical decimals precision.
-- Multiply the numbers and get the result.
-- Convert it into a string to format it − without using `Number` since you’d lose precision.
+- Multiply the numbers.
+- Convert the resulting BigInt into a string and format it for display purposes, without `Intl.NumberFormat` since it would cause precision loss.
 
 dnum can do all of this for you:
 
 ```ts
-// No need to convert anything, you can just multiply different formats of decimal numbers:
+let tknPriceInEth = "17.30624293209842";
+let ethPriceInUsd = 1002.37;
+let tknQuantity = 1401385000000000000000n; // 1401.385 (18 decimals precision)
+
+// dnum function parameters accept various ways to represent decimal numbers.
 let tknPriceInUsd = dnum.multiply(tknPriceInEth, ethPriceInUsd);
 
-// A Dnum is just a two entries array (or tuple): [value: bigint, decimals: number]
-let tknQuantityInUsd = dnum.multiply([tknQuantity, 18], tknPriceInUsd);
+let tknQuantityInUsd = dnum.multiply(
+  // Here we only attach the 18 decimals precision with the bigint value,
+  // which corresponds to the Dnum type: [value: bigint, decimals: number].
+  // You can pass this structure anywhere dnum expects a value, and this is
+  // also what most dnum functions return.
+  [tknQuantity, 18],
+  tknPriceInUsd,
+);
 
+// We can now format the obtained result, rounding its decimals to 2 digits:
 dnum.format(tknQuantityInUsd, 2); // $24,310,188.17
 ```
 
