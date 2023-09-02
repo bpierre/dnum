@@ -1,0 +1,22 @@
+{
+  "typescript": {
+    "lineWidth": 85,
+    "arrowFunction.useParentheses": "force"
+  },
+  "json": {
+  },
+  "markdown": {
+  },
+  "toml": {
+  },
+  "includes": ["**/*.{ts,tsx,js,jsx,cjs,mjs,json,md,toml}"],
+  "excludes": [
+    "**/node_modules",
+    "**/*-lock.json"
+  ],
+  "plugins": [
+    "https://plugins.dprint.dev/typescript-0.79.0.wasm",
+    "https://plugins.dprint.dev/json-0.17.0.wasm",
+    "https://plugins.dprint.dev/markdown-0.15.1.wasm"
+  ]
+}
