@@ -15,6 +15,7 @@
   ],
   "homepage": "https://github.com/bpierre/dnum",
   "bugs": "https://github.com/bpierre/dnum/issues",
+  "repository": "github:bpierre/dnum",
   "module": "dist/dnum.js",
   "main": "dist/dnum.js",
   "types": "dist/index.d.ts",
