@@ -2,6 +2,17 @@
   "name": "dnum",
   "version": "2.7.0",
   "type": "module",
+  "license": "MIT",
+  "author": "Pierre Bertet",
+  "description": "Small library for big decimal numbers.",
+  "keywords": [
+    "typescript",
+    "decimal-number",
+    "big-decimal",
+    "formatting",
+    "currency",
+    "bigint"
+  ],
   "module": "dist/dnum.js",
   "main": "dist/dnum.js",
   "types": "dist/index.d.ts",
