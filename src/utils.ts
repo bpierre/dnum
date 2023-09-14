@@ -1,6 +1,6 @@
 export function divideAndRound(dividend: bigint, divisor: bigint) {
-  const invertSign = BigInt(dividend < BigInt(0) ? -1 : 1);
-  return (dividend * invertSign + divisor / BigInt(2)) / divisor * invertSign;
+  const invertSign = dividend < 0n ? -1n : 1n;
+  return (dividend * invertSign + divisor / 2n) / divisor * invertSign;
 }
 
 export function splitNumber(number: string) {
@@ -37,5 +37,5 @@ export function floorToPower(value: bigint, power: bigint) {
 }
 
 export function abs(value: bigint) {
-  return value < BigInt(0) ? -value : value;
+  return value < 0n ? -value : value;
 }

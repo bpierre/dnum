@@ -66,7 +66,9 @@ export function from(
 
   const result = (
     BigInt(whole) * powerOfTen(decimals) + BigInt(fraction)
-  ) * BigInt(negative ? -1 : 1);
+  ) * (
+    negative ? -1n : 1n
+  );
 
   return [result, decimals];
 }
@@ -116,7 +118,7 @@ export function setDecimals(
 export function equalizeDecimals(nums: Dnum[], decimals?: number): Dnum[] {
   const decimals_ = decimals
     ?? Math.max(...nums.map(([, decimals]) => decimals), 0);
-  return nums.map(num => setDecimals(num, decimals_));
+  return nums.map((num) => setDecimals(num, decimals_));
 }
 
 export function toJSON([value, decimals]: Dnum) {
@@ -137,7 +139,10 @@ export function toParts(
       decimalsRounding?: "ROUND_HALF" | "ROUND_UP" | "ROUND_DOWN";
     }
     | number = {},
-): [whole: bigint, fraction: string | null] {
+): [
+  whole: bigint, // always positive
+  fraction: string | null,
+] {
   const [value, decimals] = dnum;
 
   // options.digits can also be passed directly as the second argument
@@ -183,22 +188,23 @@ export function toParts(
     ),
   );
 
+  // if the 1 prefix has changed to 2, it means that the
+  // rounding caused the whole part to be incremented
   if (fraction.startsWith("2")) {
-    whole += BigInt(1);
+    whole += 1n;
   }
 
-  // remove the leading 1 and extra decimal places
+  // remove the leading 1 and extra decimal places (see above)
   fraction = fraction.slice(1, digits + 1);
 
-  if (trailingZeros) {
-    fraction = fraction.padEnd(digits, "0");
-  } else {
-    fraction = fraction.replace(/0+$/, "");
-  }
+  // trim or pad with trailing zeros
+  fraction = trailingZeros
+    ? fraction.padEnd(digits, "0")
+    : fraction.replace(/0+$/, "");
 
   return [
-    whole,
-    fraction === "" || (BigInt(fraction) === BigInt(0) && !trailingZeros)
+    abs(whole),
+    fraction === "" || (BigInt(fraction) === 0n && !trailingZeros)
       ? null
       : fraction,
   ];
@@ -208,5 +214,10 @@ export function toNumber(
   value: Dnum,
   optionsOrDigits: Parameters<typeof toParts>[1],
 ) {
-  return Number(toParts(value, optionsOrDigits).join("."));
+  const [whole, fraction] = toParts(value, optionsOrDigits);
+  return Number(
+    (value[0] >= 0n ? "" : "-")
+      + whole
+      + (fraction ? `.${fraction}` : ""),
+  );
 }

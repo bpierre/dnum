@@ -51,7 +51,7 @@ export function divide(
   decimals?: Decimals,
 ): Dnum {
   const [num1_, num2_] = normalizePairAndDecimals(num1, num2, decimals);
-  if (num2_[0] === BigInt(0)) {
+  if (num2_[0] === 0n) {
     throw new Error("dnum: division by zero");
   }
   const value1 = setValueDecimals(num1_[0], Math.max(num1_[1], decimals ?? 0));
@@ -96,10 +96,10 @@ export function lessThan(num1: Numberish, num2: Numberish): boolean {
 
 export function abs(num: Numberish, decimals?: Decimals): Dnum {
   const [valueIn, decimalsIn] = from(num);
-  if (decimals === undefined) { decimals = decimalsIn; }
+  if (decimals === undefined) decimals = decimalsIn;
 
   let valueAbs = valueIn;
-  if (valueAbs < BigInt(0)) {
+  if (valueAbs < 0n) {
     valueAbs = -valueAbs;
   }
 
@@ -108,12 +108,12 @@ export function abs(num: Numberish, decimals?: Decimals): Dnum {
 
 export function floor(num: Numberish, decimals?: Decimals): Dnum {
   const [valueIn, decimalsIn] = from(num);
-  if (decimals === undefined) { decimals = decimalsIn; }
+  if (decimals === undefined) decimals = decimalsIn;
 
   let whole = BigInt(String(valueIn).slice(0, -decimalsIn));
   const fraction = BigInt(String(valueIn).slice(-decimalsIn));
-  if (whole < BigInt(0) && fraction > BigInt(0)) {
-    whole -= BigInt(1);
+  if (whole < 0n && fraction > 0n) {
+    whole -= 1n;
   }
   const numFloored: Dnum = [
     BigInt(String(whole) + "0".repeat(decimalsIn)),
@@ -124,7 +124,7 @@ export function floor(num: Numberish, decimals?: Decimals): Dnum {
 }
 
 export function ceil(num: Numberish, decimals?: Decimals): Dnum {
-  const minus1: Dnum = [BigInt(-1), 0];
+  const minus1: Dnum = [-1n, 0];
   return multiply(floor(multiply(num, minus1)), minus1, decimals);
 }
 

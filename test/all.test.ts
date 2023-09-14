@@ -24,6 +24,7 @@ import {
   toParts,
 } from "../src";
 import { setValueDecimals } from "../src/dnum";
+import { formatSign } from "../src/formatting";
 import { divideAndRound } from "../src/utils";
 
 describe("isDnum()", () => {
@@ -388,7 +389,10 @@ describe("format()", () => {
   it("works with greater digits than decimals", () => {
     expect(format([123400n, 2], 3)).toBe("1,234");
   });
-  it("works with negative values and smaller digits than decimals", () => {
+  it("works with negative numbers when the whole value is zero", () => {
+    expect(format([-123456n, 6], 2)).toBe("-0.12");
+  });
+  it("works with negative numbers and smaller digits than decimals", () => {
     expect(format([-123400n, 4], 2)).toBe("-12.34");
   });
   it("works with very large numbers", () => {
@@ -449,6 +453,60 @@ describe("format()", () => {
       decimalsRounding: "ROUND_DOWN",
     })).toBe("4,569.8");
   });
+  it("handles options.signDisplay", () => {
+    expect(format([123n, 4], { signDisplay: "auto" })).toBe("0.0123");
+    expect(format([123n, 4], { signDisplay: "always" })).toBe("+0.0123");
+    expect(format([123n, 4], { signDisplay: "exceptZero" })).toBe("+0.0123");
+    expect(format([123n, 4], { signDisplay: "negative" })).toBe("0.0123");
+    expect(format([123n, 4], { signDisplay: "never" })).toBe("0.0123");
+
+    expect(format([-123n, 4], { signDisplay: "auto" })).toBe("-0.0123");
+    expect(format([-123n, 4], { signDisplay: "always" })).toBe("-0.0123");
+    expect(format([-123n, 4], { signDisplay: "exceptZero" })).toBe("-0.0123");
+    expect(format([-123n, 4], { signDisplay: "negative" })).toBe("-0.0123");
+    expect(format([-123n, 4], { signDisplay: "never" })).toBe("0.0123");
+
+    expect(format([0n, 4], { signDisplay: "auto" })).toBe("0");
+    expect(format([0n, 4], { signDisplay: "always" })).toBe("+0");
+    expect(format([0n, 4], { signDisplay: "exceptZero" })).toBe("0");
+    expect(format([0n, 4], { signDisplay: "negative" })).toBe("0");
+    expect(format([0n, 4], { signDisplay: "never" })).toBe("0");
+
+    expect(
+      format([123n, 4], { signDisplay: "exceptZero", digits: 0 }),
+    ).toBe("0");
+    expect(
+      format([123n, 4], { signDisplay: "exceptZero", digits: 2 }),
+    ).toBe("+0.01");
+    expect(
+      format([-123n, 4], { signDisplay: "exceptZero", digits: 0 }),
+    ).toBe("0");
+    expect(
+      format([-123n, 4], { signDisplay: "exceptZero", digits: 2 }),
+    ).toBe("-0.01");
+  });
+});
+
+describe("formatSign()", () => {
+  it("works", () => {
+    expect(formatSign([0n, 2], true, "auto")).toBe("");
+    expect(formatSign([0n, 2], true, "always")).toBe("+");
+    expect(formatSign([0n, 2], true, "exceptZero")).toBe("");
+    expect(formatSign([0n, 2], true, "negative")).toBe("");
+    expect(formatSign([0n, 2], true, "never")).toBe("");
+
+    expect(formatSign([1n, 2], false, "auto")).toBe("");
+    expect(formatSign([1n, 2], false, "always")).toBe("+");
+    expect(formatSign([1n, 2], false, "exceptZero")).toBe("+");
+    expect(formatSign([1n, 2], false, "negative")).toBe("");
+    expect(formatSign([1n, 2], false, "never")).toBe("");
+
+    expect(formatSign([-1n, 2], false, "auto")).toBe("-");
+    expect(formatSign([-1n, 2], false, "always")).toBe("-");
+    expect(formatSign([-1n, 2], false, "exceptZero")).toBe("-");
+    expect(formatSign([-1n, 2], false, "negative")).toBe("-");
+    expect(formatSign([-1n, 2], false, "never")).toBe("");
+  });
 });
 
 describe("toParts()", () => {
@@ -457,26 +515,26 @@ describe("toParts()", () => {
     expect(toParts([123456n, 2], 1)).toEqual([1234n, "6"]);
     expect(toParts([123456n, 0], 0)).toEqual([123456n, null]);
     expect(toParts([123400n, 2], 2)).toEqual([1234n, null]);
-    expect(toParts([-123400n, 2], 2)).toEqual([-1234n, null]);
+    expect(toParts([-123400n, 2], 2)).toEqual([1234n, null]);
   });
   it("works with greater digits than decimals", () => {
     expect(toParts([123400n, 2], 3)).toEqual([1234n, null]);
   });
   it("works with negative values and smaller digits than decimals", () => {
-    expect(toParts([-123400n, 4], 2)).toEqual([-12n, "34"]);
+    expect(toParts([-123400n, 4], 2)).toEqual([12n, "34"]);
   });
   it("works with very large numbers", () => {
     expect(toParts(
       [-123400932870192873098321798321798731298713298n, 4],
       { digits: 2, trailingZeros: true },
     )).toEqual(
-      [-12340093287019287309832179832179873129871n, "33"],
+      [12340093287019287309832179832179873129871n, "33"],
     );
     expect(toParts(
       [-123400932870192873098321798321798731298713298n, 4],
       { digits: 8, trailingZeros: true },
     )).toEqual(
-      [-12340093287019287309832179832179873129871n, "32980000"],
+      [12340093287019287309832179832179873129871n, "32980000"],
     );
   });
   it("handles trailing zeros", () => {
@@ -490,22 +548,27 @@ describe("toParts()", () => {
     expect(toParts(
       from(5, 4),
       { digits: 4, trailingZeros: true },
-    )).toEqual([
-      5n,
-      "0000",
-    ]);
+    )).toEqual(
+      [5n, "0000"],
+    );
 
     expect(
       toParts([0n, 0], { digits: 2, trailingZeros: true }),
-    ).toEqual([0n, "00"]);
+    ).toEqual(
+      [0n, "00"],
+    );
 
     expect(
       toParts([5n, 0], { digits: 2, trailingZeros: true }),
-    ).toEqual([5n, "00"]);
+    ).toEqual(
+      [5n, "00"],
+    );
 
     expect(
       toParts([500n, 2], { digits: 8, trailingZeros: true }),
-    ).toEqual([5n, "00000000"]);
+    ).toEqual(
+      [5n, "00000000"],
+    );
   });
   it("rounds decimals properly", () => {
     expect(toParts([49999999n, 9], 1)).toEqual([0n, null]);
@@ -547,6 +610,10 @@ describe("toParts()", () => {
     expect(toParts([49998805n, 9], 7)).toEqual([0n, "0499988"]);
     expect(toParts([49998805n, 9], 8)).toEqual([0n, "04999881"]);
     expect(toParts([49998805n, 9], 9)).toEqual([0n, "049998805"]);
+
+    // negative numbers
+    expect(toParts([-123456n, 4], 2)).toEqual([12n, "35"]);
+    expect(toParts([-123456n, 6], 2)).toEqual([0n, "12"]);
 
     // decimals for 1-7 digits, rounding half (default)
     [null, "05", "05", "05", "05", "049999", "0499988"].forEach(
