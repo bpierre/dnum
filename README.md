@@ -113,7 +113,7 @@ Formats the number for display purposes.
 | Name                       | Description                                                                                                                                                                                                                                  | Type                                                          |
 | -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------- |
 | `value`                    | The value to format.                                                                                                                                                                                                                         | `Dnum`                                                        |
-| `options.digits`           | Number of digits to display. Setting `options` to a number acts as an alias for this option. Defaults to the number of decimals in the passed `Dnum`.                                                                                        | `number`                                                      |
+| `options.digits`           | Number of digits to display. Setting `options` to a number acts as an alias for this option (see example below). Defaults to the number of decimals in the `Dnum` passed to `value`.                                                         | `number`                                                      |
 | `options.compact`          | Compact formatting (e.g. “1,000” becomes “1K”).                                                                                                                                                                                              | `object`                                                      |
 | `options.trailingZeros`    | Add trailing zeros if any, following the number of digits.                                                                                                                                                                                   | `object`                                                      |
 | `options.locale`           | The locale used to format the number.                                                                                                                                                                                                        | `string`                                                      |
@@ -131,7 +131,7 @@ dnum.format(amount); // 123,456.789
 
 // options.digits
 dnum.format(amount, { digits: 2 }); // 123,456.79
-dnum.format(amount, 2); // (alias)
+dnum.format(amount, 2); // 123,456.79 (alias for { digits: 2 })
 
 // options.compact
 dnum.format(amount, { compact: true }); // 123K
@@ -397,21 +397,23 @@ let sorted = [
 console.log(sorted); // [1, 2n, 3.1, 5, [700n, 2], 8n];
 ```
 
-### `toNumber(value, options)`
+### `toNumber(value, optionsOrDigits)`
 
 Converts the `Dnum` data structure into a `Number`. [This will result in a loss of precision](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number#number_encoding) depending on how large the number is.
 
-| Name     | Description                           | Type     |
-| -------- | ------------------------------------- | -------- |
-| `value`  | The number to convert into a `Number` | `Dnum`   |
-| `digits` | The number of digits to round to.     | `Number` |
-| returns  | Result value                          | `Number` |
+| Name                       | Description                                                                                                                                                                                               | Type                                         |
+| -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------- |
+| `value`                    | The number to convert into a `Number`                                                                                                                                                                     | `Dnum`                                       |
+| `options.digits`           | Number of digits to keep after the decimal point. Setting `options` to a number acts as an alias for this option (see example below). Defaults to the number of decimals in the `Dnum` passed to `value`. | `number`                                     |
+| `options.decimalsRounding` | Method used to round to `digits` decimals (defaults to `"ROUND_HALF"`).                                                                                                                                   | `"ROUND_HALF" \| "ROUND_UP" \| "ROUND_DOWN"` |
+| returns                    | Result value                                                                                                                                                                                              | `Number`                                     |
 
 ```ts
 let value = [123456789000000000000000n, 18];
 
 toNumber(value); // 123456.789
-toNumber(value, 1); // 123456.8
+toNumber(value, { digits: 1 }); // 123456.8
+toNumber(value, 1); // 123456.8 (alias for { digits: 1 })
 ```
 
 ### `toJSON(value)`
