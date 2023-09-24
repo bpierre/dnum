@@ -22,6 +22,7 @@ import {
   toJSON,
   toNumber,
   toParts,
+  toString,
 } from "../src";
 import { setValueDecimals } from "../src/dnum";
 import { formatSign } from "../src/formatting";
@@ -670,6 +671,30 @@ describe("toNumber()", () => {
       2,
     )).toBe(
       -12340093287019287309832179832179873129871.33,
+    );
+  });
+});
+
+describe("toString()", () => {
+  it("works", () => {
+    expect(toString([123456n, 2], 2)).toBe("1234.56");
+    expect(toString([123456n, 2], 1)).toBe("1234.6");
+    expect(toString([123456n, 0], 0)).toBe("123456");
+    expect(toString([123400n, 2], 2)).toBe("1234");
+    expect(toString([-123400n, 2], 2)).toBe("-1234");
+  });
+  it("works with greater digits than decimals", () => {
+    expect(toString([123400n, 2], 3)).toBe("1234");
+  });
+  it("works with negative values and smaller digits than decimals", () => {
+    expect(toString([-123400n, 4], 2)).toBe("-12.34");
+  });
+  it("works with very large numbers", () => {
+    expect(toString(
+      [-123400932870192873098321798321798731298713298n, 4],
+      2,
+    )).toBe(
+      "-12340093287019287309832179832179873129871.33",
     );
   });
 });
