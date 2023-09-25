@@ -10,6 +10,7 @@ import {
   toJSON,
   toNumber,
   toParts,
+  toString,
 } from "./dnum";
 import { format } from "./formatting";
 import {
@@ -61,4 +62,5 @@ export {
   toJSON,
   toNumber,
   toParts,
+  toString,
 };

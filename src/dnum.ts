@@ -214,10 +214,15 @@ export function toNumber(
   value: Dnum,
   optionsOrDigits: Parameters<typeof toParts>[1],
 ) {
+  return Number(toString(value, optionsOrDigits));
+}
+
+export function toString(
+  value: Dnum,
+  optionsOrDigits: Parameters<typeof toParts>[1],
+) {
   const [whole, fraction] = toParts(value, optionsOrDigits);
-  return Number(
-    (value[0] >= 0n ? "" : "-")
-      + whole
-      + (fraction ? `.${fraction}` : ""),
-  );
+  return (value[0] >= 0n ? "" : "-")
+    + whole
+    + (fraction ? `.${fraction}` : "");
 }
