@@ -172,12 +172,12 @@ Adds two values together, regardless of their decimals. `decimals` correspond to
 
 ### `subtract(value1, value2, decimals)`
 
-Subtract a value from another one, regardless of their decimals. `decimals` correspond to the decimals desired in the result.
+Subtracts the second value from the first one, regardless of their decimals. decimals correspond to the decimals desired in the result.
 
 | Name                  | Description                                     | Type        |
 | --------------------- | ----------------------------------------------- | ----------- |
-| `value1`              | First value to add                              | `Numberish` |
-| `value2`              | Second value to add                             | `Numberish` |
+| `value1`              | Value from which `value2` is subtracted         | `Numberish` |
+| `value2`              | Value to subtract from `value1`                 | `Numberish` |
 | `decimals` (optional) | Result decimals (defaults to `value1` decimals) | `number`    |
 | returns               | Result                                          | `Dnum`      |
 
