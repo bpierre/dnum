@@ -15,6 +15,9 @@ export default defineConfig(async ({ mode }) => ({
     entries: ["src/index.ts"],
   },
   plugins: [
-    dts({ insertTypesEntry: true }),
+    dts({
+      insertTypesEntry: true,
+      rollupTypes: true,
+    }),
   ],
 }));
