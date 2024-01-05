@@ -161,13 +161,11 @@ export function toParts(
   let whole = value / decimalsDivisor;
   const fractionValue = abs(value % decimalsDivisor);
 
-  let roundFn = (
-    decimalsRounding === "ROUND_UP"
-      ? ceilToPower
-      : decimalsRounding === "ROUND_DOWN"
-      ? floorToPower
-      : roundToPower
-  );
+  const roundFn = decimalsRounding === "ROUND_UP"
+    ? ceilToPower
+    : decimalsRounding === "ROUND_DOWN"
+    ? floorToPower
+    : roundToPower;
 
   let fraction = String(
     roundFn(

@@ -26,11 +26,9 @@ export function format(
 
   const [whole, fraction] = toParts(dnum, toPartsOptions);
 
-  const decimalsSeparator = (
-    new Intl.NumberFormat(locale)
-      .formatToParts(.1)
-      .find((v) => v.type === "decimal")?.value ?? "."
-  );
+  const decimalsSeparator = new Intl.NumberFormat(locale)
+    .formatToParts(.1)
+    .find((v) => v.type === "decimal")?.value ?? ".";
 
   const roundsToZero = whole === 0n && (fraction === null || /^0+$/.test(fraction));
 
