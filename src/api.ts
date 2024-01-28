@@ -29,7 +29,7 @@ import {
   subtract,
 } from "./operations";
 
-export type { Decimals, Dnum, Value } from "./types";
+export type { Decimals, Dnum, Numberish, Value } from "./types";
 
 export {
   abs,

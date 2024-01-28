@@ -1,2 +1,2 @@
-export type { Decimals, Dnum, Value } from "./api";
+export type { Decimals, Dnum, Numberish, Value } from "./api";
 export * from "./api";
