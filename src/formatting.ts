@@ -30,7 +30,9 @@ export function format(
     .formatToParts(.1)
     .find((v) => v.type === "decimal")?.value ?? ".";
 
-  const roundsToZero = whole === 0n && (fraction === null || /^0+$/.test(fraction));
+  const roundsToZero = whole === 0n && (
+    fraction === null || /^0+$/.test(fraction)
+  );
 
   const wholeString = formatSign(
     dnum,
