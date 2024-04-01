@@ -210,14 +210,14 @@ export function toParts(
 
 export function toNumber(
   value: Dnum,
-  optionsOrDigits: Parameters<typeof toParts>[1],
+  optionsOrDigits?: Parameters<typeof toParts>[1],
 ) {
   return Number(toString(value, optionsOrDigits));
 }
 
 export function toString(
   value: Dnum,
-  optionsOrDigits: Parameters<typeof toParts>[1],
+  optionsOrDigits?: Parameters<typeof toParts>[1],
 ) {
   const [whole, fraction] = toParts(value, optionsOrDigits);
   return (value[0] >= 0n ? "" : "-")

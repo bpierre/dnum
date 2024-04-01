@@ -673,6 +673,9 @@ describe("toNumber()", () => {
       -12340093287019287309832179832179873129871.33,
     );
   });
+  it("works with a single parameter", () => {
+    expect(toNumber([123456n, 2])).toBe(1234.56);
+  });
 });
 
 describe("toString()", () => {
@@ -696,6 +699,9 @@ describe("toString()", () => {
     )).toBe(
       "-12340093287019287309832179832179873129871.33",
     );
+  });
+  it("works with a single parameter", () => {
+    expect(toString([123456n, 2])).toBe("1234.56");
   });
 });
 
