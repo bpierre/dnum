@@ -1,6 +1,38 @@
-export function divideAndRound(dividend: bigint, divisor: bigint) {
-  const invertSign = dividend < 0n ? -1n : 1n;
-  return (dividend * invertSign + divisor / 2n) / divisor * invertSign;
+import { Rounding } from "./types";
+
+function divideAndRoundUp(dividend: bigint, divisor: bigint) {
+  const num = divisor > 0n ? dividend : -dividend;
+  const den = divisor > 0n ? divisor : -divisor;
+  const remainder = num % den;
+  const roundUp = remainder > 0n ? 1n : 0n;
+  return num / den + roundUp;
+}
+
+function divideAndRoundDown(dividend: bigint, divisor: bigint) {
+  const num = divisor > 0n ? dividend : -dividend;
+  const den = divisor > 0n ? divisor : -divisor;
+  const remainder = num % den;
+  const roundDown = remainder < 0n ? -1n : 0n;
+  return num / den + roundDown;
+}
+
+function divideAndRoundHalf(dividend: bigint, divisor: bigint) {
+  const num = divisor > 0n ? dividend : -dividend;
+  const den = divisor > 0n ? divisor : -divisor;
+  const invertSign = num < 0n ? -1n : 1n;
+  return (num * invertSign + den / 2n) / den * invertSign;
+}
+
+export function divideAndRound(
+  dividend: bigint,
+  divisor: bigint,
+  rounding: Rounding = "ROUND_HALF"
+) {
+  return rounding === "ROUND_UP" 
+    ? divideAndRoundUp(dividend, divisor) 
+    : rounding === "ROUND_DOWN"
+    ? divideAndRoundDown(dividend, divisor)
+    : divideAndRoundHalf(dividend, divisor);
 }
 
 export function splitNumber(number: string) {

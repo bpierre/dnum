@@ -1,4 +1,4 @@
-import type { Decimals, Dnum, Numberish } from "./types";
+import type { Decimals, Dnum, Numberish, Rounding } from "./types";
 
 import {
   equalizeDecimals,
@@ -37,11 +37,13 @@ export function multiply(
   num1: Numberish,
   num2: Numberish,
   decimals?: Decimals,
+  round: Rounding = "ROUND_HALF",
 ): Dnum {
   const [num1_, num2_] = normalizePairAndDecimals(num1, num2, decimals);
   return setDecimals(
     [num1_[0] * num2_[0], num1_[1] * 2],
     decimals ?? (isDnum(num1) ? num1[1] : num1_[1]),
+    { round }
   );
 }
 
@@ -49,6 +51,7 @@ export function divide(
   num1: Numberish,
   num2: Numberish,
   decimals?: Decimals,
+  round: Rounding = "ROUND_HALF",
 ): Dnum {
   const [num1_, num2_] = normalizePairAndDecimals(num1, num2, decimals);
   if (num2_[0] === 0n) {
@@ -57,8 +60,9 @@ export function divide(
   const value1 = setValueDecimals(num1_[0], Math.max(num1_[1], decimals ?? 0));
   const value2 = setValueDecimals(num2_[0], 0);
   return setDecimals(
-    [divideAndRound(value1, value2), num1_[1]],
+    [divideAndRound(value1, value2, round), num1_[1]],
     decimals ?? (isDnum(num1) ? num1[1] : num1_[1]),
+    { round }
   );
 }
 

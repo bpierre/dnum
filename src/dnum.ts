@@ -1,4 +1,4 @@
-import type { Decimals, Dnum, Numberish, Value } from "./types";
+import type { Decimals, Rounding, Dnum, Numberish, Value } from "./types";
 
 import fromExponential from "from-exponential";
 import {
@@ -76,18 +76,16 @@ export function from(
 export function setValueDecimals(
   value: Value,
   decimalsDiff: Decimals,
-  options: { round?: boolean } = {},
+  options: { round?: Rounding } = {},
 ): Value {
-  options.round ??= true;
+  options.round ??= "ROUND_HALF";
 
   if (decimalsDiff > 0) {
     return value * powerOfTen(decimalsDiff);
   }
 
   if (decimalsDiff < 0) {
-    return options.round
-      ? divideAndRound(value, powerOfTen(-decimalsDiff))
-      : value / powerOfTen(-decimalsDiff);
+    return divideAndRound(value, powerOfTen(-decimalsDiff), options.round)
   }
 
   return value;
@@ -96,9 +94,9 @@ export function setValueDecimals(
 export function setDecimals(
   value: Dnum,
   decimals: Decimals,
-  options: { round?: boolean } = {},
+  options: { round?: Rounding } = {},
 ): Dnum {
-  options.round ??= true;
+  options.round ??= "ROUND_HALF";
 
   if (value[1] === decimals) {
     return value;
@@ -136,7 +134,7 @@ export function toParts(
     | {
       digits?: number; // defaults to decimals
       trailingZeros?: boolean;
-      decimalsRounding?: "ROUND_HALF" | "ROUND_UP" | "ROUND_DOWN";
+      decimalsRounding?: Rounding
     }
     | number = {},
 ): [
