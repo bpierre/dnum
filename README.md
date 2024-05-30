@@ -183,16 +183,17 @@ Subtracts the second value from the first one, regardless of their decimals. dec
 
 Alias: `sub()`
 
-### `multiply(value1, value2, decimals)`
+### `multiply(value1, value2, decimals, options)`
 
 Multiply two values together, regardless of their decimals. `decimals` correspond to the decimals desired in the result.
 
-| Name                  | Description                                     | Type        |
-| --------------------- | ----------------------------------------------- | ----------- |
-| `value1`              | First value to multiply                         | `Numberish` |
-| `value2`              | Second value to multiply                        | `Numberish` |
-| `decimals` (optional) | Result decimals (defaults to `value1` decimals) | `number`    |
-| returns               | Result                                          | `Dnum`      |
+| Name                       | Description                                            | Type        |
+| -------------------------- | ------------------------------------------------------ | ----------- |
+| `value1`                   | First value to multiply                                | `Numberish` |
+| `value2`                   | Second value to multiply                               | `Numberish` |
+| `decimals` (optional)      | Result decimals (defaults to `value1` decimals)        | `number`    |
+| `options.round` (optional) | How to round round results (defaults to `"ROUND_HALF"` | `Decimals`  |
+| returns                    | Result                                                 | `Dnum`      |
 
 Alias: `mul()`
 
@@ -207,16 +208,17 @@ let tokenPriceUsd = dnum.multiply(tokenPriceEth, ethPriceUsd, 2); // 570 USD
 // tokenPriceUsd equals [57000, 2]
 ```
 
-### `divide(value1, value2, decimals)`
+### `divide(value1, value2, decimals, options)`
 
 Divide a value by another one, regardless of their decimals. `decimals` correspond to the decimals desired in the result.
 
-| Name                  | Description                                     | Type        |
-| --------------------- | ----------------------------------------------- | ----------- |
-| `value1`              | Dividend                                        | `Numberish` |
-| `value2`              | Divisor                                         | `Numberish` |
-| `decimals` (optional) | Result decimals (defaults to `value1` decimals) | `number`    |
-| returns               | Result value                                    | `Dnum`      |
+| Name                       | Description                                            | Type        |
+| -------------------------- | ------------------------------------------------------ | ----------- |
+| `value1`                   | Dividend                                               | `Numberish` |
+| `value2`                   | Divisor                                                | `Numberish` |
+| `decimals` (optional)      | Result decimals (defaults to `value1` decimals)        | `number`    |
+| `options.round` (optional) | How to round round results (defaults to `"ROUND_HALF"` | `Decimals`  |
+| returns                    | Result value                                           | `Dnum`      |
 
 Alias: `div()`
 
@@ -471,12 +473,12 @@ let dnum = fromJSON("[\"123456789000000000000\", 18]");
 
 Return a new `Dnum` with a different amount of decimals. The value will reflect this change so that the represented number stays the same.
 
-| Name            | Description                                                                         | Type      |
-| --------------- | ----------------------------------------------------------------------------------- | --------- |
-| `value`         | The number from which decimals will be changed                                      | `Dnum`    |
-| `decimals`      | New number of decimals                                                              | `number`  |
-| `options.round` | In case of reduction, whether to round the remaining decimals (defaults to `true`). | `boolean` |
-| returns         | Result value                                                                        | `Dnum`    |
+| Name            | Description                                                                                 | Type      |
+| --------------- | ------------------------------------------------------------------------------------------- | --------- |
+| `value`         | The number from which decimals will be changed                                              | `Dnum`    |
+| `decimals`      | New number of decimals                                                                      | `number`  |
+| `options.round` | In case of reduction, whether to round the remaining decimals (defaults to `"ROUND_HALF"`). | `Decimals` |
+| returns         | Result value                                                                                | `Dnum`    |
 
 Note: `from(value, decimals)` can also be used instead.
 
