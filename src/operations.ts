@@ -111,25 +111,11 @@ export function abs(num: Numberish, decimals?: Decimals): Dnum {
 }
 
 export function floor(num: Numberish, decimals?: Decimals): Dnum {
-  const [valueIn, decimalsIn] = from(num);
-  if (decimals === undefined) decimals = decimalsIn;
-
-  let whole = BigInt(String(valueIn).slice(0, -decimalsIn));
-  const fraction = BigInt(String(valueIn).slice(-decimalsIn));
-  if (whole < 0n && fraction > 0n) {
-    whole -= 1n;
-  }
-  const numFloored: Dnum = [
-    BigInt(String(whole) + "0".repeat(decimalsIn)),
-    decimalsIn,
-  ];
-
-  return setDecimals(numFloored, decimals);
+  return round(num, decimals, "ROUND_DOWN");
 }
 
 export function ceil(num: Numberish, decimals?: Decimals): Dnum {
-  const minus1: Dnum = [-1n, 0];
-  return multiply(floor(multiply(num, minus1)), minus1, decimals);
+  return round(num, decimals, "ROUND_UP");
 }
 
 export function round(
