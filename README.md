@@ -474,12 +474,12 @@ let dnum = fromJSON("[\"123456789000000000000\", 18]");
 
 Return a new `Dnum` with a different amount of decimals. The value will reflect this change so that the represented number stays the same.
 
-| Name            | Description                                                                                 | Type      |
-| --------------- | ------------------------------------------------------------------------------------------- | --------- |
-| `value`         | The number from which decimals will be changed                                              | `Dnum`    |
-| `decimals`      | New number of decimals                                                                      | `number`  |
-| `options.round` | In case of reduction, whether to round the remaining decimals (defaults to `"ROUND_HALF"`). | `Decimals` |
-| returns         | Result value                                                                                | `Dnum`    |
+| Name            | Description                                                                                 | Type       |
+| --------------- | ------------------------------------------------------------------------------------------- | ---------- |
+| `value`         | The number from which decimals will be changed                                              | `Dnum`     |
+| `decimals`      | New number of decimals                                                                      | `number`   |
+| `options.round` | In case of reduction, whether to round the remaining decimals (defaults to `"ROUND_HALF"`). | `Rounding` |
+| returns         | Result value                                                                                | `Dnum`     |
 
 Note: `from(value, decimals)` can also be used instead.
 
