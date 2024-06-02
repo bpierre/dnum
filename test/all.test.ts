@@ -59,16 +59,16 @@ describe("setValueDecimals()", () => {
     expect(setValueDecimals(123456n, 0)).toBe(123456n);
   });
   it("round decimals up when specified and decreasing", () => {
-    expect(setValueDecimals(1234n, -2, { round: "ROUND_UP" })).toBe(13n);
-    expect(setValueDecimals(123456n, -2, { round: "ROUND_UP" })).toBe(1235n);
-    expect(setValueDecimals(-1234n, -2, { round: "ROUND_UP" })).toBe(-12n);
-    expect(setValueDecimals(-123456n, -2, { round: "ROUND_UP" })).toBe(-1234n);
+    expect(setValueDecimals(1234n, -2, { rounding: "ROUND_UP" })).toBe(13n);
+    expect(setValueDecimals(123456n, -2, { rounding: "ROUND_UP" })).toBe(1235n);
+    expect(setValueDecimals(-1234n, -2, { rounding: "ROUND_UP" })).toBe(-12n);
+    expect(setValueDecimals(-123456n, -2, { rounding: "ROUND_UP" })).toBe(-1234n);
   });
-  it("round decimals down when specified and specified", () => {
-    expect(setValueDecimals(1234n, -2, { round: "ROUND_DOWN" })).toBe(12n);
-    expect(setValueDecimals(123456n, -2, { round: "ROUND_DOWN" })).toBe(1234n);
-    expect(setValueDecimals(-1234n, -2, { round: "ROUND_DOWN" })).toBe(-13n);
-    expect(setValueDecimals(-123456n, -2, { round: "ROUND_DOWN" })).toBe(-1235n);
+  it("round decimals down when specified and decreasing", () => {
+    expect(setValueDecimals(1234n, -2, { rounding: "ROUND_DOWN" })).toBe(12n);
+    expect(setValueDecimals(123456n, -2, { rounding: "ROUND_DOWN" })).toBe(1234n);
+    expect(setValueDecimals(-1234n, -2, { rounding: "ROUND_DOWN" })).toBe(-13n);
+    expect(setValueDecimals(-123456n, -2, { rounding: "ROUND_DOWN" })).toBe(-1235n);
   });
 });
 
@@ -88,6 +88,12 @@ describe("setDecimals()", () => {
   it("throws if decimals are negative", () => {
     expect(() => setDecimals([123456n, -4], 4)).toThrowError("negative");
     expect(() => setDecimals([123456n, 4], -4)).toThrowError("negative");
+  });
+  it("round decimals up when specified and decreasing", () => {
+    expect(setDecimals([1234n, 2], 1, { rounding: "ROUND_UP" })).toEqual([124n, 1]);
+  });
+  it("round decimals down when specified and decreasing", () => {
+    expect(setDecimals([123456n, 2], 1, { rounding: "ROUND_DOWN" })).toEqual([12345n, 1]);
   });
 });
 
@@ -472,7 +478,7 @@ describe("compare()", () => {
 });
 
 describe("round()", () => {
-  it("works", () => {
+  it("rounds decimals", () => {
     expect(round([1000n, 2])).toEqual([1000n, 2]);
     expect(round([123456n, 2])).toEqual([123500n, 2]);
     expect(round([123449n, 2])).toEqual([123400n, 2]);
@@ -485,6 +491,38 @@ describe("round()", () => {
     ).toEqual([1234000000000000000000n, 18]);
     expect(
       round([1234499999999999999999n, 18], 2),
+    ).toEqual([123400n, 2]);
+  });
+
+  it("rounds decimals up", () => {
+    expect(round([1000n, 2], undefined, "ROUND_UP")).toEqual([1000n, 2]);
+    expect(round([123456n, 2], undefined, "ROUND_UP")).toEqual([123500n, 2]);
+    expect(round([123449n, 2], undefined, "ROUND_UP")).toEqual([123500n, 2]);
+    expect(round([123450n, 2], undefined, "ROUND_UP")).toEqual([123500n, 2]);
+    expect(
+      round([1234555555555555555555n, 18], undefined, "ROUND_UP"),
+    ).toEqual([1235000000000000000000n, 18]);
+    expect(
+      round([1234499999999999999999n, 18], undefined, "ROUND_UP"),
+    ).toEqual([1235000000000000000000n, 18]);
+    expect(
+      round([1234499999999999999999n, 18], 2, "ROUND_UP"),
+    ).toEqual([123500n, 2]);
+  });
+
+  it("rounds decimals down", () => {
+    expect(round([1000n, 2], undefined, "ROUND_DOWN")).toEqual([1000n, 2]);
+    expect(round([123456n, 2], undefined, "ROUND_DOWN")).toEqual([123400n, 2]);
+    expect(round([123449n, 2], undefined, "ROUND_DOWN")).toEqual([123400n, 2]);
+    expect(round([123450n, 2], undefined, "ROUND_DOWN")).toEqual([123400n, 2]);
+    expect(
+      round([1234555555555555555555n, 18], undefined, "ROUND_DOWN"),
+    ).toEqual([1234000000000000000000n, 18]);
+    expect(
+      round([1234499999999999999999n, 18], undefined, "ROUND_DOWN"),
+    ).toEqual([1234000000000000000000n, 18]);
+    expect(
+      round([1234499999999999999999n, 18], 2, "ROUND_DOWN"),
     ).toEqual([123400n, 2]);
   });
 });

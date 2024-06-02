@@ -76,16 +76,16 @@ export function from(
 export function setValueDecimals(
   value: Value,
   decimalsDiff: Decimals,
-  options: { round?: Rounding } = {},
+  options: { rounding?: Rounding } = {},
 ): Value {
-  options.round ??= "ROUND_HALF";
+  options.rounding ??= "ROUND_HALF";
 
   if (decimalsDiff > 0) {
     return value * powerOfTen(decimalsDiff);
   }
 
   if (decimalsDiff < 0) {
-    return divideAndRound(value, powerOfTen(-decimalsDiff), options.round)
+    return divideAndRound(value, powerOfTen(-decimalsDiff), options.rounding);
   }
 
   return value;
@@ -94,9 +94,9 @@ export function setValueDecimals(
 export function setDecimals(
   value: Dnum,
   decimals: Decimals,
-  options: { round?: Rounding } = {},
+  options: { rounding?: Rounding } = {},
 ): Dnum {
-  options.round ??= "ROUND_HALF";
+  options.rounding ??= "ROUND_HALF";
 
   if (value[1] === decimals) {
     return value;
