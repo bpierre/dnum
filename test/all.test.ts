@@ -203,19 +203,35 @@ describe("multiply()", () => {
     const a1 = [123456n, 2] as const;
     const a2 = [123456n, 4] as const;
     const result = [1524139n, 2] as const;
-    expect(multiply(a1, a2, result[1], "ROUND_UP")).toEqual(result);
-    expect(multiply(a2, a1, result[1], "ROUND_UP")).toEqual(result);
-    expect(multiply(16.34, 14.4454, undefined, "ROUND_UP")).toEqual([2360379n, 4]);
-    expect(multiply(16.34, 14.4454, 3, "ROUND_UP")).toEqual([236038n, 3]);
+    expect(
+      multiply(a1, a2, { decimals: result[1], rounding: "ROUND_UP" })
+    ).toEqual(result);
+    expect(
+      multiply(a2, a1, { decimals: result[1], rounding: "ROUND_UP" })
+    ).toEqual(result);
+    expect(
+      multiply(16.34, 14.4454, { rounding: "ROUND_UP" })
+    ).toEqual([2360379n, 4]);
+    expect(
+      multiply(16.34, 14.4454, { decimals: 3, rounding: "ROUND_UP" })
+    ).toEqual([236038n, 3]);
   });
   it("multiplies positive values and round down", () => {
     const a1 = [123456n, 2] as const;
     const a2 = [123456n, 4] as const;
     const result = [1524138n, 2] as const;
-    expect(multiply(a1, a2, result[1], "ROUND_DOWN")).toEqual(result);
-    expect(multiply(a2, a1, result[1], "ROUND_DOWN")).toEqual(result);
-    expect(multiply(16.34, 14.4454, undefined, "ROUND_DOWN")).toEqual([2360378n, 4]);
-    expect(multiply(16.34, 14.4454, 3, "ROUND_DOWN")).toEqual([236037n, 3]);
+    expect(
+      multiply(a1, a2, { decimals: result[1], rounding: "ROUND_DOWN" })
+    ).toEqual(result);
+    expect(
+      multiply(a2, a1, { decimals: result[1], rounding: "ROUND_DOWN" })
+    ).toEqual(result);
+    expect(
+      multiply(16.34, 14.4454, { rounding: "ROUND_DOWN" })
+    ).toEqual([2360378n, 4]);
+    expect(
+      multiply(16.34, 14.4454, { decimals: 3, rounding: "ROUND_DOWN" })
+    ).toEqual([236037n, 3]);
   });
   it("multiplies negative values and round", () => {
     const a1 = [123456n, 2] as const;
@@ -228,15 +244,23 @@ describe("multiply()", () => {
     const a1 = [123456n, 2] as const;
     const a2 = [-123456n, 4] as const;
     const result = [-1524138n, 2] as const;
-    expect(multiply(a1, a2, result[1], "ROUND_UP")).toEqual(result);
-    expect(multiply(a2, a1, result[1], "ROUND_UP")).toEqual(result);
+    expect(
+      multiply(a1, a2, { decimals: result[1], rounding: "ROUND_UP" })
+    ).toEqual(result);
+    expect(
+      multiply(a2, a1, { decimals: result[1], rounding: "ROUND_UP" })
+    ).toEqual(result);
   });
   it("multiplies negative values and round down", () => {
     const a1 = [123456n, 2] as const;
     const a2 = [-123456n, 4] as const;
     const result = [-1524139n, 2] as const;
-    expect(multiply(a1, a2, result[1], "ROUND_DOWN")).toEqual(result);
-    expect(multiply(a2, a1, result[1], "ROUND_DOWN")).toEqual(result);
+    expect(
+      multiply(a1, a2, { decimals: result[1], rounding: "ROUND_DOWN" })
+    ).toEqual(result);
+    expect(
+      multiply(a2, a1, { decimals: result[1], rounding: "ROUND_DOWN" })
+    ).toEqual(result);
   });
   it("throws if decimals are negative", () => {
     expect(() => multiply([1n, -1], [1n, 1], 1)).toThrowError(
@@ -282,32 +306,40 @@ describe("divide()", () => {
     expect(divide(16.342, 14.43)).toEqual([1133n, 3]);
   });
   it("divides positive values and round up", () => {
-    expect(divide([4n, 0], [2n, 0], 0, "ROUND_UP")).toEqual([2n, 0]);
-    expect(divide([123456n, 4], [300000000n, 8], 2, "ROUND_UP")).toEqual([412n, 2]);
-    expect(divide([123456n, 4], [300000000n, 8], 4, "ROUND_UP")).toEqual([
-      41152n,
-      4,
-    ]);
-    expect(divide([123456n, 4], [300000000n, 8], 5, "ROUND_UP")).toEqual([
-      411520n,
-      5,
-    ]);
-    expect(divide(8, 2, 8, "ROUND_UP")).toEqual([400000000n, 8]);
-    expect(divide(16.342, 14.43, undefined, "ROUND_UP")).toEqual([1133n, 3]);
+    expect(
+      divide([4n, 0], [2n, 0], { decimals: 0, rounding: "ROUND_UP" })
+    ).toEqual([2n, 0]);
+    expect(
+      divide([123456n, 4], [300000000n, 8], { decimals: 2, rounding: "ROUND_UP" })
+    ).toEqual([412n, 2]);
+    expect(
+      divide([123456n, 4], [300000000n, 8], { decimals: 4, rounding: "ROUND_UP" })
+    ).toEqual([41152n, 4]);
+    expect(
+      divide([123456n, 4], [300000000n, 8], { decimals: 5, rounding: "ROUND_UP" })
+    ).toEqual([411520n, 5]);
+    expect(
+      divide(8, 2, { decimals: 8, rounding: "ROUND_UP" })
+    ).toEqual([400000000n, 8]);
+    expect(divide(16.342, 14.43, { rounding: "ROUND_UP" })).toEqual([1133n, 3]);
   });
   it("divides positive values and round down", () => {
-    expect(divide([4n, 0], [2n, 0], 0, "ROUND_DOWN")).toEqual([2n, 0]);
-    expect(divide([123456n, 4], [300000000n, 8], 2, "ROUND_DOWN")).toEqual([411n, 2]);
-    expect(divide([123456n, 4], [300000000n, 8], 4, "ROUND_DOWN")).toEqual([
-      41152n,
-      4,
-    ]);
-    expect(divide([123456n, 4], [300000000n, 8], 5, "ROUND_DOWN")).toEqual([
-      411520n,
-      5,
-    ]);
-    expect(divide(8, 2, 8, "ROUND_DOWN")).toEqual([400000000n, 8]);
-    expect(divide(16.342, 14.43, undefined, "ROUND_DOWN")).toEqual([1132n, 3]);
+    expect(
+      divide([4n, 0], [2n, 0], { decimals: 0, rounding: "ROUND_DOWN" })
+    ).toEqual([2n, 0]);
+    expect(
+      divide([123456n, 4], [300000000n, 8], { decimals: 2, rounding: "ROUND_DOWN" })
+    ).toEqual([411n, 2]);
+    expect(
+      divide([123456n, 4], [300000000n, 8], { decimals: 4, rounding: "ROUND_DOWN" })
+    ).toEqual([41152n, 4]);
+    expect(
+      divide([123456n, 4], [300000000n, 8], { decimals: 5, rounding: "ROUND_DOWN" })
+    ).toEqual([411520n, 5]);
+    expect(
+      divide(8, 2, { decimals: 8, rounding: "ROUND_DOWN" })
+    ).toEqual([400000000n, 8]);
+    expect(divide(16.342, 14.43, { rounding: "ROUND_DOWN" })).toEqual([1132n, 3]);
   });
   it("divides negative values and round", () => {
     expect(divide([-4n, 0], [2n, 0], 0)).toEqual([-2n, 0]);
@@ -324,32 +356,40 @@ describe("divide()", () => {
     expect(divide(16.342, -14.43)).toEqual([-1133n, 3]);
   });
   it("divides negative values and round up", () => {
-    expect(divide([-4n, 0], [2n, 0], 0, "ROUND_UP")).toEqual([-2n, 0]);
-    expect(divide([123456n, 4], [-300000000n, 8], 2, "ROUND_UP")).toEqual([-411n, 2]);
-    expect(divide([-123456n, 4], [300000000n, 8], 4, "ROUND_UP")).toEqual([
-      -41152n,
-      4,
-    ]);
-    expect(divide([123456n, 4], [-300000000n, 8], 5, "ROUND_UP")).toEqual([
-      -411520n,
-      5,
-    ]);
-    expect(divide(-8, 2, 8, "ROUND_UP")).toEqual([-400000000n, 8]);
-    expect(divide(16.342, -14.43, undefined, "ROUND_UP")).toEqual([-1132n, 3]);
+    expect(
+      divide([-4n, 0], [2n, 0], { decimals: 0, rounding: "ROUND_UP"})
+    ).toEqual([-2n, 0]);
+    expect(
+      divide([123456n, 4], [-300000000n, 8], { decimals: 2, rounding: "ROUND_UP"})
+    ).toEqual([-411n, 2]);
+    expect(
+      divide([-123456n, 4], [300000000n, 8], { decimals: 4, rounding: "ROUND_UP"})
+    ).toEqual([-41152n, 4]);
+    expect(
+      divide([123456n, 4], [-300000000n, 8], { decimals: 5, rounding: "ROUND_UP"})
+    ).toEqual([-411520n, 5]);
+    expect(
+      divide(-8, 2, { decimals: 8, rounding: "ROUND_UP"})
+    ).toEqual([-400000000n, 8]);
+    expect(divide(16.342, -14.43, { rounding: "ROUND_UP"})).toEqual([-1132n, 3]);
   });
   it("divides negative values and round down", () => {
-    expect(divide([-4n, 0], [2n, 0], 0, "ROUND_DOWN")).toEqual([-2n, 0]);
-    expect(divide([123456n, 4], [-300000000n, 8], 2, "ROUND_DOWN")).toEqual([-412n, 2]);
-    expect(divide([-123456n, 4], [300000000n, 8], 4, "ROUND_DOWN")).toEqual([
-      -41152n,
-      4,
-    ]);
-    expect(divide([123456n, 4], [-300000000n, 8], 5, "ROUND_DOWN")).toEqual([
-      -411520n,
-      5,
-    ]);
-    expect(divide(-8, 2, 8, "ROUND_DOWN")).toEqual([-400000000n, 8]);
-    expect(divide(16.342, -14.43, undefined, "ROUND_DOWN")).toEqual([-1133n, 3]);
+    expect(
+      divide([-4n, 0], [2n, 0], { decimals: 0, rounding: "ROUND_DOWN"})
+    ).toEqual([-2n, 0]);
+    expect(
+      divide([123456n, 4], [-300000000n, 8], { decimals: 2, rounding: "ROUND_DOWN"})
+    ).toEqual([-412n, 2]);
+    expect(
+      divide([-123456n, 4], [300000000n, 8], { decimals: 4, rounding: "ROUND_DOWN"})
+    ).toEqual([-41152n, 4]);
+    expect(
+      divide([123456n, 4], [-300000000n, 8], { decimals: 5, rounding: "ROUND_DOWN"})
+    ).toEqual([-411520n, 5]);
+    expect(
+      divide(-8, 2, { decimals: 8, rounding: "ROUND_DOWN"})
+    ).toEqual([-400000000n, 8]);
+    expect(divide(16.342, -14.43, { rounding: "ROUND_DOWN"})).toEqual([-1133n, 3]);
   });
   it("throws if decimals are negative", () => {
     expect(() => divide([1n, -1], [1n, 1], 1)).toThrowError(
@@ -495,34 +535,34 @@ describe("round()", () => {
   });
 
   it("rounds decimals up", () => {
-    expect(round([1000n, 2], undefined, "ROUND_UP")).toEqual([1000n, 2]);
-    expect(round([123456n, 2], undefined, "ROUND_UP")).toEqual([123500n, 2]);
-    expect(round([123449n, 2], undefined, "ROUND_UP")).toEqual([123500n, 2]);
-    expect(round([123450n, 2], undefined, "ROUND_UP")).toEqual([123500n, 2]);
+    expect(round([1000n, 2], { rounding: "ROUND_UP" })).toEqual([1000n, 2]);
+    expect(round([123456n, 2], { rounding: "ROUND_UP" })).toEqual([123500n, 2]);
+    expect(round([123449n, 2], { rounding: "ROUND_UP" })).toEqual([123500n, 2]);
+    expect(round([123450n, 2], { rounding: "ROUND_UP" })).toEqual([123500n, 2]);
     expect(
-      round([1234555555555555555555n, 18], undefined, "ROUND_UP"),
+      round([1234555555555555555555n, 18], { rounding: "ROUND_UP" }),
     ).toEqual([1235000000000000000000n, 18]);
     expect(
-      round([1234499999999999999999n, 18], undefined, "ROUND_UP"),
+      round([1234499999999999999999n, 18], { rounding: "ROUND_UP" }),
     ).toEqual([1235000000000000000000n, 18]);
     expect(
-      round([1234499999999999999999n, 18], 2, "ROUND_UP"),
+      round([1234499999999999999999n, 18], { decimals: 2, rounding: "ROUND_UP" }),
     ).toEqual([123500n, 2]);
   });
 
   it("rounds decimals down", () => {
-    expect(round([1000n, 2], undefined, "ROUND_DOWN")).toEqual([1000n, 2]);
-    expect(round([123456n, 2], undefined, "ROUND_DOWN")).toEqual([123400n, 2]);
-    expect(round([123449n, 2], undefined, "ROUND_DOWN")).toEqual([123400n, 2]);
-    expect(round([123450n, 2], undefined, "ROUND_DOWN")).toEqual([123400n, 2]);
+    expect(round([1000n, 2], { rounding: "ROUND_DOWN" })).toEqual([1000n, 2]);
+    expect(round([123456n, 2], { rounding: "ROUND_DOWN" })).toEqual([123400n, 2]);
+    expect(round([123449n, 2], { rounding: "ROUND_DOWN" })).toEqual([123400n, 2]);
+    expect(round([123450n, 2], { rounding: "ROUND_DOWN" })).toEqual([123400n, 2]);
     expect(
-      round([1234555555555555555555n, 18], undefined, "ROUND_DOWN"),
+      round([1234555555555555555555n, 18], { rounding: "ROUND_DOWN" }),
     ).toEqual([1234000000000000000000n, 18]);
     expect(
-      round([1234499999999999999999n, 18], undefined, "ROUND_DOWN"),
+      round([1234499999999999999999n, 18], { rounding: "ROUND_DOWN" }),
     ).toEqual([1234000000000000000000n, 18]);
     expect(
-      round([1234499999999999999999n, 18], 2, "ROUND_DOWN"),
+      round([1234499999999999999999n, 18], { decimals: 2, rounding: "ROUND_DOWN" }),
     ).toEqual([123400n, 2]);
   });
 });

@@ -1,4 +1,4 @@
-import type { Decimals, Dnum, Numberish, Rounding } from "./types";
+import type { Decimals, Dnum, Numberish, OptionsOrDecimals } from "./types";
 
 import {
   equalizeDecimals,
@@ -36,33 +36,41 @@ export function subtract(
 export function multiply(
   num1: Numberish,
   num2: Numberish,
-  decimals?: Decimals,
-  rounding: Rounding = "ROUND_HALF",
+  optionsOrDecimals: OptionsOrDecimals = {},
 ): Dnum {
-  const [num1_, num2_] = normalizePairAndDecimals(num1, num2, decimals);
+  const options = typeof optionsOrDecimals === "number"
+    ? { decimals: optionsOrDecimals }
+    : optionsOrDecimals
+  options.rounding ??= "ROUND_HALF"
+
+  const [num1_, num2_] = normalizePairAndDecimals(num1, num2, options.decimals);
   return setDecimals(
     [num1_[0] * num2_[0], num1_[1] * 2],
-    decimals ?? (isDnum(num1) ? num1[1] : num1_[1]),
-    { rounding }
+    options.decimals ?? (isDnum(num1) ? num1[1] : num1_[1]),
+    { rounding: options.rounding }
   );
 }
 
 export function divide(
   num1: Numberish,
   num2: Numberish,
-  decimals?: Decimals,
-  rounding: Rounding = "ROUND_HALF",
+  optionsOrDecimals: OptionsOrDecimals = {},
 ): Dnum {
-  const [num1_, num2_] = normalizePairAndDecimals(num1, num2, decimals);
+  const options = typeof optionsOrDecimals === "number"
+  ? { decimals: optionsOrDecimals }
+  : optionsOrDecimals
+  options.rounding ??= "ROUND_HALF"
+
+  const [num1_, num2_] = normalizePairAndDecimals(num1, num2, options.decimals);
   if (num2_[0] === 0n) {
     throw new Error("dnum: division by zero");
   }
-  const value1 = setValueDecimals(num1_[0], Math.max(num1_[1], decimals ?? 0));
+  const value1 = setValueDecimals(num1_[0], Math.max(num1_[1], options.decimals ?? 0));
   const value2 = setValueDecimals(num2_[0], 0);
   return setDecimals(
-    [divideAndRound(value1, value2, rounding), num1_[1]],
-    decimals ?? (isDnum(num1) ? num1[1] : num1_[1]),
-    { rounding }
+    [divideAndRound(value1, value2, options.rounding), num1_[1]],
+    options.decimals ?? (isDnum(num1) ? num1[1] : num1_[1]),
+    { rounding: options.rounding }
   );
 }
 
@@ -111,22 +119,26 @@ export function abs(num: Numberish, decimals?: Decimals): Dnum {
 }
 
 export function floor(num: Numberish, decimals?: Decimals): Dnum {
-  return round(num, decimals, "ROUND_DOWN");
+  return round(num, { decimals, rounding: "ROUND_DOWN" });
 }
 
 export function ceil(num: Numberish, decimals?: Decimals): Dnum {
-  return round(num, decimals, "ROUND_UP");
+  return round(num, { decimals, rounding: "ROUND_UP" });
 }
 
 export function round(
   num: Numberish, 
-  decimals?: Decimals,
-  rounding: Rounding = "ROUND_HALF",
+  optionsOrDecimals: OptionsOrDecimals = {},
 ): Dnum {
+  const options = typeof optionsOrDecimals === "number"
+    ? { decimals: optionsOrDecimals }
+    : optionsOrDecimals
+  options.rounding ??= "ROUND_HALF"
+
   const numIn = from(num);
   return setDecimals(
-    setDecimals(numIn, 0, { rounding }), // setDecimals() uses divideAndRound() internally
-    decimals === undefined ? numIn[1] : decimals,
+    setDecimals(numIn, 0, { rounding: options.rounding }), // setDecimals() uses divideAndRound() internally
+    options.decimals === undefined ? numIn[1] : options.decimals,
   );
 }
 
