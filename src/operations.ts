@@ -40,8 +40,8 @@ export function multiply(
 ): Dnum {
   const options = typeof optionsOrDecimals === "number"
     ? { decimals: optionsOrDecimals }
-    : optionsOrDecimals
-  options.rounding ??= "ROUND_HALF"
+    : optionsOrDecimals;
+  options.rounding ??= "ROUND_HALF";
 
   const [num1_, num2_] = normalizePairAndDecimals(num1, num2, options.decimals);
   return setDecimals(
@@ -57,9 +57,9 @@ export function divide(
   optionsOrDecimals: OptionsOrDecimals = {},
 ): Dnum {
   const options = typeof optionsOrDecimals === "number"
-  ? { decimals: optionsOrDecimals }
-  : optionsOrDecimals
-  options.rounding ??= "ROUND_HALF"
+    ? { decimals: optionsOrDecimals }
+    : optionsOrDecimals;
+  options.rounding ??= "ROUND_HALF";
 
   const [num1_, num2_] = normalizePairAndDecimals(num1, num2, options.decimals);
   if (num2_[0] === 0n) {
@@ -132,8 +132,8 @@ export function round(
 ): Dnum {
   const options = typeof optionsOrDecimals === "number"
     ? { decimals: optionsOrDecimals }
-    : optionsOrDecimals
-  options.rounding ??= "ROUND_HALF"
+    : optionsOrDecimals;
+  options.rounding ??= "ROUND_HALF";
 
   const numIn = from(num);
   return setDecimals(
