@@ -183,16 +183,17 @@ Subtracts the second value from the first one, regardless of their decimals. dec
 
 Alias: `sub()`
 
-### `multiply(value1, value2, decimals)`
+### `multiply(value1, value2, optionsOrDecimals)`
 
-Multiply two values together, regardless of their decimals. `decimals` correspond to the decimals desired in the result.
+Multiply two values together, regardless of their decimals. `options.decimals` correspond to the decimals desired in the result.
 
-| Name                  | Description                                     | Type        |
-| --------------------- | ----------------------------------------------- | ----------- |
-| `value1`              | First value to multiply                         | `Numberish` |
-| `value2`              | Second value to multiply                        | `Numberish` |
-| `decimals` (optional) | Result decimals (defaults to `value1` decimals) | `number`    |
-| returns               | Result                                          | `Dnum`      |
+| Name                          | Description                                                                                                         | Type        |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------------- | ----------- |
+| `value1`                      | First value to multiply                                                                                             | `Numberish` |
+| `value2`                      | Second value to multiply                                                                                            | `Numberish` |
+| `options.decimals` (optional) | Results decimals (defaults to `value1` decimals). Setting `options` to a `number` acts as an alias for this option. | `Decimals`  |
+| `options.rounding` (optional) | How to round round results (defaults to `"ROUND_HALF"`)                                                             | `Rounding`  |
+| returns                       | Result                                                                                                              | `Dnum`      |
 
 Alias: `mul()`
 
@@ -207,16 +208,17 @@ let tokenPriceUsd = dnum.multiply(tokenPriceEth, ethPriceUsd, 2); // 570 USD
 // tokenPriceUsd equals [57000, 2]
 ```
 
-### `divide(value1, value2, decimals)`
+### `divide(value1, value2, optionsOrDecimals)`
 
-Divide a value by another one, regardless of their decimals. `decimals` correspond to the decimals desired in the result.
+Divide a value by another one, regardless of their decimals. `options.decimals` correspond to the decimals desired in the result.
 
-| Name                  | Description                                     | Type        |
-| --------------------- | ----------------------------------------------- | ----------- |
-| `value1`              | Dividend                                        | `Numberish` |
-| `value2`              | Divisor                                         | `Numberish` |
-| `decimals` (optional) | Result decimals (defaults to `value1` decimals) | `number`    |
-| returns               | Result value                                    | `Dnum`      |
+| Name                          | Description                                                                                                         | Type        |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------------- | ----------- |
+| `value1`                      | Dividend                                                                                                            | `Numberish` |
+| `value2`                      | Divisor                                                                                                             | `Numberish` |
+| `options.decimals` (optional) | Results decimals (defaults to `value1` decimals). Setting `options` to a `number` acts as an alias for this option. | `Decimals`  |
+| `options.rounding` (optional) | How to round round results (defaults to `"ROUND_HALF"`)                                                             | `Rounding`  |
+| returns                       | Result                                                                                                              | `Dnum`      |
 
 Alias: `div()`
 
@@ -262,15 +264,16 @@ let value = [-100000n, 2];
 dnum.abs(value); // [100000n, 2]
 ```
 
-### `round(value, decimals)`
+### `round(value, optionsOrDecimals)`
 
-Equivalent to the [`Math.round()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/round) function: it returns the value of a number rounded to the nearest integer.
+Equivalent to the [`Math.round()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/round) function, with added option to forcibly round up or down: it returns the value of a number rounded to the nearest integer.
 
-| Name                  | Description                                    | Type        |
-| --------------------- | ---------------------------------------------- | ----------- |
-| `value`               | Value to round to the nearest integer          | `Numberish` |
-| `decimals` (optional) | Result decimals (defaults to `value` decimals) | `number`    |
-| returns               | Result value                                   | `Dnum`      |
+| Name                          | Description                                                                                                        | Type        |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------------ | ----------- |
+| `value`                       | Value to round to the nearest integer                                                                              | `Numberish` |
+| `options.decimals` (optional) | Results decimals (defaults to `value` decimals). Setting `options` to a `number` acts as an alias for this option. | `Decimals`  |
+| `options.rounding` (optional) | How to round round results (defaults to `"ROUND_HALF"`)                                                            | `Rounding`  |
+| returns                       | Result                                                                                                             | `Dnum`      |
 
 #### Example
 
@@ -471,12 +474,12 @@ let dnum = fromJSON("[\"123456789000000000000\", 18]");
 
 Return a new `Dnum` with a different amount of decimals. The value will reflect this change so that the represented number stays the same.
 
-| Name            | Description                                                                         | Type      |
-| --------------- | ----------------------------------------------------------------------------------- | --------- |
-| `value`         | The number from which decimals will be changed                                      | `Dnum`    |
-| `decimals`      | New number of decimals                                                              | `number`  |
-| `options.round` | In case of reduction, whether to round the remaining decimals (defaults to `true`). | `boolean` |
-| returns         | Result value                                                                        | `Dnum`    |
+| Name            | Description                                                                                 | Type       |
+| --------------- | ------------------------------------------------------------------------------------------- | ---------- |
+| `value`         | The number from which decimals will be changed                                              | `Dnum`     |
+| `decimals`      | New number of decimals                                                                      | `number`   |
+| `options.round` | In case of reduction, whether to round the remaining decimals (defaults to `"ROUND_HALF"`). | `Rounding` |
+| returns         | Result value                                                                                | `Dnum`     |
 
 Note: `from(value, decimals)` can also be used instead.
 

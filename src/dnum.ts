@@ -1,4 +1,11 @@
-import type { Decimals, Dnum, Numberish, Value } from "./types";
+import type {
+  AliasedOptions,
+  Decimals,
+  Dnum,
+  Numberish,
+  Rounding,
+  Value,
+} from "./types";
 
 import fromExponential from "from-exponential";
 import {
@@ -76,18 +83,16 @@ export function from(
 export function setValueDecimals(
   value: Value,
   decimalsDiff: Decimals,
-  options: { round?: boolean } = {},
+  options: { rounding?: Rounding } = {},
 ): Value {
-  options.round ??= true;
+  options.rounding ??= "ROUND_HALF";
 
   if (decimalsDiff > 0) {
     return value * powerOfTen(decimalsDiff);
   }
 
   if (decimalsDiff < 0) {
-    return options.round
-      ? divideAndRound(value, powerOfTen(-decimalsDiff))
-      : value / powerOfTen(-decimalsDiff);
+    return divideAndRound(value, powerOfTen(-decimalsDiff), options.rounding);
   }
 
   return value;
@@ -96,9 +101,9 @@ export function setValueDecimals(
 export function setDecimals(
   value: Dnum,
   decimals: Decimals,
-  options: { round?: boolean } = {},
+  options: { rounding?: Rounding } = {},
 ): Dnum {
-  options.round ??= true;
+  options.rounding ??= "ROUND_HALF";
 
   if (value[1] === decimals) {
     return value;
@@ -132,13 +137,11 @@ export function fromJSON(jsonValue: string): Dnum {
 
 export function toParts(
   dnum: Dnum,
-  optionsOrDigits:
-    | {
-      digits?: number; // defaults to decimals
-      trailingZeros?: boolean;
-      decimalsRounding?: "ROUND_HALF" | "ROUND_UP" | "ROUND_DOWN";
-    }
-    | number = {},
+  optionsOrDigits: AliasedOptions<{
+    digits?: number; // defaults to decimals
+    trailingZeros?: boolean;
+    decimalsRounding?: Rounding;
+  }, "digits"> = {},
 ): [
   whole: bigint, // always positive
   fraction: string | null,
