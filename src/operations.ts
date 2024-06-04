@@ -1,4 +1,10 @@
-import type { Decimals, Dnum, Numberish, OptionsOrDecimals } from "./types";
+import type {
+  AliasedOptions,
+  Decimals,
+  Dnum,
+  Numberish,
+  Rounding,
+} from "./types";
 
 import {
   equalizeDecimals,
@@ -36,7 +42,10 @@ export function subtract(
 export function multiply(
   num1: Numberish,
   num2: Numberish,
-  optionsOrDecimals: OptionsOrDecimals = {},
+  optionsOrDecimals: AliasedOptions<{
+    decimals?: Decimals;
+    rounding?: Rounding;
+  }, "decimals"> = {},
 ): Dnum {
   const options = typeof optionsOrDecimals === "number"
     ? { decimals: optionsOrDecimals }
@@ -47,14 +56,17 @@ export function multiply(
   return setDecimals(
     [num1_[0] * num2_[0], num1_[1] * 2],
     options.decimals ?? (isDnum(num1) ? num1[1] : num1_[1]),
-    { rounding: options.rounding }
+    { rounding: options.rounding },
   );
 }
 
 export function divide(
   num1: Numberish,
   num2: Numberish,
-  optionsOrDecimals: OptionsOrDecimals = {},
+  optionsOrDecimals: AliasedOptions<{
+    decimals?: Decimals;
+    rounding?: Rounding;
+  }, "decimals"> = {},
 ): Dnum {
   const options = typeof optionsOrDecimals === "number"
     ? { decimals: optionsOrDecimals }
@@ -127,8 +139,11 @@ export function ceil(num: Numberish, decimals?: Decimals): Dnum {
 }
 
 export function round(
-  num: Numberish, 
-  optionsOrDecimals: OptionsOrDecimals = {},
+  num: Numberish,
+  optionsOrDecimals: AliasedOptions<{
+    decimals?: Decimals;
+    rounding?: Rounding;
+  }, "decimals"> = {},
 ): Dnum {
   const options = typeof optionsOrDecimals === "number"
     ? { decimals: optionsOrDecimals }

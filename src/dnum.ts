@@ -1,4 +1,11 @@
-import type { Decimals, Rounding, Dnum, Numberish, Value } from "./types";
+import type {
+  AliasedOptions,
+  Decimals,
+  Dnum,
+  Numberish,
+  Rounding,
+  Value,
+} from "./types";
 
 import fromExponential from "from-exponential";
 import {
@@ -130,13 +137,11 @@ export function fromJSON(jsonValue: string): Dnum {
 
 export function toParts(
   dnum: Dnum,
-  optionsOrDigits:
-    | {
-      digits?: number; // defaults to decimals
-      trailingZeros?: boolean;
-      decimalsRounding?: Rounding
-    }
-    | number = {},
+  optionsOrDigits: AliasedOptions<{
+    digits?: number; // defaults to decimals
+    trailingZeros?: boolean;
+    decimalsRounding?: Rounding;
+  }, "digits"> = {},
 ): [
   whole: bigint, // always positive
   fraction: string | null,
