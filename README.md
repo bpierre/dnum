@@ -183,17 +183,17 @@ Subtracts the second value from the first one, regardless of their decimals. dec
 
 Alias: `sub()`
 
-### `multiply(value1, value2, decimals, options)`
+### `multiply(value1, value2, optionsOrDecimals)`
 
-Multiply two values together, regardless of their decimals. `decimals` correspond to the decimals desired in the result.
+Multiply two values together, regardless of their decimals. `options.decimals` correspond to the decimals desired in the result.
 
-| Name                          | Description                                             | Type        |
-| ----------------------------- | ------------------------------------------------------- | ----------- |
-| `value1`                      | First value to multiply                                 | `Numberish` |
-| `value2`                      | Second value to multiply                                | `Numberish` |
-| `decimals` (optional)         | Result decimals (defaults to `value1` decimals)         | `number`    |
-| `options.rounding` (optional) | How to round round results (defaults to `"ROUND_HALF"`) | `Rounding`  |
-| returns                       | Result                                                  | `Dnum`      |
+| Name                          | Description                                                                                                         | Type        |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------------- | ----------- |
+| `value1`                      | First value to multiply                                                                                             | `Numberish` |
+| `value2`                      | Second value to multiply                                                                                            | `Numberish` |
+| `options.decimals` (optional) | Results decimals (defaults to `value1` decimals). Setting `options` to a `number` acts as an alias for this option. | `Decimals`  |
+| `options.rounding` (optional) | How to round round results (defaults to `"ROUND_HALF"`)                                                             | `Rounding`  |
+| returns                       | Result                                                                                                              | `Dnum`      |
 
 Alias: `mul()`
 
@@ -208,17 +208,17 @@ let tokenPriceUsd = dnum.multiply(tokenPriceEth, ethPriceUsd, 2); // 570 USD
 // tokenPriceUsd equals [57000, 2]
 ```
 
-### `divide(value1, value2, decimals, options)`
+### `divide(value1, value2, optionsOrDecimals)`
 
-Divide a value by another one, regardless of their decimals. `decimals` correspond to the decimals desired in the result.
+Divide a value by another one, regardless of their decimals. `options.decimals` correspond to the decimals desired in the result.
 
-| Name                          | Description                                             | Type        |
-| ----------------------------- | ------------------------------------------------------- | ----------- |
-| `value1`                      | Dividend                                                | `Numberish` |
-| `value2`                      | Divisor                                                 | `Numberish` |
-| `decimals` (optional)         | Result decimals (defaults to `value1` decimals)         | `number`    |
-| `options.rounding` (optional) | How to round round results (defaults to `"ROUND_HALF"`) | `Rounding`  |
-| returns                       | Result value                                            | `Dnum`      |
+| Name                          | Description                                                                                                         | Type        |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------------- | ----------- |
+| `value1`                      | Dividend                                                                                                            | `Numberish` |
+| `value2`                      | Divisor                                                                                                             | `Numberish` |
+| `options.decimals` (optional) | Results decimals (defaults to `value1` decimals). Setting `options` to a `number` acts as an alias for this option. | `Decimals`  |
+| `options.rounding` (optional) | How to round round results (defaults to `"ROUND_HALF"`)                                                             | `Rounding`  |
+| returns                       | Result                                                                                                              | `Dnum`      |
 
 Alias: `div()`
 
@@ -264,16 +264,16 @@ let value = [-100000n, 2];
 dnum.abs(value); // [100000n, 2]
 ```
 
-### `round(value, decimals, options)`
+### `round(value, optionsOrDecimals)`
 
 Equivalent to the [`Math.round()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/round) function, with added option to forcibly round up or down: it returns the value of a number rounded to the nearest integer. 
 
-| Name                          | Description                                             | Type        |
-| ----------------------------- | ------------------------------------------------------- | ----------- |
-| `value`                       | Value to round to the nearest integer                   | `Numberish` |
-| `decimals` (optional)         | Result decimals (defaults to `value` decimals)          | `number`    |
-| `options.rounding` (optional) | How to round round results (defaults to `"ROUND_HALF"`) | `Rounding`  |
-| returns                       | Result value                                            | `Dnum`      |
+| Name                          | Description                                                                                                        | Type        |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------------ | ----------- |
+| `value`                       | Value to round to the nearest integer                                                                              | `Numberish` |
+| `options.decimals` (optional) | Results decimals (defaults to `value` decimals). Setting `options` to a `number` acts as an alias for this option. | `Decimals`  |
+| `options.rounding` (optional) | How to round round results (defaults to `"ROUND_HALF"`)                                                            | `Rounding`  |
+| returns                       | Result                                                                                                             | `Dnum`      |
 
 #### Example
 
