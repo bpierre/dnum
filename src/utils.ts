@@ -26,10 +26,10 @@ function divideAndRoundHalf(dividend: bigint, divisor: bigint) {
 export function divideAndRound(
   dividend: bigint,
   divisor: bigint,
-  rounding: Rounding = "ROUND_HALF"
+  rounding: Rounding = "ROUND_HALF",
 ) {
-  return rounding === "ROUND_UP" 
-    ? divideAndRoundUp(dividend, divisor) 
+  return rounding === "ROUND_UP"
+    ? divideAndRoundUp(dividend, divisor)
     : rounding === "ROUND_DOWN"
     ? divideAndRoundDown(dividend, divisor)
     : divideAndRoundHalf(dividend, divisor);

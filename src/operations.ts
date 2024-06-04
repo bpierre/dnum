@@ -77,12 +77,15 @@ export function divide(
   if (num2_[0] === 0n) {
     throw new Error("dnum: division by zero");
   }
-  const value1 = setValueDecimals(num1_[0], Math.max(num1_[1], options.decimals ?? 0));
+  const value1 = setValueDecimals(
+    num1_[0],
+    Math.max(num1_[1], options.decimals ?? 0),
+  );
   const value2 = setValueDecimals(num2_[0], 0);
   return setDecimals(
     [divideAndRound(value1, value2, options.rounding), num1_[1]],
     options.decimals ?? (isDnum(num1) ? num1[1] : num1_[1]),
-    { rounding: options.rounding }
+    { rounding: options.rounding },
   );
 }
 

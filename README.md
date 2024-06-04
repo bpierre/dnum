@@ -266,7 +266,7 @@ dnum.abs(value); // [100000n, 2]
 
 ### `round(value, optionsOrDecimals)`
 
-Equivalent to the [`Math.round()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/round) function, with added option to forcibly round up or down: it returns the value of a number rounded to the nearest integer. 
+Equivalent to the [`Math.round()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/round) function, with added option to forcibly round up or down: it returns the value of a number rounded to the nearest integer.
 
 | Name                          | Description                                                                                                        | Type        |
 | ----------------------------- | ------------------------------------------------------------------------------------------------------------------ | ----------- |
