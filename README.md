@@ -359,7 +359,6 @@ Equivalent to [the `==` operator](https://developer.mozilla.org/en-US/docs/Web/J
 | --------------------- | --------------------------------------------- | ----------- |
 | `value1`              | First value                                   | `Numberish` |
 | `value2`              | Second value                                  | `Numberish` |
-| `decimals` (optional) | Result decimals (defaults to value1 decimals) | `number`    |
 | returns               | Result value                                  | `Dnum`      |
 
 Alias: `eq()`
@@ -370,7 +369,7 @@ Alias: `eq()`
 let value1 = [100000n, 2];
 let value2 = [10000000n, 4];
 
-dnum.lessThan(value1, value2); // true
+dnum.equal(value1, value2); // true
 ```
 
 ### `compare(value1, value2)`
