@@ -303,7 +303,7 @@ Equivalent to the [`Math.ceil()`](https://developer.mozilla.org/en-US/docs/Web/J
 | `decimals` (optional) | Result decimals (defaults to `value` decimals) | `number`    |
 | returns               | Result value                                   | `Dnum`      |
 
-### `greaterThan(value1, value2, decimals)`
+### `greaterThan(value1, value2)`
 
 Equivalent to [the `>` operator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Greater_than): it returns `true` if the first value is greater than the second value and `false` otherwise, regardless of their respective decimals.
 
@@ -311,7 +311,6 @@ Equivalent to [the `>` operator](https://developer.mozilla.org/en-US/docs/Web/Ja
 | --------------------- | --------------------------------------------- | ----------- |
 | `value1`              | First value                                   | `Numberish` |
 | `value2`              | Second value                                  | `Numberish` |
-| `decimals` (optional) | Result decimals (defaults to value1 decimals) | `number`    |
 | returns               | Result value                                  | `Dnum`      |
 
 Alias: `gt()`
@@ -327,7 +326,7 @@ dnum.greaterThan(value1, value1); // false
 dnum.greaterThan(value2, value1); // false
 ```
 
-### `lessThan(value1, value2, decimals)`
+### `lessThan(value1, value2)`
 
 Equivalent to [the `<` operator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Less_than): it returns `true` if the first value is less than the second value and `false` otherwise, regardless of their respective decimals.
 
@@ -335,7 +334,6 @@ Equivalent to [the `<` operator](https://developer.mozilla.org/en-US/docs/Web/Ja
 | --------------------- | --------------------------------------------- | ----------- |
 | `value1`              | First value                                   | `Numberish` |
 | `value2`              | Second value                                  | `Numberish` |
-| `decimals` (optional) | Result decimals (defaults to value1 decimals) | `number`    |
 | returns               | Result value                                  | `Dnum`      |
 
 Alias: `lt()`
@@ -351,7 +349,7 @@ dnum.lessThan(value1, value1); // false
 dnum.lessThan(value2, value1); // false
 ```
 
-### `equal(value1, value2, decimals)`
+### `equal(value1, value2)`
 
 Equivalent to [the `==` operator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Equality): it returns `true` if the first value is equal to the second value and `false` otherwise, regardless of their respective decimals.
 
