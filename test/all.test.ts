@@ -12,8 +12,10 @@ import {
   from,
   fromJSON,
   greaterThan,
+  greaterThanOrEqual,
   isDnum,
   lessThan,
+  lessThanOrEqual,
   multiply,
   remainder,
   round,
@@ -1002,6 +1004,26 @@ describe("abs()", () => {
   });
 });
 
+describe("greaterThan()", () => {
+  it("works", () => {
+    expect(
+      greaterThan([123456789000000000000n, 18], [123456789000000000001n, 18]),
+    ).toBe(false);
+    expect(
+      greaterThan([123456789000000000001n, 18], [123456789000000000001n, 18]),
+    ).toBe(false);
+    expect(
+      greaterThan([123456789000000000001n, 18], [123456789000000000000n, 18]),
+    ).toBe(true);
+    expect(
+      greaterThan([123456789000000000000n, 18], 124),
+    ).toBe(false);
+    expect(
+      greaterThan([123456789000000000000n, 18], 123),
+    ).toBe(true);
+  });
+});
+
 describe("lessThan()", () => {
   it("works", () => {
     expect(
@@ -1022,23 +1044,37 @@ describe("lessThan()", () => {
   });
 });
 
-describe("greaterThan()", () => {
+describe("greaterThanOrEqual()", () => {
   it("works", () => {
-    expect(
-      greaterThan([123456789000000000000n, 18], [123456789000000000001n, 18]),
-    ).toBe(false);
-    expect(
-      greaterThan([123456789000000000001n, 18], [123456789000000000001n, 18]),
-    ).toBe(false);
-    expect(
-      greaterThan([123456789000000000001n, 18], [123456789000000000000n, 18]),
-    ).toBe(true);
-    expect(
-      greaterThan([123456789000000000000n, 18], 124),
-    ).toBe(false);
-    expect(
-      greaterThan([123456789000000000000n, 18], 123),
-    ).toBe(true);
+    expect(greaterThanOrEqual(
+      [123456789000000000000n, 18],
+      [123456789000000000001n, 18],
+    )).toBe(false);
+    expect(greaterThanOrEqual(
+      [123456789000000000001n, 18],
+      [123456789000000000001n, 18],
+    )).toBe(true);
+    expect(greaterThanOrEqual(
+      [123456789000000000001n, 18],
+      [123456789000000000000n, 18],
+    )).toBe(true);
+  });
+});
+
+describe("lessThanOrEqual()", () => {
+  it("works", () => {
+    expect(lessThanOrEqual(
+      [123456789000000000000n, 18],
+      [123456789000000000001n, 18],
+    )).toBe(true);
+    expect(lessThanOrEqual(
+      [123456789000000000001n, 18],
+      [123456789000000000001n, 18],
+    )).toBe(true);
+    expect(lessThanOrEqual(
+      [123456789000000000001n, 18],
+      [123456789000000000000n, 18],
+    )).toBe(false);
   });
 });
 

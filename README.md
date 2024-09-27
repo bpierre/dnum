@@ -307,11 +307,11 @@ Equivalent to the [`Math.ceil()`](https://developer.mozilla.org/en-US/docs/Web/J
 
 Equivalent to [the `>` operator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Greater_than): it returns `true` if the first value is greater than the second value and `false` otherwise, regardless of their respective decimals.
 
-| Name                  | Description                                   | Type        |
-| --------------------- | --------------------------------------------- | ----------- |
-| `value1`              | First value                                   | `Numberish` |
-| `value2`              | Second value                                  | `Numberish` |
-| returns               | Result value                                  | `Dnum`      |
+| Name     | Description  | Type        |
+| -------- | ------------ | ----------- |
+| `value1` | First value  | `Numberish` |
+| `value2` | Second value | `Numberish` |
+| returns  | Result value | `Dnum`      |
 
 Alias: `gt()`
 
@@ -326,15 +326,27 @@ dnum.greaterThan(value1, value1); // false
 dnum.greaterThan(value2, value1); // false
 ```
 
+### `greaterThanOrEqual(value1, value2)`
+
+Equivalent to [the `>=` operator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Greater_than_or_equal): it returns `true` if the first value is greater than or equal to the second value and `false` otherwise, regardless of their respective decimals.
+
+| Name     | Description  | Type        |
+| -------- | ------------ | ----------- |
+| `value1` | First value  | `Numberish` |
+| `value2` | Second value | `Numberish` |
+| returns  | Result value | `boolean`   |
+
+Alias: `gte()`
+
 ### `lessThan(value1, value2)`
 
 Equivalent to [the `<` operator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Less_than): it returns `true` if the first value is less than the second value and `false` otherwise, regardless of their respective decimals.
 
-| Name                  | Description                                   | Type        |
-| --------------------- | --------------------------------------------- | ----------- |
-| `value1`              | First value                                   | `Numberish` |
-| `value2`              | Second value                                  | `Numberish` |
-| returns               | Result value                                  | `Dnum`      |
+| Name     | Description  | Type        |
+| -------- | ------------ | ----------- |
+| `value1` | First value  | `Numberish` |
+| `value2` | Second value | `Numberish` |
+| returns  | Result value | `Dnum`      |
 
 Alias: `lt()`
 
@@ -349,15 +361,27 @@ dnum.lessThan(value1, value1); // false
 dnum.lessThan(value2, value1); // false
 ```
 
+### `lessThanOrEqual(value1, value2)`
+
+Equivalent to [the `<=` operator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Less_than_or_equal): it returns `true` if the first value is less than or equal to the second value and `false` otherwise, regardless of their respective decimals.
+
+| Name     | Description  | Type        |
+| -------- | ------------ | ----------- |
+| `value1` | First value  | `Numberish` |
+| `value2` | Second value | `Numberish` |
+| returns  | Result value | `boolean`   |
+
+Alias: `lte()`
+
 ### `equal(value1, value2)`
 
 Equivalent to [the `==` operator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Equality): it returns `true` if the first value is equal to the second value and `false` otherwise, regardless of their respective decimals.
 
-| Name                  | Description                                   | Type        |
-| --------------------- | --------------------------------------------- | ----------- |
-| `value1`              | First value                                   | `Numberish` |
-| `value2`              | Second value                                  | `Numberish` |
-| returns               | Result value                                  | `Dnum`      |
+| Name     | Description  | Type        |
+| -------- | ------------ | ----------- |
+| `value1` | First value  | `Numberish` |
+| `value2` | Second value | `Numberish` |
+| returns  | Result value | `Dnum`      |
 
 Alias: `eq()`
 
