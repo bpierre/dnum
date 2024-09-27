@@ -242,7 +242,7 @@ Equivalent to [the `%` operator](https://developer.mozilla.org/en-US/docs/Web/Ja
 | `value1`              | Dividend                                        | `Numberish` |
 | `value2`              | Divisor                                         | `Numberish` |
 | `decimals` (optional) | Result decimals (defaults to `value1` decimals) | `number`    |
-| returns               | Result value                                    | `Dnum`      |
+| returns               | Result                                          | `Dnum`      |
 
 Alias: `rem()`
 
@@ -254,7 +254,7 @@ Equivalent to the [`Math.abs()`](https://developer.mozilla.org/en-US/docs/Web/Ja
 | --------------------- | ---------------------------------------------- | ----------- |
 | `value`               | Value to remove the sign from                  | `Numberish` |
 | `decimals` (optional) | Result decimals (defaults to `value` decimals) | `number`    |
-| returns               | Result value                                   | `Dnum`      |
+| returns               | Result                                         | `Dnum`      |
 
 #### Example
 
@@ -291,7 +291,7 @@ Equivalent to the [`Math.floor()`](https://developer.mozilla.org/en-US/docs/Web/
 | --------------------- | ---------------------------------------------- | ----------- |
 | `value`               | Value to round down                            | `Numberish` |
 | `decimals` (optional) | Result decimals (defaults to `value` decimals) | `number`    |
-| returns               | Result value                                   | `Dnum`      |
+| returns               | Result                                         | `Dnum`      |
 
 ### `ceil(value, decimals)`
 
@@ -301,17 +301,17 @@ Equivalent to the [`Math.ceil()`](https://developer.mozilla.org/en-US/docs/Web/J
 | --------------------- | ---------------------------------------------- | ----------- |
 | `value`               | Value to round up                              | `Numberish` |
 | `decimals` (optional) | Result decimals (defaults to `value` decimals) | `number`    |
-| returns               | Result value                                   | `Dnum`      |
+| returns               | Result                                         | `Dnum`      |
 
 ### `greaterThan(value1, value2)`
 
 Equivalent to [the `>` operator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Greater_than): it returns `true` if the first value is greater than the second value and `false` otherwise, regardless of their respective decimals.
 
-| Name     | Description  | Type        |
-| -------- | ------------ | ----------- |
-| `value1` | First value  | `Numberish` |
-| `value2` | Second value | `Numberish` |
-| returns  | Result value | `Dnum`      |
+| Name     | Description       | Type        |
+| -------- | ----------------- | ----------- |
+| `value1` | First value       | `Numberish` |
+| `value2` | Second value      | `Numberish` |
+| returns  | Comparison result | `boolean`   |
 
 Alias: `gt()`
 
@@ -330,11 +330,11 @@ dnum.greaterThan(value2, value1); // false
 
 Equivalent to [the `>=` operator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Greater_than_or_equal): it returns `true` if the first value is greater than or equal to the second value and `false` otherwise, regardless of their respective decimals.
 
-| Name     | Description  | Type        |
-| -------- | ------------ | ----------- |
-| `value1` | First value  | `Numberish` |
-| `value2` | Second value | `Numberish` |
-| returns  | Result value | `boolean`   |
+| Name     | Description       | Type        |
+| -------- | ----------------- | ----------- |
+| `value1` | First value       | `Numberish` |
+| `value2` | Second value      | `Numberish` |
+| returns  | Comparison result | `boolean`   |
 
 Alias: `gte()`
 
@@ -342,11 +342,11 @@ Alias: `gte()`
 
 Equivalent to [the `<` operator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Less_than): it returns `true` if the first value is less than the second value and `false` otherwise, regardless of their respective decimals.
 
-| Name     | Description  | Type        |
-| -------- | ------------ | ----------- |
-| `value1` | First value  | `Numberish` |
-| `value2` | Second value | `Numberish` |
-| returns  | Result value | `Dnum`      |
+| Name     | Description       | Type        |
+| -------- | ----------------- | ----------- |
+| `value1` | First value       | `Numberish` |
+| `value2` | Second value      | `Numberish` |
+| returns  | Comparison result | `boolean`   |
 
 Alias: `lt()`
 
@@ -365,11 +365,11 @@ dnum.lessThan(value2, value1); // false
 
 Equivalent to [the `<=` operator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Less_than_or_equal): it returns `true` if the first value is less than or equal to the second value and `false` otherwise, regardless of their respective decimals.
 
-| Name     | Description  | Type        |
-| -------- | ------------ | ----------- |
-| `value1` | First value  | `Numberish` |
-| `value2` | Second value | `Numberish` |
-| returns  | Result value | `boolean`   |
+| Name     | Description       | Type        |
+| -------- | ----------------- | ----------- |
+| `value1` | First value       | `Numberish` |
+| `value2` | Second value      | `Numberish` |
+| returns  | Comparison result | `boolean`   |
 
 Alias: `lte()`
 
@@ -377,11 +377,11 @@ Alias: `lte()`
 
 Equivalent to [the `==` operator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Equality): it returns `true` if the first value is equal to the second value and `false` otherwise, regardless of their respective decimals.
 
-| Name     | Description  | Type        |
-| -------- | ------------ | ----------- |
-| `value1` | First value  | `Numberish` |
-| `value2` | Second value | `Numberish` |
-| returns  | Result value | `Dnum`      |
+| Name     | Description       | Type        |
+| -------- | ----------------- | ----------- |
+| `value1` | First value       | `Numberish` |
+| `value2` | Second value      | `Numberish` |
+| returns  | Comparison result | `boolean`   |
 
 Alias: `eq()`
 
@@ -398,11 +398,11 @@ dnum.equal(value1, value2); // true
 
 Returns `1` if `value1 > value2`, `-1` if `value1 < value2`, `0` if `value1 == value2`. It makes it easy to combine `Dnum` values with sorting functions such as [`Array#sort()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort).
 
-| Name     | Description  | Type           |
-| -------- | ------------ | -------------- |
-| `value1` | First value  | `Numberish`    |
-| `value2` | Second value | `Numberish`    |
-| returns  | Result value | `1 \| -1 \| 0` |
+| Name     | Description       | Type           |
+| -------- | ----------------- | -------------- |
+| `value1` | First value       | `Numberish`    |
+| `value2` | Second value      | `Numberish`    |
+| returns  | Comparison result | `1 \| -1 \| 0` |
 
 Alias: `cmp()`
 
@@ -430,7 +430,7 @@ Converts the `Dnum` data structure into a `number`. [This might result in a loss
 | `value`                    | The number to convert into a `number`                                                                                                                                                                     | `Dnum`                                       |
 | `options.digits`           | Number of digits to keep after the decimal point. Setting `options` to a number acts as an alias for this option (see example below). Defaults to the number of decimals in the `Dnum` passed to `value`. | `number`                                     |
 | `options.decimalsRounding` | Method used to round to `digits` decimals (defaults to `"ROUND_HALF"`).                                                                                                                                   | `"ROUND_HALF" \| "ROUND_UP" \| "ROUND_DOWN"` |
-| returns                    | Result value                                                                                                                                                                                              | `number`                                     |
+| returns                    | Result                                                                                                                                                                                                    | `number`                                     |
 
 ```ts
 let value = [123456789000000000000000n, 18];
@@ -449,7 +449,7 @@ Converts the `Dnum` data structure into a `string`, without any formatting. [Thi
 | `value`                    | The number to convert into a `string`                                                                                                                                                                     | `Dnum`                                       |
 | `options.digits`           | Number of digits to keep after the decimal point. Setting `options` to a number acts as an alias for this option (see example below). Defaults to the number of decimals in the `Dnum` passed to `value`. | `string`                                     |
 | `options.decimalsRounding` | Method used to round to `digits` decimals (defaults to `"ROUND_HALF"`).                                                                                                                                   | `"ROUND_HALF" \| "ROUND_UP" \| "ROUND_DOWN"` |
-| returns                    | Result value                                                                                                                                                                                              | `string`                                     |
+| returns                    | String conversion of the value                                                                                                                                                                            | `string`                                     |
 
 ```ts
 let value = [123456789000000000000000n, 18];
@@ -468,7 +468,7 @@ Converts the `Dnum` data structure into a JSON-compatible string. This function 
 | Name    | Description                       | Type     |
 | ------- | --------------------------------- | -------- |
 | `value` | The number to convert into a JSON | `Dnum`   |
-| returns | Result value                      | `string` |
+| returns | JSON conversion of the value      | `string` |
 
 ```ts
 let json = toJSON([123456789000000000000n, 18]);
@@ -483,7 +483,7 @@ Converts the string resulting from `toJSON()` back into a `Dnum`.
 | Name    | Description                                    | Type     |
 | ------- | ---------------------------------------------- | -------- |
 | `value` | The string value to convert back into a `Dnum` | `string` |
-| returns | Result value                                   | `Dnum`   |
+| returns | `Dnum` value parsed from the JSON              | `Dnum`   |
 
 ```ts
 let dnum = fromJSON("[\"123456789000000000000\", 18]");
@@ -500,7 +500,7 @@ Return a new `Dnum` with a different amount of decimals. The value will reflect 
 | `value`         | The number from which decimals will be changed                                              | `Dnum`     |
 | `decimals`      | New number of decimals                                                                      | `number`   |
 | `options.round` | In case of reduction, whether to round the remaining decimals (defaults to `"ROUND_HALF"`). | `Rounding` |
-| returns         | Result value                                                                                | `Dnum`     |
+| returns         | Result                                                                                      | `Dnum`     |
 
 Note: `from(value, decimals)` can also be used instead.
 
