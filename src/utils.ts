@@ -61,7 +61,8 @@ export function roundToPower(value: bigint, power: bigint) {
 }
 
 export function ceilToPower(value: bigint, power: bigint) {
-  return ((value / power) * power) + power;
+  const remainder = value % power;
+  return remainder === 0n ? value : ((value / power) * power) + power;
 }
 
 export function floorToPower(value: bigint, power: bigint) {

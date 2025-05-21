@@ -675,20 +675,23 @@ describe("format()", () => {
     Intl.NumberFormat.prototype.formatToParts = formatToParts;
   });
   it("rounds correctly", () => {
-    // using 4,569.988
+    // using 4,569.88
     const n = [456988n, 2] as const;
 
     expect(format(n, 0)).toBe("4,570");
     expect(format(n, 1)).toBe("4,569.9");
+    expect(
+      format(n, {
+        digits: 1,
+        decimalsRounding: "ROUND_DOWN",
+      })
+    ).toBe("4,569.8");
+
     expect(format(n, 2)).toBe("4,569.88");
     expect(format(n, {
       digits: 2,
       decimalsRounding: "ROUND_UP",
-    })).toBe("4,569.89");
-    expect(format(n, {
-      digits: 1,
-      decimalsRounding: "ROUND_DOWN",
-    })).toBe("4,569.8");
+    })).toBe("4,569.88");
   });
   it("handles options.signDisplay", () => {
     expect(format([123n, 4], { signDisplay: "auto" })).toBe("0.0123");
