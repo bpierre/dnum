@@ -21,6 +21,7 @@ import {
 export function isDnum(value: unknown): value is Dnum {
   return (
     Array.isArray(value)
+    && value.length === 2
     && typeof value[0] === "bigint"
     && typeof value[1] === "number"
   );
