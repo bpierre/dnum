@@ -36,7 +36,7 @@ describe("isDnum()", () => {
     expect(isDnum(1n)).toBe(false);
     expect(isDnum([1, 2])).toBe(false);
     expect(isDnum([10n])).toBe(false);
-    expect(isDnum([10n, 1, 1])).toBe(true); // More than 2 entries is still valid
+    expect(isDnum([10n, 1, 1])).toBe(false);
     expect(isDnum([1n, 1])).toBe(true);
   });
 });
