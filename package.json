@@ -16,9 +16,19 @@
   "homepage": "https://github.com/bpierre/dnum",
   "bugs": "https://github.com/bpierre/dnum/issues",
   "repository": "github:bpierre/dnum",
-  "module": "dist/dnum.js",
-  "main": "dist/dnum.js",
-  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/esm/index.d.ts",
+        "default": "./dist/esm/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/index.d.cts",
+        "default": "./dist/cjs/index.cjs"
+      }
+    },
+    "./package.json": "./package.json"
+  },
   "sideEffects": false,
   "files": [
     "dist"
@@ -32,6 +42,7 @@
     "coverage": "vitest run --coverage"
   },
   "devDependencies": {
+    "@tanstack/config": "^0.13.4",
     "@typescript-eslint/eslint-plugin": "7.3.1",
     "@typescript-eslint/parser": "7.3.1",
     "@vitest/coverage-c8": "^0.33.0",
