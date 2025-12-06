@@ -26,6 +26,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "format": "dprint fmt",
     "preview": "vite preview",
     "test": "vitest",
     "lint": "eslint ./src",
