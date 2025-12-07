@@ -33,7 +33,7 @@ console.log(
 ```sh
 npm install --save dnum
 pnpm add dnum
-yarn add dnum
+bun add dnum
 ```
 
 ## TL;DR
