@@ -127,7 +127,7 @@ export function equalizeDecimals(nums: Dnum[], decimals?: number): Dnum[] {
   return nums.map((num) => setDecimals(num, decimals_));
 }
 
-export function toJSON([value, decimals]: Dnum) {
+export function toJSON([value, decimals]: Dnum): string {
   return JSON.stringify([String(value), decimals]);
 }
 
@@ -215,14 +215,14 @@ export function toParts(
 export function toNumber(
   value: Dnum,
   optionsOrDigits?: Parameters<typeof toParts>[1],
-) {
+): number {
   return Number(toString(value, optionsOrDigits));
 }
 
 export function toString(
   value: Dnum,
   optionsOrDigits?: Parameters<typeof toParts>[1],
-) {
+): string {
   const [whole, fraction] = toParts(value, optionsOrDigits);
   return (value[0] >= 0n ? "" : "-")
     + whole
