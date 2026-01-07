@@ -27,6 +27,22 @@ export function isDnum(value: unknown): value is Dnum {
   );
 }
 
+/**
+ * Locale-aware number parser that can handle strings with thousands separator.
+ *
+ * @param strNum formatted string with thousands separator to parse
+ * @returns parsed number
+ * @example parseLocaleNumber("1,234.56") === "1234.56"
+ * @link https://stackoverflow.com/a/51157574
+ */
+function parseLocaleNumber(strNum: string): string {
+  const decSep = (1.1).toLocaleString().substring(1, 2);
+  const formatted = strNum
+    .replace(new RegExp(`([${decSep}])(?=.*\\1)`, 'g'), '')
+    .replace(new RegExp(`[^-0-9${decSep}]`, 'g'), '');
+  return formatted.replace(decSep, '.');
+}
+
 // Matches:
 //  - whole numbers (123)
 //  - decimal numbers (1.23, .23)
@@ -47,6 +63,10 @@ export function from(
 
   if (value.includes("e")) {
     value = fromExponential(value);
+  }
+
+  if (value.includes(",")) {
+    value = parseLocaleNumber(value)
   }
 
   if (!value.match(NUM_RE)) {

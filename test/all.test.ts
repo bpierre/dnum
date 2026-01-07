@@ -998,6 +998,24 @@ describe("from()", () => {
     expect(from(".29387", 18)).toEqual([293870000000000000n, 18]);
     expect(from("-.29387", 18)).toEqual([-293870000000000000n, 18]);
   });
+  it("accepts formatted strings with thousands separator", () => {
+    expect(from("12,345.29387", 18)).toEqual([12345_293870000000000000n, 18]);
+    expect(from("12,345.29387", 2)).toEqual([12345_29n, 2]);
+    expect(from("12,345.29387", 0)).toEqual([12345n, 0]);
+    expect(from("-12,345.29387", 0)).toEqual([-12345n, 0]);
+    expect(from(".29,387", 18)).toEqual([293870000000000000n, 18]);
+    expect(from("-.29,387", 18)).toEqual([-293870000000000000n, 18]);
+    // TODO: figure out how to programmatically run the tests in different locales
+    // I have only found a way to do that by setting the `LC_ALL='de-DE.UTF-8'` env var
+  });
+  it("accepts formatted strings with thousands separator in scientific notation", () => {
+    expect(from(12345.29387 * 10 ** 21, 5)).toEqual([12345293870000000000000000_00000n, 5]);
+    expect(from(-12345.29387 * 10 ** 21, 5)).toEqual([-12345293870000000000000000_00000n, 5]);
+    // NOTE: these cases currently fail because of floating point precision issues
+    // > .29387 * 10 ** 21 === 293870000000000030000
+    // expect(from(.29387 * 10 ** 21, 5)).toEqual([293870000000000000000_00000n, 5]);
+    // expect(from(-.29387 * 10 ** 21, 5)).toEqual([-293870000000000000000_00000n, 5]);
+  });
   it("works with Dnums", () => {
     expect(from([12345n, 2], 2)).toEqual([12345n, 2]);
     expect(from([12345n, 2], 4)).toEqual([1234500n, 4]);
@@ -1020,6 +1038,7 @@ describe("from()", () => {
   });
   it("throws with incorrect values", () => {
     expect(from(10 ** 21)).toEqual([10n ** 21n, 0]);
+    // expected because it is not a valid number in any locale
     expect(() => from("3298.987.32", 18))
       .toThrowErrorMatchingSnapshot(JSON.stringify(["3298.987.32", 18]));
   });
