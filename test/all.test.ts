@@ -1009,8 +1009,14 @@ describe("from()", () => {
     // I have only found a way to do that by setting the `LC_ALL='de-DE.UTF-8'` env var
   });
   it("accepts formatted strings with thousands separator in scientific notation", () => {
-    expect(from(12345.29387 * 10 ** 21, 5)).toEqual([12345293870000000000000000_00000n, 5]);
-    expect(from(-12345.29387 * 10 ** 21, 5)).toEqual([-12345293870000000000000000_00000n, 5]);
+    expect(from(12345.29387 * 10 ** 21, 5)).toEqual([
+      12345293870000000000000000_00000n,
+      5,
+    ]);
+    expect(from(-12345.29387 * 10 ** 21, 5)).toEqual([
+      -12345293870000000000000000_00000n,
+      5,
+    ]);
     // NOTE: these cases currently fail because of floating point precision issues
     // > .29387 * 10 ** 21 === 293870000000000030000
     // expect(from(.29387 * 10 ** 21, 5)).toEqual([293870000000000000000_00000n, 5]);

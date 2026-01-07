@@ -38,9 +38,9 @@ export function isDnum(value: unknown): value is Dnum {
 function parseLocaleNumber(strNum: string): string {
   const decSep = (1.1).toLocaleString().substring(1, 2);
   const formatted = strNum
-    .replace(new RegExp(`([${decSep}])(?=.*\\1)`, 'g'), '')
-    .replace(new RegExp(`[^-0-9${decSep}]`, 'g'), '');
-  return formatted.replace(decSep, '.');
+    .replace(new RegExp(`([${decSep}])(?=.*\\1)`, "g"), "")
+    .replace(new RegExp(`[^-0-9${decSep}]`, "g"), "");
+  return formatted.replace(decSep, ".");
 }
 
 // Matches:
@@ -66,7 +66,7 @@ export function from(
   }
 
   if (value.includes(",")) {
-    value = parseLocaleNumber(value)
+    value = parseLocaleNumber(value);
   }
 
   if (!value.match(NUM_RE)) {
