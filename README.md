@@ -138,16 +138,17 @@ type Numberish = string | number | bigint | Dnum;
 
 Formats the number for display purposes.
 
-| Name                       | Description                                                                                                                                                                                                                                  | Type                                                          |
-| -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------- |
-| `value`                    | The value to format.                                                                                                                                                                                                                         | `Dnum`                                                        |
-| `options.digits`           | Number of digits to display. Setting `options` to a number acts as an alias for this option (see example below). Defaults to the number of decimals in the `Dnum` passed to `value`.                                                         | `number`                                                      |
-| `options.compact`          | Compact formatting (e.g. “1,000” becomes “1K”).                                                                                                                                                                                              | `boolean`                                                     |
-| `options.trailingZeros`    | Add trailing zeros if any, following the number of digits.                                                                                                                                                                                   | `boolean`                                                     |
-| `options.locale`           | The locale used to format the number.                                                                                                                                                                                                        | `string`                                                      |
-| `options.decimalsRounding` | Method used to round to `digits` decimals (defaults to `"ROUND_HALF"`).                                                                                                                                                                      | `"ROUND_HALF" \| "ROUND_UP" \| "ROUND_DOWN"`                  |
-| `options.signDisplay`      | When to display the sign for the number. [Follows the same rules as `Intl.NumberFormat`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/NumberFormat#signdisplay). Defaults to `"auto"`. | `"auto" \| "always" \| "exceptZero" \| "negative" \| "never"` |
-| returns                    | Formatted string.                                                                                                                                                                                                                            | `string`                                                      |
+| Name                        | Description                                                                                                                                                                                                                                  | Type                                                          |
+| --------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------- |
+| `value`                     | The value to format.                                                                                                                                                                                                                         | `Dnum`                                                        |
+| `options.digits`            | Number of fractional digits to display. Setting `options` to a number acts as an alias for this option (see example below). Defaults to the `Dnum` decimals unless `significantDigits` is set.                                               | `number`                                                      |
+| `options.significantDigits` | Round to this many significant digits. With `digits`, use whichever precision preserves more detail. Must be a positive safe integer. Cannot be combined with `compact: true`.                                                               | `number`                                                      |
+| `options.compact`           | Compact formatting (e.g. “1,000” becomes “1K”).                                                                                                                                                                                              | `boolean`                                                     |
+| `options.trailingZeros`     | Add trailing zeros if any, following the number of digits.                                                                                                                                                                                   | `boolean`                                                     |
+| `options.locale`            | The locale used to format the number.                                                                                                                                                                                                        | `string`                                                      |
+| `options.decimalsRounding`  | Method used to round to `digits` decimals (defaults to `"ROUND_HALF"`).                                                                                                                                                                      | `"ROUND_HALF" \| "ROUND_UP" \| "ROUND_DOWN"`                  |
+| `options.signDisplay`       | When to display the sign for the number. [Follows the same rules as `Intl.NumberFormat`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/NumberFormat#signdisplay). Defaults to `"auto"`. | `"auto" \| "always" \| "exceptZero" \| "negative" \| "never"` |
+| returns                     | Formatted string.                                                                                                                                                                                                                            | `string`                                                      |
 
 #### Example
 
@@ -167,6 +168,33 @@ dnum.format(amount, { compact: true }); // 123K
 // options.trailingZeros
 dnum.format(amount, { digits: 6, trailingZeros: true }); // 123,456.789000
 ```
+
+#### Significant digits
+
+Significant digits start at the first nonzero digit. Leading zeros do not count, but zeros between significant digits do. Use `significantDigits` to format small amounts without counting their leading zeros:
+
+```ts
+dnum.format([126n, 8], { significantDigits: 1 }); // "0.000001"
+dnum.format([126n, 8], { significantDigits: 2 }); // "0.0000013"
+```
+
+On its own, `significantDigits` rounds the whole number to the requested precision. When combined with `digits`, it preserves whichever precision keeps more detail:
+
+```ts
+let amount = [1234567n, 3] as const; // 1234.567
+dnum.format(amount, { significantDigits: 2 }); // "1,200"
+dnum.format(amount, { digits: 2, significantDigits: 2 }); // "1,234.57"
+dnum.format([126n, 8], { digits: 2, significantDigits: 2 }); // "0.0000013"
+```
+
+Fractional trailing zeros are trimmed by default. Set `trailingZeros: true` to pad to the selected precision, including after rounding changes the number’s magnitude:
+
+```ts
+dnum.format([1n, 6], { significantDigits: 2, trailingZeros: true }); // "0.0000010"
+dnum.format([999n, 5], { significantDigits: 2, trailingZeros: true }); // "0.010"
+```
+
+Zero is formatted as `"0"` by default. With `trailingZeros: true`, it uses `digits` fractional places if provided, or `significantDigits - 1` otherwise. Rounding follows `decimalsRounding`: `"ROUND_HALF"` rounds to the nearest value with ties away from zero, `"ROUND_UP"` rounds away from zero, and `"ROUND_DOWN"` rounds toward zero. Locale and sign display options apply as usual. Invalid `significantDigits` values throw a `RangeError`; combining it with `compact: true` throws an error.
 
 ### `from(valueToParse, decimals)`
 
