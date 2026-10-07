@@ -81,14 +81,18 @@ Caches are lazy and bounded: at most 257 powers of ten (exponents 0–256) and 3
 
 ## Compatibility checks
 
-- 135 unit tests passed, including regression tests for two-stage division rounding, rounding products after multiplication, and signed-zero precision.
+- 136 unit tests passed, including regression tests for two-stage division rounding, rounding products after multiplication, signed-zero precision, and formatter reuse/lazy initialization/eviction.
 - 42,715 differential checks passed in each of Node and Bun against the original source, comparing results, error names/messages, and option mutation.
 - TypeScript checks and lint passed with zero warnings. Export names and public type signatures are unchanged.
+- Generated pairs cover all 100 scale combinations with five coefficient profiles, including equal precision, arbitrary large coefficients, zeros, and rounding boundaries.
 - Formatting checks include locale arrays, cache eviction, significant digits, and the existing formatToParts monkey-patch behavior.
+- `bun run test` and GitHub Actions run unit tests, parity in both runtimes, and a build with public ESM/CommonJS import checks.
 
-## Existing package build issue
+## Package build validation
 
-The repository’s `bun run build` exits successfully with the installed bunup 0.16.10 and Bun 1.4.0 canary, but its generated ESM file fails to import: `SyntaxError: Export 'abs' is not defined in module`. The same failure was reproduced independently using unchanged source, package.json, and tsconfig.json from the baseline commit. This issue is outside the optimization changes. The comparison and parity checks use valid standalone Bun-built ESM bundles, which import and execute in both runtimes.
+The original Bun 1.4.0 canary silently stripped function definitions when a resolver plugin was registered, producing broken ESM and CommonJS files through bunup 0.16.10. The failure also reproduced on unchanged baseline source and with a minimal no-op resolver plugin.
+
+Stable Bun 1.4.2 builds both formats correctly. The repository now pins that version in `package.json`, which GitHub Actions uses. `bun run build` imports the public package through both `import("dnum")` and `require("dnum")` in Node and Bun, checks callable exports, and exercises parsing, arithmetic, formatting, JSON, and aliases. A broken artifact now fails the build. The unit and compatibility checks above also pass with stable Bun; the historical performance measurements retain their original runtime versions.
 
 ## Reproduce
 

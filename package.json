@@ -27,12 +27,14 @@
     }
   },
   "sideEffects": false,
+  "packageManager": "bun@1.4.2",
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "bunup --format esm,cjs",
-    "test": "bun test",
+    "build": "bunup --format esm,cjs && node scripts/check-build.mjs && bun scripts/check-build.mjs",
+    "test": "bun run test:unit && bun run test:parity && bun run test:parity:node && bun run build",
+    "test:unit": "bun test",
     "format": "dprint fmt",
     "lint": "oxlint --type-aware ./src",
     "coverage": "bun test --coverage",

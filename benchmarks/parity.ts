@@ -34,13 +34,35 @@ const pairs: Array<[Numberish, Numberish]> = [
   [1.23e-8, 7n],
   ["1e20", "-1e-10"],
 ];
-for (let i = 0; i < 500; i++) {
-  const coefficient = () =>
-    (BigInt(next()) - 2147483648n) * 10n ** BigInt(next() % 160);
-  pairs.push([[coefficient(), scales[next() % scales.length]!], [
-    coefficient(),
-    scales[next() % scales.length]!,
-  ]]);
+const pick = (length: number) => Math.floor(next() / 2 ** 32 * length);
+function coefficient(profile: number): bigint {
+  const signed = () => BigInt(next()) - 2147483648n;
+  if (profile === 0) return signed();
+  if (profile === 1) {
+    // Large coefficients with arbitrary digits, rather than only trailing zeros.
+    let value = 0n;
+    for (let i = 0; i < 16; i++) value = (value << 32n) + BigInt(next());
+    return pick(2) ? value : -value;
+  }
+  if (profile === 2) {
+    const boundaries = [9n, 10n, 11n, 49n, 50n, 51n, 149n, 150n, 151n];
+    const value = boundaries[pick(boundaries.length)]!;
+    return pick(2) ? value : -value;
+  }
+  if (profile === 3) return [0n, 1n, -1n][pick(3)]!;
+  return signed() * 10n ** BigInt(pick(160));
+}
+// Guarantee every scale pairing for each coefficient profile. Taking an LCG's
+// low bits modulo the scale count previously excluded all equal-scale pairs.
+for (let profile = 0; profile < 5; profile++) {
+  for (const leftScale of scales) {
+    for (const rightScale of scales) {
+      pairs.push([
+        [coefficient(profile), leftScale],
+        [coefficient(profile), rightScale],
+      ]);
+    }
+  }
 }
 for (const [a, b] of pairs) {
   for (
@@ -188,10 +210,11 @@ for (const value of formatted) {
     );
   }
 }
-// Exercise cache eviction and mutable locale lists without depending on internals.
+// Check formatting across many locale keys; allocation/eviction is asserted in
+// test/format-cache.test.ts.
 for (let i = 0; i < 64; i++) {
   check(
-    "locale eviction",
+    "many locale keys",
     (dn) => dn.format([123456n, 2], { locale: `en-US-x-${i}` }),
   );
 }

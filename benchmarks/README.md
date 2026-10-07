@@ -3,7 +3,8 @@
 The local `experiment/javascript-optimizations` branch measures changes to dnum's
 existing JavaScript API. The Rust prototype remains on `experiment/rust-wasm`.
 
-Run from the repository root with the existing Bun dependencies installed:
+Use stable Bun 1.4.2 (pinned in `package.json`) and Node 24. Run from the
+repository root with the Bun dependencies installed:
 
 ```sh
 bun run bench --output benchmarks/results/js-bun.json
@@ -38,21 +39,32 @@ nanoseconds per call and the baseline/current speed ratio. JSON preserves all
 samples, iteration counts, runtime versions, CPU, timestamp, baseline commit,
 and bundle sizes. Formatting and power-cache timings describe warmed caches.
 
-For more extensive compatibility checks:
+Run the complete validation suite (also run by GitHub Actions):
 
 ```sh
-bun test
-bun run test:parity
-bun run test:parity:node
+bun run test
 bun run check:bench
 bun run lint
 ```
 
+`bun run test` runs unit tests, compatibility checks in Bun and Node, and the
+package build. Use `bun run test:unit` for unit tests alone; `test:parity` and
+`test:parity:node` remain available separately.
+
 The parity runner checks over 42,000 outcomes against the original code in each
-runtime. It covers all rounding modes, default/explicit precision, signed and
-very large values, mixed input types, errors, unusual scale values, option
-mutation, locale lists, locale-cache eviction, significant digits, and patched
-`formatToParts`. Both result values and error names/messages are compared.
+runtime. Its 500 generated pairs cover all 100 scale combinations, including
+equal precision, with small, arbitrary-digit large, rounding-boundary, zero, and
+trailing-zero coefficients. It covers all rounding modes, default/explicit
+precision, mixed input types, errors, unusual scale values, option mutation,
+locale lists, significant digits, and patched `formatToParts`. Both result
+values and error names/messages are compared. A focused unit test counts
+formatter allocations to verify reuse, lazy compact initialization, and eviction.
+
+`bun run build` verifies that the public ESM and CommonJS package exports import
+and execute in both Node and Bun. Bun 1.4.0 canary had a resolver-plugin
+regression that silently stripped function definitions in bunup builds; stable
+1.4.2 fixes it. GitHub Actions uses the pinned version. For a local installation
+still on canary, `bun upgrade --stable` switches back to stable.
 
 The optimized multiplication uses the product's original precision and rescales
 once. Division cancels equal normalization factors before dividing, then keeps
@@ -77,6 +89,6 @@ Exports, type signatures, precision defaults, rounding modes, and tuple output
 remain unchanged. The caches add bounded retained memory and slightly increase
 the bundle. Cold formatting and uncommon precision patterns may benefit less
 than these warm measurements. See [RESULTS.md](./RESULTS.md) for measured gains,
-small regressions, size costs, and the build-tool observation.
+small regressions, size costs, and build validation.
 
 Generated snapshots, bundles, and raw JSON runs are ignored by Git.
