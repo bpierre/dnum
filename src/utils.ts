@@ -19,8 +19,9 @@ function divideAndRoundDown(dividend: bigint, divisor: bigint) {
 function divideAndRoundHalf(dividend: bigint, divisor: bigint) {
   const num = divisor > 0n ? dividend : -dividend;
   const den = divisor > 0n ? divisor : -divisor;
-  const invertSign = num < 0n ? -1n : 1n;
-  return (num * invertSign + den / 2n) / den * invertSign;
+  return num < 0n
+    ? -((-num + den / 2n) / den)
+    : (num + den / 2n) / den;
 }
 
 export function divideAndRound(
@@ -47,11 +48,20 @@ export function splitNumber(number: string) {
   return [whole, fraction];
 }
 
+const powersOfTen: bigint[] = [1n];
+
 export function powerOfTen(zeroes: number) {
+  const cached = powersOfTen[zeroes];
+  if (cached !== undefined) return cached;
   // This is to avoid using the ** operator which
   // doesn’t seem to work for BigInt values on CodeSandbox.
   // See https://github.com/codesandbox/codesandbox-client/issues/6706
-  return BigInt("1" + "0".repeat(zeroes));
+  const value = BigInt("1" + "0".repeat(zeroes));
+  // Only powers with integer exponents 0–256 are retained in the cache.
+  if (Number.isInteger(zeroes) && zeroes >= 0 && zeroes <= 256) {
+    powersOfTen[zeroes] = value;
+  }
+  return value;
 }
 
 export function roundToPower(value: bigint, power: bigint) {

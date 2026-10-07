@@ -5,6 +5,46 @@ import { abs, divideAndRound, powerOfTen } from "./utils";
 
 type SignDisplay = "auto" | "always" | "exceptZero" | "negative" | "never";
 
+type Locale = ConstructorParameters<typeof Intl.NumberFormat>[0];
+type Formatters = {
+  factory: typeof Intl.NumberFormat;
+  formatToParts: Intl.NumberFormat["formatToParts"];
+  standard: Intl.NumberFormat;
+  compact?: Intl.NumberFormat;
+  decimal: string;
+};
+const formatterCache = new Map<string, Formatters>();
+
+function getFormatters(locale: Locale): Formatters {
+  // Locale arrays can be mutated by callers; only cache string keys.
+  const cached = typeof locale === "string"
+    ? formatterCache.get(locale)
+    : undefined;
+  if (
+    cached && cached.factory === Intl.NumberFormat
+    && cached.formatToParts === cached.standard.formatToParts
+  ) return cached;
+  const standard = new Intl.NumberFormat(locale);
+  const formatters: Formatters = {
+    factory: Intl.NumberFormat,
+    // Retain the method for identity checks; calls still use its receiver.
+    // oxlint-disable-next-line typescript-eslint/unbound-method
+    formatToParts: standard.formatToParts,
+    standard,
+    decimal:
+      standard.formatToParts(.1).find((part) => part.type === "decimal")?.value
+        ?? ".",
+  };
+  if (typeof locale === "string") {
+    formatterCache.delete(locale);
+    if (formatterCache.size === 32) {
+      formatterCache.delete(formatterCache.keys().next().value!);
+    }
+    formatterCache.set(locale, formatters);
+  }
+  return formatters;
+}
+
 export function format(
   dnum: Dnum,
   // see toParts() in src/dnum.ts
@@ -44,9 +84,12 @@ export function format(
     ? toParts(dnum, toPartsOptions)
     : toSignificantParts(dnum, significantDigits, toPartsOptions);
 
-  const decimalsSeparator = new Intl.NumberFormat(locale)
-    .formatToParts(.1)
-    .find((v) => v.type === "decimal")?.value ?? ".";
+  const formatters = getFormatters(locale);
+  const wholeFormatter = compact
+    ? (formatters.compact ??= new Intl.NumberFormat(locale, {
+      notation: "compact",
+    }))
+    : formatters.standard;
 
   const roundsToZero = whole === 0n && (
     fraction === null || /^0+$/.test(fraction)
@@ -56,15 +99,13 @@ export function format(
     dnum,
     roundsToZero,
     signDisplay,
-  ) + BigInt(whole).toLocaleString(locale, {
-    notation: compact ? "compact" : "standard",
-  });
+  ) + wholeFormatter.format(whole);
 
   return fraction === null
       // check if a compact notation has been applied
-      || !/\d/.test(wholeString.at(-1) as string) // “as string” is safe because whole.toLocaleString() always returns a non-empty string
+      || !/\d/.test(wholeString.at(-1) as string) // “as string” is safe because wholeFormatter.format() always returns a non-empty string
     ? wholeString
-    : `${wholeString}${decimalsSeparator}${fraction}`;
+    : `${wholeString}${formatters.decimal}${fraction}`;
 }
 
 function toSignificantParts(
