@@ -6,14 +6,8 @@ import type {
   Rounding,
 } from "./types";
 
-import {
-  equalizeDecimals,
-  from,
-  isDnum,
-  setDecimals,
-  setValueDecimals,
-} from "./dnum";
-import { divideAndRound } from "./utils";
+import { from, isDnum, setDecimals, setValueDecimals } from "./dnum";
+import { divideAndRound, powerOfTen } from "./utils";
 
 export function add(
   num1: Numberish,
@@ -52,6 +46,22 @@ export function multiply(
     : optionsOrDecimals;
   options.rounding ??= "ROUND_HALF";
 
+  const [left, right] = normalizePair(num1, num2);
+  const decimals = options.decimals
+    ?? (isDnum(num1) ? left[1] : Math.max(left[1], right[1]));
+  if (
+    Number.isInteger(left[1]) && Number.isInteger(right[1])
+    && Number.isInteger(decimals)
+  ) {
+    // Multiplication needs one final rescale, not equalized input coefficients.
+    const productDecimals = left[1] + right[1];
+    return setDecimals(
+      [left[0] * right[0], productDecimals === 0 ? left[1] : productDecimals],
+      decimals,
+      { rounding: options.rounding },
+    );
+  }
+
   const [num1_, num2_] = normalizePairAndDecimals(num1, num2, options.decimals);
   return setDecimals(
     [num1_[0] * num2_[0], num1_[1] * 2],
@@ -72,6 +82,28 @@ export function divide(
     ? { decimals: optionsOrDecimals }
     : optionsOrDecimals;
   options.rounding ??= "ROUND_HALF";
+
+  const [left, right] = normalizePair(num1, num2);
+  const decimals = options.decimals
+    ?? (isDnum(num1) ? left[1] : Math.max(left[1], right[1]));
+  if (
+    Number.isInteger(left[1]) && Number.isInteger(right[1])
+    && Number.isInteger(decimals)
+  ) {
+    if (right[0] === 0n) throw new Error("dnum: division by zero");
+    const common = Math.max(left[1], right[1], decimals);
+    // Cancel the denominator's normalization factor before dividing. Keep both
+    // rounding steps: changing to a single division would change some results.
+    const dividend = left[0] * powerOfTen(common + right[1] - left[1]);
+    return setDecimals(
+      [
+        divideAndRound(dividend, right[0], options.rounding),
+        left[1] === common ? left[1] : common,
+      ],
+      decimals,
+      { rounding: options.rounding },
+    );
+  }
 
   const [num1_, num2_] = normalizePairAndDecimals(num1, num2, options.decimals);
   if (num2_[0] === 0n) {
@@ -175,15 +207,28 @@ function normalizePairAndDecimals(
   num2: Numberish,
   decimals?: number,
 ) {
-  const num1_ = from(num1);
-  const num2_ = from(num2);
+  const num1_ = isDnum(num1) ? num1 : from(num1);
+  const num2_ = isDnum(num2) ? num2 : from(num2);
+  if (num1_[1] < 0 || num2_[1] < 0) {
+    throw new Error("dnum: decimals cannot be negative");
+  }
+  if (num1_[1] === num2_[1] && num1_[1] >= (decimals ?? 0)) {
+    return [num1_, num2_] as const;
+  }
+  const precision = Math.max(num1_[1], num2_[1], decimals ?? 0);
+  return [
+    setDecimals(num1_, precision),
+    setDecimals(num2_, precision),
+  ] as const;
+}
+
+function normalizePair(num1: Numberish, num2: Numberish) {
+  const num1_ = isDnum(num1) ? num1 : from(num1);
+  const num2_ = isDnum(num2) ? num2 : from(num2);
 
   if (num1_[1] < 0 || num2_[1] < 0) {
     throw new Error("dnum: decimals cannot be negative");
   }
 
-  return equalizeDecimals(
-    [num1_, num2_],
-    Math.max(num1_[1], num2_[1], decimals ?? 0),
-  );
+  return [num1_, num2_] as const;
 }
