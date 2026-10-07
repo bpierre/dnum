@@ -97,6 +97,34 @@ dnum.format(tknQuantityInUsd, 2); // $24,310,188.17
 
 You can play with this example [on CodeSandbox](https://codesandbox.io/s/dnum-intro-qljzi6?file=/src/index.ts).
 
+## Contract calls
+
+Here is how to display a USDC balance and send 0.001 USDC using [viem](https://viem.sh). This example assumes the clients and addresses are already configured.
+
+```ts
+import * as dn from "dnum";
+import { erc20Abi } from "viem";
+
+// Read the balance and attach the token’s decimals (6 for USDC).
+let balanceValue = await publicClient.readContract({
+  address: tokenAddress,
+  abi: erc20Abi,
+  functionName: "balanceOf",
+  args: [ownerAddress],
+});
+let balance: dn.Dnum = [balanceValue, 6];
+console.log(dn.format(balance));
+
+// Send 0.001 USDC using the bigint from the Dnum.
+let amount = dn.from("0.001", 6); // [1000n, 6]
+await walletClient.writeContract({
+  address: tokenAddress,
+  abi: erc20Abi,
+  functionName: "transfer",
+  args: [recipientAddress, amount[0]],
+});
+```
+
 ## API
 
 ### Types
