@@ -48,7 +48,6 @@ export function splitNumber(number: string) {
   return [whole, fraction];
 }
 
-// Bound the cache so user-controlled precision cannot grow it indefinitely.
 const powersOfTen: bigint[] = [1n];
 
 export function powerOfTen(zeroes: number) {
@@ -58,6 +57,7 @@ export function powerOfTen(zeroes: number) {
   // doesn’t seem to work for BigInt values on CodeSandbox.
   // See https://github.com/codesandbox/codesandbox-client/issues/6706
   const value = BigInt("1" + "0".repeat(zeroes));
+  // Only powers with integer exponents 0–256 are retained in the cache.
   if (Number.isInteger(zeroes) && zeroes >= 0 && zeroes <= 256) {
     powersOfTen[zeroes] = value;
   }
