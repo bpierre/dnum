@@ -1,4 +1,4 @@
-import { Rounding } from "./types";
+import type { Rounding } from "./types";
 
 function divideAndRoundUp(dividend: bigint, divisor: bigint) {
   const num = divisor > 0n ? dividend : -dividend;
