@@ -16,8 +16,6 @@ dist-ssr
 
 /benchmarks/.build/
 /benchmarks/results/
-/experiments/rust-wasm/target/
-/experiments/rust-wasm/pkg/
 
 # Editor directories and files
 .vscode/*

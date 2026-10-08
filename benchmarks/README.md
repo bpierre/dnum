@@ -1,7 +1,7 @@
-# JavaScript optimization experiment
+# Benchmarks
 
-The local `experiment/javascript-optimizations` branch measures changes to dnum's
-existing JavaScript API. The Rust prototype remains on `experiment/rust-wasm`.
+Compare the working tree's performance and behavior against a Git revision of
+dnum using the same public API.
 
 Use stable Bun 1.4.2 (pinned in `package.json`) and Node 24. Run from the
 repository root with the Bun dependencies installed:
@@ -14,7 +14,7 @@ bun run bench:node --output benchmarks/results/js-node.json
 Use `--quick` for three short samples, or `--filter tokens/6-18dp` to select cases.
 Full runs use nine samples of approximately forty milliseconds per version. Run
 Node and Bun sequentially on an idle machine. Results are exploratory
-microbenchmarks on this machine, without statistical significance claims.
+microbenchmarks, without statistical significance claims.
 
 ## Comparison and correctness
 
@@ -25,8 +25,8 @@ the same installed dependency versions. Set `DNUM_BASELINE` to another Git
 revision to choose a different baseline; the resolved commit is recorded in the
 JSON output. No checkout or network access is needed.
 
-Both versions execute their complete public API in the same process. Arithmetic
-uses sixteen varied, preconstructed signed operand pairs per dataset. Cases
+Both versions run in the same process. Arithmetic uses sixteen varied,
+preconstructed signed operand pairs per dataset. Cases
 cover money, token amounts with equal/mixed precision, large coefficients,
 rescaling, parsing, formatting, and interest calculations that call the existing
 `multiply` and `add` functions each period. Formatting uses both explicit and
@@ -61,34 +61,7 @@ values and error names/messages are compared. A focused unit test counts
 formatter allocations to verify reuse, lazy compact initialization, and eviction.
 
 `bun run build` verifies that the public ESM and CommonJS package exports import
-and execute in both Node and Bun. Bun 1.4.0 canary had a resolver-plugin
-regression that silently stripped function definitions in bunup builds; stable
-1.4.2 fixes it. GitHub Actions uses the pinned version. For a local installation
-still on canary, `bun upgrade --stable` switches back to stable.
-
-The optimized multiplication uses the product's original precision and rescales
-once. Division cancels equal normalization factors before dividing, then keeps
-both existing rounding steps. These are particularly important compatibility
-checks: reducing division to one final rounding would change some answers.
-
-## Changes and costs
-
-- Reuse lazily cached powers of ten for integer exponents 0–256. Higher and
-  unusual exponents retain the original construction path; the cache is bounded.
-- Remove two unnecessary BigInt multiplications from half rounding.
-- Normalize arithmetic pairs without mapping through a general array helper or
-  reparsing tuple operands. Multiplication/division avoid inflated coefficients
-  where integer scales allow equivalent arithmetic; unusual scales retain the
-  original path.
-- Cache standard/compact `Intl.NumberFormat` instances and decimal separators
-  for at most 32 locale strings. Locale arrays remain uncached because callers
-  can mutate them. Default locale resolution is still performed on each call.
-  Formatter caches refresh when the constructor or `formatToParts` changes.
-
-Exports, type signatures, precision defaults, rounding modes, and tuple output
-remain unchanged. The caches add bounded retained memory and slightly increase
-the bundle. Cold formatting and uncommon precision patterns may benefit less
-than these warm measurements. See [RESULTS.md](./RESULTS.md) for measured gains,
-small regressions, size costs, and build validation.
+and execute in both Node and Bun. GitHub Actions uses the Bun version pinned in
+`package.json`.
 
 Generated snapshots, bundles, and raw JSON runs are ignored by Git.
