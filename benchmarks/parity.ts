@@ -4,7 +4,11 @@ import { loadImplementations } from "./load";
 
 const { baseline, current } = await loadImplementations();
 let checks = 0;
-function check(label: string, call: (dn: typeof current) => unknown) {
+function check(
+  label: string,
+  call: (dn: typeof current) => unknown,
+  expected?: { result: unknown },
+) {
   const outcome = (dn: typeof current) => {
     try {
       return { result: call(dn) };
@@ -15,7 +19,7 @@ function check(label: string, call: (dn: typeof current) => unknown) {
       };
     }
   };
-  deepStrictEqual(outcome(current), outcome(baseline), label);
+  deepStrictEqual(outcome(current), expected ?? outcome(baseline), label);
   checks++;
 }
 deepStrictEqual(Object.keys(current).sort(), Object.keys(baseline).sort());
@@ -201,8 +205,19 @@ for (const value of formatted) {
     }
   }
   for (const digits of [0, 2, 18, 72]) {
-    check("toParts", (dn) => dn.toParts(value, digits));
-    check("toString", (dn) => dn.toString(value, digits));
+    // The baseline loses magnitude when a negative fraction carries into the
+    // whole part. Assert the corrected results instead of preserving that bug.
+    const negativeCarry = value[0] === -999n && value[1] === 2 && digits === 0;
+    check(
+      "toParts",
+      (dn) => dn.toParts(value, digits),
+      negativeCarry ? { result: [10n, null] } : undefined,
+    );
+    check(
+      "toString",
+      (dn) => dn.toString(value, digits),
+      negativeCarry ? { result: "-10" } : undefined,
+    );
     check(
       "significantDigits",
       (dn) =>
@@ -237,5 +252,5 @@ check("patched formatToParts", (dn) => {
   }
 });
 console.log(
-  `Passed ${checks} differential checks against the baseline, including results, errors and option mutation.`,
+  `Passed ${checks} compatibility checks against the baseline or explicit regression expectations, including results, errors and option mutation.`,
 );
