@@ -162,7 +162,7 @@ export function toParts(
 
   const decimalsDivisor = powerOfTen(decimals);
 
-  let whole = value / decimalsDivisor;
+  let whole = abs(value / decimalsDivisor);
   const fractionValue = abs(value % decimalsDivisor);
 
   const roundFn = decimalsRounding === "ROUND_UP"
@@ -205,7 +205,7 @@ export function toParts(
     : fraction.replace(/0+$/, "");
 
   return [
-    abs(whole),
+    whole,
     fraction === "" || (BigInt(fraction) === 0n && !trailingZeros)
       ? null
       : fraction,

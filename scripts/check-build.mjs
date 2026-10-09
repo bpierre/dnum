@@ -14,6 +14,10 @@ for (const [name, dn] of [["ESM", esm], ["CommonJS", cjs]]) {
   deepStrictEqual(dn.multiply("1.49", "1.49", 0), [2n, 0]);
   deepStrictEqual(dn.divide([2999n, 3], [2000n, 3], 0), [2n, 0]);
   strictEqual(dn.format([123456n, 2], { locale: "en-US" }), "1,234.56");
+  deepStrictEqual(dn.toParts([-199n, 2], 0), [2n, null]);
+  strictEqual(dn.toString([-199n, 2], 0), "-2");
+  strictEqual(dn.toNumber([-199n, 2], 0), -2);
+  strictEqual(dn.format([-199n, 2], { digits: 0, locale: "en-US" }), "-2");
   deepStrictEqual(dn.fromJSON(dn.toJSON([123n, 2])), [123n, 2]);
   strictEqual(dn.mul, dn.multiply);
   strictEqual(dn.div, dn.divide);
