@@ -175,10 +175,20 @@ const formatted: Dnum[] = [
 ];
 for (const value of formatted) {
   for (
-    const locale of [undefined, "en-US", "fr-FR", "ar-EG", "en-IN", "de-DE", [
-      "fr-FR",
+    // Non-Latin numbering systems have explicit regression expectations below.
+    const locale of [
+      undefined,
       "en-US",
-    ], "invalid_locale"]
+      "fr-FR",
+      "ar-EG-u-nu-latn",
+      "en-IN",
+      "de-DE",
+      [
+        "fr-FR",
+        "en-US",
+      ],
+      "invalid_locale",
+    ]
   ) {
     for (const compact of [false, true]) {
       for (
@@ -225,6 +235,37 @@ for (const value of formatted) {
     );
   }
 }
+for (
+  const [locale, positive, tiny] of [
+    ["ar-EG", "١٬٢٣٤٫٥٦", "٠٫٠٥"],
+    ["fa-IR", "۱٬۲۳۴٫۵۶", "۰٫۰۵"],
+    ["en-US-u-nu-fullwide", "１,２３４.５６", "０.０５"],
+    ["zh-CN-u-nu-hanidec", "一,二三四.五六", "〇.〇五"],
+  ]
+) {
+  check("localized fraction", (dn) => dn.format([123456n, 2], { locale }), {
+    result: positive,
+  });
+  check(
+    "negative localized fraction",
+    (dn) => dn.format([-123456n, 2], { locale }),
+    {
+      result: `-${positive}`,
+    },
+  );
+  check("localized leading zeros", (dn) => dn.format([5n, 2], { locale }), {
+    result: tiny,
+  });
+}
+check(
+  "compact prefix",
+  (dn) => dn.format([12345678n, 2], { locale: "sw", compact: true }),
+  {
+    result: new Intl.NumberFormat("sw", { notation: "compact" }).format(
+      123456n,
+    ),
+  },
+);
 // Check formatting across many locale keys; allocation/eviction is asserted in
 // test/format-cache.test.ts.
 for (let i = 0; i < 64; i++) {

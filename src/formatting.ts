@@ -12,6 +12,7 @@ type Formatters = {
   standard: Intl.NumberFormat;
   compact?: Intl.NumberFormat;
   decimal: string;
+  numerals?: string[];
 };
 const formatterCache = new Map<string, Formatters>();
 
@@ -34,6 +35,9 @@ function getFormatters(locale: Locale): Formatters {
     decimal:
       standard.formatToParts(.1).find((part) => part.type === "decimal")?.value
         ?? ".",
+    numerals: standard.format(0) === "0"
+      ? undefined
+      : Array.from({ length: 10 }, (_, digit) => standard.format(digit)),
   };
   if (typeof locale === "string") {
     formatterCache.delete(locale);
@@ -95,17 +99,28 @@ export function format(
     fraction === null || /^0+$/.test(fraction)
   );
 
+  const compactParts = compact && fraction !== null
+    ? wholeFormatter.formatToParts(whole)
+    : undefined;
   const wholeString = formatSign(
     dnum,
     roundsToZero,
     signDisplay,
-  ) + wholeFormatter.format(whole);
+  ) + (
+    compactParts?.map((part) => part.value).join("")
+      ?? wholeFormatter.format(whole)
+  );
 
-  return fraction === null
-      // check if a compact notation has been applied
-      || !/\d/.test(wholeString.at(-1) as string) // “as string” is safe because wholeFormatter.format() always returns a non-empty string
-    ? wholeString
-    : `${wholeString}${formatters.decimal}${fraction}`;
+  if (
+    fraction === null
+    || compactParts?.some((part) => part.type === "compact")
+  ) return wholeString;
+
+  const numerals = formatters.numerals;
+  const localizedFraction = numerals
+    ? fraction.replace(/\d/g, (digit) => numerals[Number(digit)]!)
+    : fraction;
+  return `${wholeString}${formatters.decimal}${localizedFraction}`;
 }
 
 function toSignificantParts(
