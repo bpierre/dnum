@@ -59,7 +59,6 @@ precision, mixed input types, errors, unusual scale values, option mutation,
 locale lists, significant digits, and patched `formatToParts`. Both result
 values and error names/messages are compared. A focused unit test counts
 formatter allocations to verify reuse, lazy compact initialization, and eviction.
-Known bug fixes use explicit expected results where the baseline is incorrect.
 
 `bun run build` verifies that the public ESM and CommonJS package exports import
 and execute in both Node and Bun. GitHub Actions uses the Bun version pinned in
