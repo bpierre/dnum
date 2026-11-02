@@ -91,4 +91,9 @@ describe("format() with localized digits and compact notation", () => {
       locale: "en-US-u-nu-fullwide",
     })).toBe("９,００７,１９９,２５４,７４０,９９３." + "０".repeat(17) + "１");
   });
+
+  it("translates fractional digits outside the Basic Multilingual Plane", () => {
+    expect(format([1205n, 2], { locale: "en-US-u-nu-mathbold" }))
+      .toBe("𝟏𝟐.𝟎𝟓");
+  });
 });

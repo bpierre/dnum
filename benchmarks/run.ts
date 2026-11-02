@@ -202,6 +202,40 @@ benchmark(
       compact: true,
     }),
 );
+const integerAmounts: Dnum[] = smallAmounts.map(([value]) => [value, 0]);
+for (const locale of ["en-US", "ar-EG"]) {
+  // Locale lists deliberately bypass the cache, measuring cold initialization.
+  const options = { locale: [locale, "en-US"] };
+  benchmark(
+    `format/${locale}/integer-locale-list`,
+    (i) => baseline.format(integerAmounts[i % 16]!, options),
+    (i) => current.format(integerAmounts[i % 16]!, options),
+  );
+}
+const japaneseAmounts: Dnum[] = Array.from(
+  { length: 16 },
+  (_, i) => [1234567n + BigInt(i) * 17n, 2],
+);
+const mixedJapaneseAmounts: Dnum[] = japaneseAmounts.map((
+  [value, decimals],
+  i,
+) => [
+  i % 2 ? value * 10n : value,
+  decimals,
+]);
+for (
+  const [name, amounts] of [
+    ["same-magnitude", japaneseAmounts],
+    ["mixed-magnitudes", mixedJapaneseAmounts],
+  ] as const
+) {
+  const options = { locale: "ja-JP", compact: true };
+  benchmark(
+    `format/ja-JP/compact-${name}`,
+    (i) => baseline.format(amounts[i % 16]!, options),
+    (i) => current.format(amounts[i % 16]!, options),
+  );
+}
 const assets = [];
 for (const name of ["baseline", "current"]) {
   const bytes = await readFile(`benchmarks/.build/${name}.mjs`);

@@ -32,6 +32,8 @@ rescaling, parsing, formatting, and interest calculations that call the existing
 `multiply` and `add` functions each period. Formatting uses both explicit and
 default locales, with standard and compact notation. Compact cases include
 small amounts and German values that remain unscaled, with and without grouping.
+Japanese compact cases use both fixed and alternating magnitudes. Integer locale
+lists exercise uncached formatter initialization for Latin and Arabic digits.
 
 Each case checks equal results before timing. Both versions are warmed up and
 calibrated independently, then their measurement order alternates per sample.
@@ -58,8 +60,9 @@ equal precision, with small, arbitrary-digit large, rounding-boundary, zero, and
 trailing-zero coefficients. It covers all rounding modes, default/explicit
 precision, mixed input types, errors, unusual scale values, option mutation,
 locale lists, significant digits, and patched `formatToParts`. Both result
-values and error names/messages are compared. A focused unit test counts
-formatter allocations to verify reuse, lazy compact initialization, and eviction.
+values and error names/messages are compared. Focused unit tests count formatter
+allocations to verify reuse, lazy compact initialization, and eviction, and bound
+Intl calls for integer locale lists and compact values with changing magnitudes.
 
 `bun run build` verifies that the public ESM and CommonJS package exports import
 and execute in both Node and Bun. GitHub Actions uses the Bun version pinned in
