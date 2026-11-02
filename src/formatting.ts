@@ -11,7 +11,9 @@ type Formatters = {
   formatToParts: Intl.NumberFormat["formatToParts"];
   standard: Intl.NumberFormat;
   compact?: Intl.NumberFormat;
+  compactProbeMiss?: number;
   decimal: string;
+  group?: string;
   numerals?: string[];
 };
 const formatterCache = new Map<string, Formatters>();
@@ -26,15 +28,15 @@ function getFormatters(locale: Locale): Formatters {
     && cached.formatToParts === cached.standard.formatToParts
   ) return cached;
   const standard = new Intl.NumberFormat(locale);
+  const numberParts = standard.formatToParts(12345.6);
   const formatters: Formatters = {
     factory: Intl.NumberFormat,
     // Retain the method for identity checks; calls still use its receiver.
     // oxlint-disable-next-line typescript-eslint/unbound-method
     formatToParts: standard.formatToParts,
     standard,
-    decimal:
-      standard.formatToParts(.1).find((part) => part.type === "decimal")?.value
-        ?? ".",
+    decimal: numberParts.find((part) => part.type === "decimal")?.value ?? ".",
+    group: numberParts.find((part) => part.type === "group")?.value,
     numerals: standard.format(0) === "0"
       ? undefined
       : Array.from({ length: 10 }, (_, digit) => standard.format(digit)),
@@ -99,28 +101,56 @@ export function format(
     fraction === null || /^0+$/.test(fraction)
   );
 
-  const compactParts = compact && fraction !== null
-    ? wholeFormatter.formatToParts(whole)
-    : undefined;
-  const wholeString = formatSign(
-    dnum,
-    roundsToZero,
-    signDisplay,
-  ) + (
-    compactParts?.map((part) => part.value).join("")
-      ?? wholeFormatter.format(whole)
-  );
+  const sign = formatSign(dnum, roundsToZero, signDisplay);
+  let wholeString: string;
+  if (compact && fraction !== null) {
+    // With Latin digits, an unchanged integer is unscaled, while ASCII letters
+    // identify compact notation. Use Intl parts for other output forms.
+    let integer = formatters.compactProbeMiss === undefined
+      ? undefined
+      : whole.toString();
+    const formatted = !formatters.numerals
+        && (integer === undefined
+          || integer.length !== formatters.compactProbeMiss)
+      ? wholeFormatter.format(whole)
+      : undefined;
+    if (formatted && /[a-z]/i.test(formatted)) return sign + formatted;
+    if (formatted !== undefined) integer ??= whole.toString();
 
-  if (
-    fraction === null
-    || compactParts?.some((part) => part.type === "compact")
-  ) return wholeString;
+    if (
+      formatted !== undefined
+      && (
+        formatted === integer
+        || (formatters.group
+          && formatted.replaceAll(formatters.group, "") === integer)
+      )
+    ) {
+      wholeString = formatted;
+    } else {
+      // A missed probe only skips the fast path at this magnitude. Intl parts
+      // still decide whether compaction applies to each value.
+      if (formatted !== undefined) {
+        formatters.compactProbeMiss = integer!.length;
+      }
+      wholeString = "";
+      let hasCompact = false;
+      for (const part of wholeFormatter.formatToParts(whole)) {
+        wholeString += part.value;
+        if (part.type === "compact") hasCompact = true;
+      }
+      if (hasCompact) return sign + wholeString;
+    }
+  } else {
+    wholeString = wholeFormatter.format(whole);
+  }
+
+  if (fraction === null) return sign + wholeString;
 
   const numerals = formatters.numerals;
   const localizedFraction = numerals
     ? fraction.replace(/\d/g, (digit) => numerals[Number(digit)]!)
     : fraction;
-  return `${wholeString}${formatters.decimal}${localizedFraction}`;
+  return `${sign}${wholeString}${formatters.decimal}${localizedFraction}`;
 }
 
 function toSignificantParts(

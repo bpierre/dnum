@@ -146,7 +146,7 @@ benchmark(
   (i) => baseline.from(strings[i % 16]!, 18),
   (i) => current.from(strings[i % 16]!, 18),
 );
-for (const locale of ["en-US", "fr-FR", undefined]) {
+for (const locale of ["en-US", "fr-FR", "de-DE", undefined]) {
   for (const compact of [false, true]) {
     const options = { digits: 2, locale, compact };
     benchmark(
@@ -156,6 +156,52 @@ for (const locale of ["en-US", "fr-FR", undefined]) {
     );
   }
 }
+const smallAmounts: Dnum[] = Array.from(
+  { length: 16 },
+  (_, i) => [12345n + BigInt(i) * 17n, 2],
+);
+const unscaledAmounts: Dnum[] = Array.from(
+  { length: 16 },
+  (_, i) => [123456n + BigInt(i) * 1700n, 2],
+);
+const groupedAmounts: Dnum[] = unscaledAmounts.map(([value, decimals]) => [
+  value * 10n,
+  decimals,
+]);
+for (const locale of ["en-US", "fr-FR", "de-DE"]) {
+  const options = { locale, compact: true };
+  benchmark(
+    `format/${locale}/compact-small`,
+    (i) => baseline.format(smallAmounts[i % 16]!, options),
+    (i) => current.format(smallAmounts[i % 16]!, options),
+  );
+}
+benchmark(
+  "format/de-DE/compact-unscaled",
+  (i) =>
+    baseline.format(unscaledAmounts[i % 16]!, {
+      locale: "de-DE",
+      compact: true,
+    }),
+  (i) =>
+    current.format(unscaledAmounts[i % 16]!, {
+      locale: "de-DE",
+      compact: true,
+    }),
+);
+benchmark(
+  "format/de-DE/compact-grouped",
+  (i) =>
+    baseline.format(groupedAmounts[i % 16]!, {
+      locale: "de-DE",
+      compact: true,
+    }),
+  (i) =>
+    current.format(groupedAmounts[i % 16]!, {
+      locale: "de-DE",
+      compact: true,
+    }),
+);
 const assets = [];
 for (const name of ["baseline", "current"]) {
   const bytes = await readFile(`benchmarks/.build/${name}.mjs`);

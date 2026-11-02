@@ -1,7 +1,7 @@
 import { describe, expect, it } from "bun:test";
 import { format, from } from "../src";
 
-describe("format() with non-Latin digits", () => {
+describe("format() with localized digits and compact notation", () => {
   it.each(
     [
       ["ar-EG", "١٬٢٣٤٫٥٦", "٠٫٠٥", "١٢٫٠٠", "٠٫٠٠", "٠٫٠٠٠٠٠١٣"],
@@ -58,12 +58,31 @@ describe("format() with non-Latin digits", () => {
     "zh-CN-u-nu-hanidec",
     "sw",
     "fr-FR",
+    "en-US",
+    "ar-EG-u-nu-latn",
+    "ja-JP",
   ])(
     "omits the original fraction when compact notation applies for %s",
     (locale) => {
       const expected = new Intl.NumberFormat(locale, { notation: "compact" })
         .format(123456n);
       expect(format([12345678n, 2], { locale, compact: true })).toBe(expected);
+    },
+  );
+
+  it.each(
+    [
+      ["en-US", 99999n, "999.99"],
+      ["de-DE", 123456n, "1234,56"],
+      ["de-DE", 1234567n, "12.345,67"],
+      ["ja-JP", 123456n, "1234.56"],
+    ] as const,
+  )(
+    "preserves fractions when compact notation does not scale %s/%s",
+    (locale, value, expected) => {
+      expect(format([value, 2], { locale, compact: true })).toBe(expected);
+      expect(format([-value, 2], { locale, compact: true }))
+        .toBe(`-${expected}`);
     },
   );
 
