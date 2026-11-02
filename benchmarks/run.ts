@@ -146,7 +146,7 @@ benchmark(
   (i) => baseline.from(strings[i % 16]!, 18),
   (i) => current.from(strings[i % 16]!, 18),
 );
-for (const locale of ["en-US", "fr-FR", undefined]) {
+for (const locale of ["en-US", "fr-FR", "de-DE", undefined]) {
   for (const compact of [false, true]) {
     const options = { digits: 2, locale, compact };
     benchmark(
@@ -155,6 +155,86 @@ for (const locale of ["en-US", "fr-FR", undefined]) {
       (i) => current.format(datasets[1]!.pairs[i % 16]![0], options),
     );
   }
+}
+const smallAmounts: Dnum[] = Array.from(
+  { length: 16 },
+  (_, i) => [12345n + BigInt(i) * 17n, 2],
+);
+const unscaledAmounts: Dnum[] = Array.from(
+  { length: 16 },
+  (_, i) => [123456n + BigInt(i) * 1700n, 2],
+);
+const groupedAmounts: Dnum[] = unscaledAmounts.map(([value, decimals]) => [
+  value * 10n,
+  decimals,
+]);
+for (const locale of ["en-US", "fr-FR", "de-DE"]) {
+  const options = { locale, compact: true };
+  benchmark(
+    `format/${locale}/compact-small`,
+    (i) => baseline.format(smallAmounts[i % 16]!, options),
+    (i) => current.format(smallAmounts[i % 16]!, options),
+  );
+}
+benchmark(
+  "format/de-DE/compact-unscaled",
+  (i) =>
+    baseline.format(unscaledAmounts[i % 16]!, {
+      locale: "de-DE",
+      compact: true,
+    }),
+  (i) =>
+    current.format(unscaledAmounts[i % 16]!, {
+      locale: "de-DE",
+      compact: true,
+    }),
+);
+benchmark(
+  "format/de-DE/compact-grouped",
+  (i) =>
+    baseline.format(groupedAmounts[i % 16]!, {
+      locale: "de-DE",
+      compact: true,
+    }),
+  (i) =>
+    current.format(groupedAmounts[i % 16]!, {
+      locale: "de-DE",
+      compact: true,
+    }),
+);
+const integerAmounts: Dnum[] = smallAmounts.map(([value]) => [value, 0]);
+for (const locale of ["en-US", "ar-EG"]) {
+  // Locale lists deliberately bypass the cache, measuring cold initialization.
+  const options = { locale: [locale, "en-US"] };
+  benchmark(
+    `format/${locale}/integer-locale-list`,
+    (i) => baseline.format(integerAmounts[i % 16]!, options),
+    (i) => current.format(integerAmounts[i % 16]!, options),
+  );
+}
+const japaneseAmounts: Dnum[] = Array.from(
+  { length: 16 },
+  (_, i) => [1234567n + BigInt(i) * 17n, 2],
+);
+const mixedJapaneseAmounts: Dnum[] = japaneseAmounts.map((
+  [value, decimals],
+  i,
+) => [
+  i % 2 ? value * 10n : value,
+  decimals,
+]);
+for (
+  const [name, amounts] of [
+    ["same-magnitude", japaneseAmounts],
+    ["mixed-magnitudes", mixedJapaneseAmounts],
+  ] as const
+) {
+  const options = { locale: "ja-JP", compact: true };
+  benchmark(
+    `format/ja-JP/compact-${name}`,
+    (i) => baseline.format(amounts[i % 16]!, options),
+    (i) => current.format(amounts[i % 16]!, options),
+  );
 }
 const assets = [];
 for (const name of ["baseline", "current"]) {

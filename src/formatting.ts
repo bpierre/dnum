@@ -12,6 +12,7 @@ type Formatters = {
   standard: Intl.NumberFormat;
   compact?: Intl.NumberFormat;
   decimal: string;
+  numerals?: string[];
 };
 const formatterCache = new Map<string, Formatters>();
 
@@ -25,15 +26,19 @@ function getFormatters(locale: Locale): Formatters {
     && cached.formatToParts === cached.standard.formatToParts
   ) return cached;
   const standard = new Intl.NumberFormat(locale);
+  const numberParts = standard.formatToParts(.1);
   const formatters: Formatters = {
     factory: Intl.NumberFormat,
     // Retain the method for identity checks; calls still use its receiver.
     // oxlint-disable-next-line typescript-eslint/unbound-method
     formatToParts: standard.formatToParts,
     standard,
-    decimal:
-      standard.formatToParts(.1).find((part) => part.type === "decimal")?.value
-        ?? ".",
+    decimal: numberParts.find((part) => part.type === "decimal")?.value ?? ".",
+    // Latin digits need no translation; other maps are initialized on demand.
+    numerals:
+      numberParts.some((part) => part.type === "integer" && part.value === "0")
+        ? []
+        : undefined,
   };
   if (typeof locale === "string") {
     formatterCache.delete(locale);
@@ -95,17 +100,33 @@ export function format(
     fraction === null || /^0+$/.test(fraction)
   );
 
-  const wholeString = formatSign(
-    dnum,
-    roundsToZero,
-    signDisplay,
-  ) + wholeFormatter.format(whole);
+  const sign = formatSign(dnum, roundsToZero, signDisplay);
+  let wholeString: string;
+  if (compact && fraction !== null) {
+    wholeString = "";
+    let hasCompact = false;
+    for (const part of wholeFormatter.formatToParts(whole)) {
+      wholeString += part.value;
+      if (part.type === "compact") hasCompact = true;
+    }
+    if (hasCompact) return sign + wholeString;
+  } else {
+    wholeString = wholeFormatter.format(whole);
+  }
 
-  return fraction === null
-      // check if a compact notation has been applied
-      || !/\d/.test(wholeString.at(-1) as string) // “as string” is safe because wholeFormatter.format() always returns a non-empty string
-    ? wholeString
-    : `${wholeString}${formatters.decimal}${fraction}`;
+  if (fraction === null) return sign + wholeString;
+
+  // Read all ten digits in one call, excluding any grouping separators.
+  const numerals = formatters.numerals ??= Array.from(
+    formatters.standard.formatToParts(9876543210n)
+      .filter((part) => part.type === "integer")
+      .map((part) => part.value)
+      .join(""),
+  ).reverse();
+  const localizedFraction = numerals.length
+    ? fraction.replace(/\d/g, (digit) => numerals[Number(digit)]!)
+    : fraction;
+  return `${sign}${wholeString}${formatters.decimal}${localizedFraction}`;
 }
 
 function toSignificantParts(
